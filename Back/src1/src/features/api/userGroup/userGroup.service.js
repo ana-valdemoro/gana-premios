@@ -1,4 +1,4 @@
-const { randomUUID } = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 const { UserGroup } = require('../../../models/index');
 
 const toPublic = (userGroup) => userGroup.toJSON();
@@ -19,7 +19,7 @@ const toPublic = (userGroup) => userGroup.toJSON();
 const createUserGroup = async (data) => {
   const dataToCreate = {
     ...data,
-    uuid: randomUUID(),
+    uuid: uuidv4(),
   };
   return UserGroup.create(dataToCreate);
 };

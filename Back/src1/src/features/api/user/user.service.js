@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-const { randomUUID } = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 const { User, UserGroup } = require('../../../models/index');
 const jwt = require('../../../utils/middleware/jwt');
 // const logger = require('../../../config/winston');
@@ -68,7 +68,7 @@ const createUser = async (data) => {
   const dataToCreate = {
     ...data,
     token: jwt.generateJWT({ uuid: '', type: 'user' }),
-    uuid: randomUUID(),
+    uuid: uuidv4(),
   };
   return User.create(dataToCreate);
 };
