@@ -15,6 +15,7 @@ const toPublic = (userGroup) => userGroup.toJSON();
 //       uuid,
 //     },
 //   });
+const getRoleByName = async (roleName) => UserGroup.findOne({ name: roleName });
 
 const createUserGroup = async (data) => {
   const dataToCreate = {
@@ -35,6 +36,7 @@ const createUserGroup = async (data) => {
 
 module.exports = {
   toPublic,
+  getRoleByName,
   // getUserGroups,
   // getUserGroup,
   createUserGroup,

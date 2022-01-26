@@ -24,8 +24,8 @@ const schema = new mongoose.Schema(
       type: String,
     },
     token: {
-      required: true,
       type: String,
+      default: '',
     },
     active: {
       required: true,
@@ -40,6 +40,16 @@ const schema = new mongoose.Schema(
     role_uuid: {
       required: true,
       type: String,
+    },
+    failed_logins: {
+      type: Number,
+      default: 0,
+      max: 5,
+    },
+    password_history_uuid: {
+      // required: true,
+      type: String,
+      default: '',
     },
   },
   {
