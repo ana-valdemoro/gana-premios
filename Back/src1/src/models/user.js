@@ -41,6 +41,17 @@ const schema = new mongoose.Schema(
       required: true,
       type: String,
     },
+    failed_logins: {
+      required: true,
+      type: Number,
+      default: 0,
+      max: 5,
+    },
+    password_history_uuid: {
+      required: true,
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,
