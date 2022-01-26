@@ -17,7 +17,7 @@ const isUserAuthorized = async (user, role) => {
   const [roleResource] = role.split(':');
 
   return (
-    userRights.includes('SUPERADMIN') ||
+    userRights.includes('ADMIN') ||
     userRights.includes(`${roleResource}:all`) ||
     userRights.includes(role)
   );
