@@ -1,15 +1,27 @@
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
-
-const { UniqueConstraintError } = require('sequelize');
-
 const userService = require('./user.service');
+const userGroupService = require('../userGroup/userGroup.service');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
+// Private functions
+const isValidatePasswordToParticipant = (email, password) => {
+  // Supported symbols : [:;!@#$%^&*_=+-?¡¿]
+  const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[:;!@#$%^&*_=+-/?/¡/¿]).{9,}$');
+  if (!regex.test(password)) {
+    return false;
+  }
+  // Check if any part of the password matches the email
+  const [userName, domain] = email.split('@');
+  if (password.includes(userName) || password.includes(domain)) return false;
+  return true;
+};
+
+// Public function
 const activate = async (req, res) => {
   const { token } = req.params;
 
@@ -69,23 +81,21 @@ const register = async (req, res, next) => {
   const userData = req.body;
   let user;
   try {
-    user = await userService.createUser(userData);
+    if (!isValidatePasswordToParticipant(userData.email, userData.password)) {
+      return next(boom.badData('La contraseña no es válida, no cumple el patrón '));
+    }
+    const searchRole = await userGroupService.getRoleByName('Participants');
+    user = await userService.createUser({
+      ...userData,
+      role_uuid: searchRole.uuid,
+    });
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe un usuario con el email introducido'));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
-  }
-
-  try {
-    await activityService.createActivity({
-      action: activityActions.CREATE_USER,
-      author: 'Anonymous',
-      elementAfter: user.toJSON(),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
   }
 
   res.status(201).json(user.toJSON());
@@ -147,8 +157,9 @@ const createMongoUser = async (req, res, next) => {
   try {
     user = await userService.createUser(userToCreate);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe un usuario con el email introducido'));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
@@ -221,8 +232,9 @@ const putUser = async (req, res, next) => {
     delete userData.uuid;
     response = await userService.putUser(userUuid, userData);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe un usuario con el email introducido'));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
