@@ -11,7 +11,9 @@ const logger = require('../../../config/winston');
 // Private functions
 const isValidatePasswordToParticipant = (email, password) => {
   // Supported symbols : [:;!@#$%^&*_=+-?¡¿]
-  const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[:;!@#$%^&*_=+-/?/¡/¿]).{9,}$');
+  const regex = new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[-!$%^&*()_+|~=`{}[\]:";'<>\?,.\/]).{9,}$/,
+  );
   if (!regex.test(password)) {
     return false;
   }
