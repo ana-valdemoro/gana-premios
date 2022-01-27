@@ -3,6 +3,8 @@ const { cloneDeep } = require('lodash');
 
 const { UniqueConstraintError } = require('sequelize');
 
+const { User } = require('../../../models/index');
+
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
@@ -41,11 +43,18 @@ const login = async (req, res, next) => {
   if (!user) {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
-
+  if (user.failed_logins >= 5) {
+    return next(boom.unauthorized('La cuenta ha sido bloqueada'));
+  }
   try {
     const userHasValidPassword = await user.validPassword(password);
 
     if (!userHasValidPassword) {
+      const updateFailed = await User.updateOne(
+        { uuid: user.uuid },
+        { $set: { failed_logins: user.failed_logins + 1 } },
+      );
+      console.log({ updateFailed });
       return next(boom.unauthorized('La contraseña es errónea'));
     }
   } catch (error) {
@@ -65,6 +74,22 @@ const login = async (req, res, next) => {
   return res.json(response);
 };
 
+const unlockAccount = async (req, res, next) => {
+  const { email } = req.params;
+
+  let user;
+
+  try {
+    user = await userService.getUserByEmail(email);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.unauthorized('Usuario no válido'));
+  }
+  const unlockedUser = await User.updateOne({ uuid: user.uuid }, { $set: { failed_logins: 0 } });
+  if (unlockedUser) {
+    return res.status(204).json(user.toJSON());
+  }
+};
 const register = async (req, res, next) => {
   const userData = req.body;
   let user;
@@ -278,4 +303,5 @@ module.exports = {
   putUser,
   deleteUser,
   createMongoUser,
+  unlockAccount,
 };

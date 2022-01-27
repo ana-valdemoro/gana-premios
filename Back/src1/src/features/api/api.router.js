@@ -28,4 +28,7 @@ module.exports = (app) => {
     // eslint-disable-next-line global-require
     require('./activity/activity.router'),
   );
+
+  // Desboquear cuenta
+  app.get(`/${tag}/unlock-account/:email`, userController.unlockAccount);
 };

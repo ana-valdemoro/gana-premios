@@ -6,7 +6,6 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   const user = await userService.getUserByEmail(email);
-
   if (!user) {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
