@@ -11,7 +11,10 @@ const createCampaign = async (data) => {
   return Campaign.create(dataToCreate);
 };
 
+const getCampaigns = (filters) => Campaign.find({ ...filters });
+
 module.exports = {
   toPublic,
   createCampaign,
+  getCampaigns,
 };

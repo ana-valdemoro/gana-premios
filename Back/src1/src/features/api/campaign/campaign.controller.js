@@ -34,6 +34,18 @@ const create = async (req, res, next) => {
   res.status(201).json(campaignService.toPublic(campaign));
 };
 
+const listCampaings = async (req, res, next) => {
+  try {
+    const filters = campaignFilters(req.query, req.user.uuid);
+
+    return res.json(await campaignService.getCampaigns(filters));
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+};
+
 module.exports = {
   create,
+  listCampaings,
 };
