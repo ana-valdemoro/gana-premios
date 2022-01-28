@@ -1,20 +1,12 @@
 const boom = require('@hapi/boom');
 const logger = require('../../../config/winston');
+const campaignFilters = require('./campaign.filters');
 const campaignService = require('./campaign.service');
-const userService = require('../user/user.service');
 
 const create = async (req, res, next) => {
-  const { name, customerUuid, managerUuid, startDate, endDate } = req.body;
-  let manager;
+  const managerUuid = req.user.uuid;
+  const { name, customerUuid, startDate, endDate } = req.body;
   // Check customer existence
-  // Check manager existence
-  try {
-    manager = await userService.getUser(managerUuid);
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badData(error.message));
-  }
-  if (!manager) return next(boom.notFound('No existe el gestor asignado a la campaña'));
 
   let campaign;
   const campaignData = {
