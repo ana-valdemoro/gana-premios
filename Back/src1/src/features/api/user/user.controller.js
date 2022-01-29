@@ -12,6 +12,9 @@ const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
+const sendEmail = require('../../../utils/lib/email');
+// const SendmailTransport = require('nodemailer/lib/sendmail-transport');
+
 const activate = async (req, res) => {
   const { token } = req.params;
 
@@ -55,7 +58,7 @@ const login = async (req, res, next) => {
         { $set: { failed_logins: user.failed_logins + 1 } },
       );
       console.log({ updateFailed });
-      return next(boom.unauthorized('La contraseña es errónea'));
+      return next(boom.unauthorized('La contraseña introducida no es válida'));
     }
   } catch (error) {
     logger.error(`${error}`);
@@ -79,8 +82,12 @@ const unlockAccount = async (req, res, next) => {
 
   let user;
 
+  // let verificationLink;
+
   try {
     user = await userService.getUserByEmail(email);
+    sendEmail();
+    // verificationLink = `http://localhost:9000/api/v1/unlock-account/${email}`;
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.unauthorized('Usuario no válido'));
@@ -90,6 +97,7 @@ const unlockAccount = async (req, res, next) => {
     return res.status(204).json(user.toJSON());
   }
 };
+
 const register = async (req, res, next) => {
   const userData = req.body;
   let user;
