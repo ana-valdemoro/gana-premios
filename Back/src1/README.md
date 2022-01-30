@@ -40,4 +40,4 @@ BOILERPLATE NODE WITH MONGO - FORMACIÓN
 - With logs (./docker/view-docker-web-logs.sh) you can see the progress instalation
 
 # Mongo
-
+- Execute specific seed: node ./src/seeders/<seed-file>

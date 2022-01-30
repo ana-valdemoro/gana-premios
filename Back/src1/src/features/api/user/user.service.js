@@ -17,7 +17,7 @@ const isUserAuthorized = async (user, role) => {
   const [roleResource] = role.split(':');
 
   return (
-    userRights.includes('SUPERADMIN') ||
+    userRights.includes('ADMIN') ||
     userRights.includes(`${roleResource}:all`) ||
     userRights.includes(role)
   );
@@ -73,10 +73,7 @@ const createUser = async (data) => {
   return User.create(dataToCreate);
 };
 
-// const putUser = async (uuid, data) => {
-//   const user = await getUser(uuid);
-//   return user.update(data);
-// };
+const putUser = async (uuid, data) => User.findOneAndUpdate(uuid, data);
 
 // const deleteUser = async (user) => user.destroy();
 
@@ -91,6 +88,6 @@ module.exports = {
   getUserByEmail,
   createUser,
   getUser,
-  //   putUser,
+  putUser,
   //   deleteUser,
 };
