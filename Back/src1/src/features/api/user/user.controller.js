@@ -1,10 +1,5 @@
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
-
-const { UniqueConstraintError } = require('sequelize');
-
-const { User } = require('../../../models/index');
-
 const userService = require('./user.service');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
@@ -96,21 +91,12 @@ const register = async (req, res, next) => {
   try {
     user = await userService.createUser(userData);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe un usuario con el email introducido'));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
-  }
-
-  try {
-    await activityService.createActivity({
-      action: activityActions.CREATE_USER,
-      author: 'Anonymous',
-      elementAfter: user.toJSON(),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
   }
 
   res.status(201).json(user.toJSON());
@@ -172,8 +158,9 @@ const createMongoUser = async (req, res, next) => {
   try {
     user = await userService.createUser(userToCreate);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe un usuario con el email introducido'));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
@@ -246,8 +233,9 @@ const putUser = async (req, res, next) => {
     delete userData.uuid;
     response = await userService.putUser(userUuid, userData);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe un usuario con el email introducido'));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
