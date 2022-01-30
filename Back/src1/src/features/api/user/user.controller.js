@@ -1,11 +1,27 @@
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 const userService = require('./user.service');
+const userGroupService = require('../userGroup/userGroup.service');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+
+// Private functions
+const validatePasswordPattern = (email, password) => {
+  // Supported symbols : [:;!@#$%^&*_=+-?¡¿]
+  const regex = new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[-!$%^&*()_+|~=`{}[\]:";'<>\?,.\/]).{9,}$/,
+  );
+  if (!regex.test(password)) {
+    return false;
+  }
+  // Check if any part of the password matches the email
+  const [userName, domain] = email.split('@');
+  if (password.includes(userName) || password.includes(domain)) return false;
+  return true;
+};
 
 const activate = async (req, res) => {
   const { token } = req.params;
@@ -89,7 +105,14 @@ const register = async (req, res, next) => {
   const userData = req.body;
   let user;
   try {
-    user = await userService.createUser(userData);
+    if (!validatePasswordPattern(userData.email, userData.password)) {
+      return next(boom.badData('La contraseña no es válida, no cumple el patrón '));
+    }
+    const searchRole = await userGroupService.getRoleByName('Participants');
+    user = await userService.createUser({
+      ...userData,
+      role_uuid: searchRole.uuid,
+    });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
       const dupField = Object.keys(error.keyValue)[0];
