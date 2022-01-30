@@ -23,6 +23,17 @@ const validatePasswordPattern = (email, password) => {
   return true;
 };
 
+const updateLoginAttemps = async (user, attempt) => {
+  try {
+    await userService.putUser(user.uuid, {
+      failed_logins: attempt,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+};
+
+// Public functions
 const activate = async (req, res) => {
   const { token } = req.params;
 
@@ -61,12 +72,12 @@ const login = async (req, res, next) => {
     const userHasValidPassword = await user.validPassword(password);
 
     if (!userHasValidPassword) {
-      const updateFailed = await User.updateOne(
-        { uuid: user.uuid },
-        { $set: { failed_logins: user.failed_logins + 1 } },
-      );
-      console.log({ updateFailed });
+      const attempt = user.failed_logins + 1;
+      await updateLoginAttemps(user, attempt);
       return next(boom.unauthorized('La contraseña es errónea'));
+    }
+    if (user.failed_logins > 0) {
+      await updateLoginAttemps(user, 0);
     }
   } catch (error) {
     logger.error(`${error}`);
@@ -96,7 +107,9 @@ const unlockAccount = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.unauthorized('Usuario no válido'));
   }
-  const unlockedUser = await User.updateOne({ uuid: user.uuid }, { $set: { failed_logins: 0 } });
+  const unlockedUser = await userService.putUser(user.uuid, {
+    failed_logins: 0,
+  });
   if (unlockedUser) {
     return res.status(204).json(user.toJSON());
   }
