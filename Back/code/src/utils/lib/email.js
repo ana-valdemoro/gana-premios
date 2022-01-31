@@ -1,9 +1,9 @@
 // const m = require('sendinblue');
 
 const nodemailer = require('nodemailer');
+const jwt = require('../../utils/middleware/jwt');
 
-const sendEmail = async (req, res) => {
-  console.log('entroooooo');
+module.exports =  async function sendEmail (email) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -13,52 +13,31 @@ const sendEmail = async (req, res) => {
       pass: 'tfmruqvjmxvrlggo', // generated gmail password
     },
   });
+  
+     const token = jwt.generateJWT({
+      email
+     });
+   
+    
   const mailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
-    to: req.body.to, // list of receivers
+    to: "chicano.cano@gmail", // list of receivers
     subject: 'Desbloquear cuenta', // Subject line
-    text: 'Pulsa en este link para desbloquear tu cuenta', // plain text body
+    html: `<p>Pulsa en este link para desbloquear tu cuenta</p>
+    <a href="http://localhost:9000/api/v1/unlock-account/${token}">Desbloquea tu cuenta</a>`, // plain html body
   };
   await transporter.sendMail(mailOptions, (error, info) => {
-    console.log('entroo yaaaa');
+    console.log('entroo en sendMail');
     if (error) {
-      res.sendStatus(500);
-      return console.log(error);
+       throw new Error (error)
     }
     console.log('Message %s sent: %s', info.messageId, info.response);
-    res.sendStatus(200);
+    return true
   });
 };
-/* transporter.verify().then(() => {
-    console.log('Ready for send emails');
-  }); */
 
-/* const sendEmail = async (data) => {
-  console.log(data);
-};
 
-const sendForgotPassword = async (user, token) => {
-  const url = `${process.env.FRONT_BASE_URL}/account/${token}`;
-
-  const data = {
-    params: {
-      BOILERPLATE_USERNAME: user.name,
-      BOILERPLATE_URL: url,
-    },
-    subject: 'Petición de restablecimiento de la contraseña',
-    to: [
-      {
-        email: user.email,
-        name: user.name,
-      },
-    ],
-    templateId: 12,
-  };
-
-  return sendEmail(data);
-}; */
-
-module.exports = {
+/* module.exports = {
   sendEmail,
-  //  sendForgotPassword,
-};
+}; 
+  */

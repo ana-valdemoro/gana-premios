@@ -38,7 +38,23 @@ const isUserAuthorized = async (user, role) => {
 //   try {
 //     await sendinblue.sendForgotPassword(user, token);
 //   } catch (error) {
+//     logger.info(`${error}`);const forgotPassword = async (user) => {
+//   const token = jwt.generateJWT({
+//     uuid: user.uuid,
+//     type: 'user',
+//   });
+
+//   try {
+//     await sendinblue.sendForgotPassword(user, token);
+//   } catch (error) {
 //     logger.info(`${error}`);
+//   }
+
+//   return true;
+// };
+
+// const recoveryPassword = async (token, data) => {
+//   // TODO: Send email with token 
 //   }
 
 //   return true;

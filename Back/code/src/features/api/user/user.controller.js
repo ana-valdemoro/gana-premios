@@ -7,6 +7,9 @@ const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
+const sendEmail = require('../../../utils/lib/email');
+
+const jwt = require('../../../utils/middleware/jwt');
 const logger = require('../../../config/winston');
 
 // Private functions
@@ -67,6 +70,10 @@ const login = async (req, res, next) => {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
   if (user.failed_logins >= 5) {
+    const emailSent = await sendEmail(user.email)
+    if (emailSent) {
+      return next(boom.unauthorized('La cuenta ha sido bloqueada y se ha enviado un correo para desbloqeuarla'));
+    }
     return next(boom.unauthorized('La cuenta ha sido bloqueada'));
   }
   try {
@@ -98,22 +105,27 @@ const login = async (req, res, next) => {
 };
 
 const unlockAccount = async (req, res, next) => {
-  const { email } = req.params;
+  const { token } = req.params;
 
   let user;
 
+
   try {
-    user = await userService.getUserByEmail(email);
+    if (token !== '') {
+      const payload = jwt.verifyJWT(token);
+    }
+    user = await userService.getUserByEmail(payload);
+    const unlockedUser = await userService.putUser(user.uuid, {
+      failed_logins: 0,
+    });
+    if (unlockedUser) {
+      return res.status(204).json(user.toJSON());
+    }
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.unauthorized('Usuario no válido'));
   }
-  const unlockedUser = await userService.putUser(user.uuid, {
-    failed_logins: 0,
-  });
-  if (unlockedUser) {
-    return res.status(204).json(user.toJSON());
-  }
+  
 };
 const register = async (req, res, next) => {
   const userData = req.body;
