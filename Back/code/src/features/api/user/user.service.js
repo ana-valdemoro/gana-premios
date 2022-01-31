@@ -5,6 +5,10 @@ const jwt = require('../../../utils/middleware/jwt');
 // const logger = require('../../../config/winston');
 // const sendinblue = require('../../../utils/lib/email');
 
+const ALL = 2;
+const MANAGER_RESOURCES = 1;
+const PARTICIPANTS_RESOURCES = 0;
+
 const toPublic = (user) => user.toJSON();
 
 const getUserRole = async (user) => UserGroup.findOne({ uuid: user.role_uuid });
@@ -90,4 +94,7 @@ module.exports = {
   getUser,
   putUser,
   //   deleteUser,
+  ALL,
+  MANAGER_RESOURCES,
+  PARTICIPANTS_RESOURCES,
 };

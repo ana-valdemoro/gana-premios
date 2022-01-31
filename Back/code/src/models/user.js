@@ -51,6 +51,10 @@ const schema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    priority: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

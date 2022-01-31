@@ -7,6 +7,7 @@ const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+const { PARTICIPANTS_RESOURCES } = require('./user.service');
 
 // Private functions
 const validatePasswordPattern = (email, password) => {
