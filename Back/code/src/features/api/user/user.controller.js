@@ -126,6 +126,7 @@ const register = async (req, res, next) => {
     user = await userService.createUser({
       ...userData,
       role_uuid: searchRole.uuid,
+      priority: PARTICIPANTS_RESOURCES,
     });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
