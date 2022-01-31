@@ -1,13 +1,11 @@
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 const userService = require('./user.service');
-const userGroupService = require('../userGroup/userGroup.service');
 const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
-const { PARTICIPANTS_RESOURCES } = require('./user.service');
 
 // Private functions
 
@@ -101,30 +99,6 @@ const unlockAccount = async (req, res, next) => {
   if (unlockedUser) {
     return res.status(204).json(user.toJSON());
   }
-};
-const register = async (req, res, next) => {
-  const userData = req.body;
-  let user;
-  try {
-    if (!validatePasswordPattern(userData.email, userData.password)) {
-      return next(boom.badData('La contraseña no es válida, no cumple el patrón '));
-    }
-    const searchRole = await userGroupService.getRoleByName('Participants');
-    user = await userService.createUser({
-      ...userData,
-      role_uuid: searchRole.uuid,
-      priority: PARTICIPANTS_RESOURCES,
-    });
-  } catch (error) {
-    if (error.code === 11000 && error.keyPattern) {
-      const dupField = Object.keys(error.keyValue)[0];
-      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
-    }
-    logger.error(`${error}`);
-    return next(boom.badData(error.message));
-  }
-
-  res.status(201).json(user.toJSON());
 };
 
 const forgot = async (req, res) => {
@@ -307,7 +281,6 @@ const deleteUser = async (req, res, next) => {
 module.exports = {
   activate,
   login,
-  register,
   forgot,
   recovery,
   listUsers,
