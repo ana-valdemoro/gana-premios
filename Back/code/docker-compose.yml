@@ -2,7 +2,7 @@ version: '3'
 services:
   mongodb:
     image: mongo
-    container_name: bd_mongo1_boilerplate
+    container_name: bd_mongo_boilerplate_app2
     ports:
     - "27018:27017"
     environment:
@@ -10,7 +10,7 @@ services:
     - PGID=1000
   web:
     build: ./docker
-    container_name: backend_node1_boilerplate
+    container_name: backend_node_boilerplate_app2
     ports:
      - "9000:4000"
     links:
