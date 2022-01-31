@@ -10,19 +10,6 @@ const logger = require('../../../config/winston');
 const { PARTICIPANTS_RESOURCES } = require('./user.service');
 
 // Private functions
-const validatePasswordPattern = (email, password) => {
-  // Supported symbols : [:;!@#$%^&*_=+-?¡¿]
-  const regex = new RegExp(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[-!$%^&*()_+|~=`{}[\]:";'<>\?,.\/]).{9,}$/,
-  );
-  if (!regex.test(password)) {
-    return false;
-  }
-  // Check if any part of the password matches the email
-  const [userName, domain] = email.split('@');
-  if (password.includes(userName) || password.includes(domain)) return false;
-  return true;
-};
 
 const updateLoginAttemps = async (user, attempt) => {
   try {
