@@ -24,58 +24,6 @@ const activate = async (req, res) => {
   });
 };
 
-const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  let user;
-
-  try {
-    user = await userService.getUserByEmail(email);
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.unauthorized('Usuario no válido'));
-  }
-
-  if (!user) {
-    return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
-  }
-
-  if (user.failed_logins >= 5) {
-    return next(boom.unauthorized('La cuenta ha sido bloqueada'));
-  }
-
-  try {
-    const userHasValidPassword = await user.validPassword(password);
-
-    if (!userHasValidPassword) {
-      await userService.incrementLoginAttempts(user.uuid);
-      return next(boom.unauthorized('La contraseña es errónea'));
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badRequest(error.message));
-  }
-
-  try {
-    if (user.failed_logins > 0) {
-      await userService.resetLoginAttempts(user.uuid);
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badRequest(error.message));
-  }
-
-  let response;
-
-  try {
-    response = await user.toAuthJSON();
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badRequest(error.message));
-  }
-
-  return res.json(response);
-};
-
 const unlockAccount = async (req, res, next) => {
   const { email } = req.params;
 
@@ -274,7 +222,6 @@ const deleteUser = async (req, res, next) => {
 
 module.exports = {
   activate,
-  login,
   forgot,
   recovery,
   listUsers,

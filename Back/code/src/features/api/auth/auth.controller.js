@@ -7,17 +7,38 @@ const userGroupService = require('../userGroup/userGroup.service');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
+  let user;
 
-  const user = await userService.getUserByEmail(email);
+  try {
+    user = await userService.getUserByEmail(email);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.unauthorized('Usuario no válido'));
+  }
+
   if (!user) {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
+  }
+
+  if (user.failed_logins >= 5) {
+    return next(boom.unauthorized('La cuenta ha sido bloqueada'));
   }
 
   try {
     const userHasValidPassword = await user.validPassword(password);
 
     if (!userHasValidPassword) {
+      await userService.incrementLoginAttempts(user.uuid);
       return next(boom.unauthorized('La contraseña es errónea'));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badRequest(error.message));
+  }
+
+  try {
+    if (user.failed_logins > 0) {
+      await userService.resetLoginAttempts(user.uuid);
     }
   } catch (error) {
     logger.error(`${error}`);
