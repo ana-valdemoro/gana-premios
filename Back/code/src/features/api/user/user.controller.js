@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const boom = require('@hapi/boom');
 const { cloneDeep } = require('lodash');
 const userService = require('./user.service');
