@@ -7,18 +7,6 @@ const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
-// Private functions
-
-const updateLoginAttemps = async (user, attempt) => {
-  try {
-    await userService.putUser(user.uuid, {
-      failed_logins: attempt,
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-  }
-};
-
 // Public functions
 const activate = async (req, res) => {
   const { token } = req.params;
@@ -38,7 +26,6 @@ const activate = async (req, res) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-
   let user;
 
   try {
@@ -51,19 +38,26 @@ const login = async (req, res, next) => {
   if (!user) {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
+
   if (user.failed_logins >= 5) {
     return next(boom.unauthorized('La cuenta ha sido bloqueada'));
   }
+
   try {
     const userHasValidPassword = await user.validPassword(password);
 
     if (!userHasValidPassword) {
-      const attempt = user.failed_logins + 1;
-      await updateLoginAttemps(user, attempt);
+      await userService.incrementLoginAttempts(user.uuid);
       return next(boom.unauthorized('La contraseña es errónea'));
     }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badRequest(error.message));
+  }
+
+  try {
     if (user.failed_logins > 0) {
-      await updateLoginAttemps(user, 0);
+      await userService.resetLoginAttempts(user.uuid);
     }
   } catch (error) {
     logger.error(`${error}`);

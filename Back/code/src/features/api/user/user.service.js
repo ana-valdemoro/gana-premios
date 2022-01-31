@@ -79,6 +79,11 @@ const createUser = async (data) => {
 
 const putUser = async (uuid, data) => User.findOneAndUpdate(uuid, data);
 
+const incrementLoginAttempts = async (uuid) =>
+  User.findOneAndUpdate(uuid, { $inc: { failed_logins: 1 } });
+
+const resetLoginAttempts = async (uuid) => User.findOneAndUpdate(uuid, { failed_logins: 0 });
+
 // const deleteUser = async (user) => user.destroy();
 
 module.exports = {
@@ -93,6 +98,8 @@ module.exports = {
   createUser,
   getUser,
   putUser,
+  incrementLoginAttempts,
+  resetLoginAttempts,
   //   deleteUser,
   ALL,
   MANAGER_RESOURCES,
