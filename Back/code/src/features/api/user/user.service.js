@@ -5,6 +5,10 @@ const jwt = require('../../../utils/middleware/jwt');
 // const logger = require('../../../config/winston');
 // const sendinblue = require('../../../utils/lib/email');
 
+const ALL = 2;
+const MANAGER_RESOURCES = 1;
+const PARTICIPANTS_RESOURCES = 0;
+
 const toPublic = (user) => user.toJSON();
 
 const getUserRole = async (user) => UserGroup.findOne({ uuid: user.role_uuid });
@@ -93,6 +97,11 @@ const createUser = async (data) => {
 
 const putUser = async (uuid, data) => User.findOneAndUpdate(uuid, data, { new: true });
 
+const incrementLoginAttempts = async (uuid) =>
+  User.findOneAndUpdate(uuid, { $inc: { failed_logins: 1 } });
+
+const resetLoginAttempts = async (uuid) => User.findOneAndUpdate(uuid, { failed_logins: 0 });
+
 // const deleteUser = async (user) => user.destroy();
 
 module.exports = {
@@ -108,5 +117,10 @@ module.exports = {
   createUser,
   getUser,
   putUser,
+  incrementLoginAttempts,
+  resetLoginAttempts,
   //   deleteUser,
+  ALL,
+  MANAGER_RESOURCES,
+  PARTICIPANTS_RESOURCES,
 };

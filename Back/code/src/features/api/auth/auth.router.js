@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
+const authController = require('./auth.controller');
 const userController = require('../user/user.controller');
 const userValidator = require('../user/user.validator');
 
@@ -9,10 +10,10 @@ const userValidator = require('../user/user.validator');
 router.post('/activate/:token', userValidator.activateUser, userController.activate);
 
 // Login del usuario
-router.post('/login', userValidator.loginUser, userController.login);
+router.post('/login', userValidator.loginUser, authController.login);
 
 // Register user
-router.post('/register', userValidator.createUser, userController.register);
+router.post('/register', userValidator.createUser, authController.register);
 
 // Send email for recovery pass (User)
 router.post('/forgot', userValidator.emailRecoveryUser, userController.forgot);

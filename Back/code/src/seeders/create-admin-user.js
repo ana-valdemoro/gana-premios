@@ -2,7 +2,6 @@
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const db = require('../config/db');
-
 const { User, UserGroup } = require('../models/index');
 
 // connection with database
@@ -25,6 +24,7 @@ const seedDB = async () => {
     role_uuid: adminGroup.uuid,
     token: '',
     active: true,
+    priority: 2,
   };
   await User.deleteMany({});
   await User.insertMany(seedAdminShema);
