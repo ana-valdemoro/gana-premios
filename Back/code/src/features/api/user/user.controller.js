@@ -6,9 +6,6 @@ const activityService = require('../activity/activity.service');
 const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
-const sendEmail = require('../../../utils/lib/email');
-
-const jwt = require('../../../utils/middleware/jwt');
 const logger = require('../../../config/winston');
 
 // Public functions
