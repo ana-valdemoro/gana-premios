@@ -5,6 +5,7 @@ const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
 const sendEmail = require('../../../utils/lib/email');
+const jwt = require('../../../utils/middleware/jwt');
 
 const updateLoginAttemps = async (user, attempt) => {
   try {
@@ -76,7 +77,9 @@ const unlockAccount = async (req, res, next) => {
 
   try {
     if (token !== '') {
-      user = await userService.getUserByToken(token);
+      const payload = jwt.verifyJWT(token);
+      console.log({ payload });
+      user = await userService.getUserByEmail(payload.email);
     }
     console.log(user);
     if (!user) {
@@ -84,7 +87,7 @@ const unlockAccount = async (req, res, next) => {
     }
     const unlockedUser = await userService.putUser(user.uuid, {
       failed_logins: 0,
-      token: '',
+      // token: '',
       active: true,
     });
     console.log(unlockedUser);
