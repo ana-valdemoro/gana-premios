@@ -1,7 +1,7 @@
 // const m = require('sendinblue');
 
 const nodemailer = require('nodemailer');
-const jwt = require('../../utils/middleware/jwt');
+const jwt = require('../middleware/jwt');
 
 module.exports =  async function sendEmail (email) {
   const transporter = nodemailer.createTransport({

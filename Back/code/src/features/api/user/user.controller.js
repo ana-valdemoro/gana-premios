@@ -110,7 +110,7 @@ const unlockAccount = async (req, res, next) => {
   let user;
 
 
-  try {
+        try {
     if (token !== '') {
       const payload = jwt.verifyJWT(token);
     }
