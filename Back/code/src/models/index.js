@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 // const Activity = require('./activity');
 const UserSchema = require('./user');
 const UserGroupSchema = require('./userGroup');
+const ClientSchema = require('./client');
 
 const models = {
   //   Activity: Activity.init(Sequelize, sequelize),
   User: mongoose.model('User', UserSchema),
   UserGroup: mongoose.model('UserGroups', UserGroupSchema),
+  Client: mongoose.model('Client', ClientSchema),
 };
 
 // Object.values(models)
