@@ -22,6 +22,6 @@ router.post('/forgot', userValidator.emailRecoveryUser, userController.forgot);
 router.post('/recovery', userValidator.recoveryUser, userController.recovery);
 
 // Desbloquear la contraseña
-router.post('/unlock/:token', userValidator.unlockUser, userController.unlockAccount);
+router.get('/unlock/:token', userValidator.unlockUser, authController.unlockAccount);
 
 module.exports = router;
