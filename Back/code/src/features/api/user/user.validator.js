@@ -55,6 +55,17 @@ const activateUser = validate(
   },
 );
 
+const unlockUser = validate(
+  {
+    body: joi.object({}),
+  },
+  {
+    context: false,
+    statusCode: 422,
+    keyByField: true,
+  },
+);
+
 const loginUser = validate(
   {
     body: joi.object({
@@ -104,4 +115,5 @@ module.exports = {
   loginUser,
   emailRecoveryUser,
   recoveryUser,
+  unlockUser,
 };

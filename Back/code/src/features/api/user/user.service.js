@@ -23,6 +23,8 @@ const isUserAuthorized = async (user, role) => {
   );
 };
 
+const getUserByToken = async (token) => User.findOne({ token });
+
 // const activate = async (token, data) => {
 //   const payload = jwt.verifyJWT(token);
 //   const user = await User.findOne({ where: { uuid: payload.uuid } });
@@ -89,7 +91,7 @@ const createUser = async (data) => {
   return User.create(dataToCreate);
 };
 
-const putUser = async (uuid, data) => User.findOneAndUpdate(uuid, data);
+const putUser = async (uuid, data) => User.findOneAndUpdate(uuid, data, { new: true });
 
 // const deleteUser = async (user) => user.destroy();
 
@@ -97,6 +99,7 @@ module.exports = {
   toPublic,
   getUserRole,
   isUserAuthorized,
+  getUserByToken,
   //   activate,
   //   forgotPassword,
   //   recoveryPassword,
