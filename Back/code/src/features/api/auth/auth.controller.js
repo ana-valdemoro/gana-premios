@@ -4,6 +4,7 @@ const logger = require('../../../config/winston');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
+const sendEmail = require('../../../utils/lib/email');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -20,8 +21,20 @@ const login = async (req, res, next) => {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
 
-  if (user.failed_logins >= 5) {
-    return next(boom.unauthorized('La cuenta ha sido bloqueada'));
+  try {
+    if (user.failed_logins >= 5) {
+      const emailSent = await sendEmail(user.email);
+      if (emailSent) {
+        return next(
+          boom.unauthorized(
+            'La cuenta ha sido bloqueada y se ha enviado un correo para desbloqeuarla',
+          ),
+        );
+      }
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.unauthorized('Usuario no válido'));
   }
 
   try {
