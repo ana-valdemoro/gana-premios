@@ -4,14 +4,16 @@ const mongoose = require('mongoose');
 // const Activity = require('./activity');
 const UserSchema = require('./user');
 const UserGroupSchema = require('./userGroup');
+const PromotionSchema = require('./promotion');
 
 const models = {
   //   Activity: Activity.init(Sequelize, sequelize),
   User: mongoose.model('User', UserSchema),
   UserGroup: mongoose.model('UserGroups', UserGroupSchema),
+  Promotion: mongoose.model('Promotion', PromotionSchema),
 };
 
-// Object.values(models)
+// Object.values(models)S
 //   .filter((model) => typeof model.associate === 'function')
 //   .forEach((model) => model.associate(models));
 

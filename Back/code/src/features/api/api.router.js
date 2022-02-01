@@ -28,6 +28,12 @@ module.exports = (app) => {
     // eslint-disable-next-line global-require
     require('./activity/activity.router'),
   );
+  app.use(
+    `/${tag}/promotions`,
+    authorize,
+    // eslint-disable-next-line global-require
+    require('./promotion/promotion.router'),
+  );
 
   // Desboquear cuenta
   app.get(`/${tag}/unlock-account/:email`, userController.unlockAccount);
