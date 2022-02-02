@@ -44,7 +44,7 @@ const createPromotion = async (req, res, next) => {
 
   let promotion;
   try {
-    promotion = await promotionService.createClient(promotionData);
+    promotion = await promotionService.createPromotion(promotionData);
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
       return next(boom.badData('Ya existe esta promoción'));
@@ -54,10 +54,10 @@ const createPromotion = async (req, res, next) => {
   }
   /* try {
     await activityService.createActivity({
-      action: activityActions.CREATE_CLIENT,
+      action: activityActions.CREATE_PROMOTION,
       author: req.user.email,
       elementBefore: JSON.stringify({}),
-      elementAfter: JSON.stringify(client.toJSON()),
+      elementAfter: JSON.stringify(promotion.toJSON()),
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -107,7 +107,7 @@ const deletePromotion = async (req, res, next) => {
   const promotionBeforeDelete = cloneDeep(promotion);
 
   try {
-    await promotionService.deleteClient(promotion, req.client._id);
+    await promotionService.deletePromotion(promotion, req.promotion._id);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
