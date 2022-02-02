@@ -1,12 +1,9 @@
 /* eslint-disable import/no-unresolved */
 const boom = require('@hapi/boom');
-const { cloneDeep } = require('lodash');
 
 const { UniqueConstraintError } = require('sequelize');
 
 const promotionService = require('./promotion.service');
-const activityService = require('../activity/activity.service');
-const activityActions = require('./promotion.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const promotionFilters = require('./promotion.filters');
 const logger = require('../../../config/winston');
@@ -77,39 +74,16 @@ const putPromotion = async (req, res, next) => {
     return next(boom.badData(error.message));
   }
 
-  try {
-    await activityService.createActivity({
-      action: activityActions.UPDATE_PROMOTION,
-      author: req.promotion.name,
-      elementBefore: JSON.stringify(promotion.toJSON()),
-      elementAfter: JSON.stringify(response.toJSON()),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-  }
-
   res.json(promotionService.toPublic(response));
 };
 
 const deletePromotion = async (req, res, next) => {
   const { promotion } = res.locals;
-  const promotionBeforeDelete = cloneDeep(promotion);
-
   try {
     await promotionService.deletePromotion(promotion, req.promotion._id);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
-  }
-
-  try {
-    await activityService.createActivity({
-      action: activityActions.DELETE_PROMOTION,
-      author: req.promotion.toJSON(),
-      elementBefore: promotionBeforeDelete.toJSON(),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
   }
 
   res.status(200).json('La promoción ha sido borrada correctamente');
