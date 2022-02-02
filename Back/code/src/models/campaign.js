@@ -12,7 +12,7 @@ const schema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    customer_uuid: {
+    client_uuid: {
       required: true,
       type: String,
     },

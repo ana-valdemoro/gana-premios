@@ -6,7 +6,7 @@ const createCampaign = validate(
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
       name: joi.string().min(20).max(250).required(),
-      customerUuid: joi.string().uuid().required(),
+      clientUuid: joi.string().uuid().required(),
       startDate: joi.date().required(),
       endDate: joi.date().greater(joi.ref('startDate')).required(),
     }),

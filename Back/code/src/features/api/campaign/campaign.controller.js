@@ -2,20 +2,33 @@ const boom = require('@hapi/boom');
 const logger = require('../../../config/winston');
 const campaignFilters = require('./campaign.filters');
 const campaignService = require('./campaign.service');
+const clientService = require('../client/client.service');
 
 const create = async (req, res, next) => {
   const managerUuid = req.user.uuid;
-  const { name, customerUuid, startDate, endDate } = req.body;
-  // Check customer existence
+  const { name, clientUuid, startDate, endDate } = req.body;
+  let client;
+
+  try {
+    client = await clientService.getClient(clientUuid);
+
+    if(!client){
+      return next(boom.badData('El cliente no existe'));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
 
   let campaign;
   const campaignData = {
     name,
-    customer_uuid: customerUuid,
+    client_uuid: clientUuid,
     manager_uuid: managerUuid,
     start_date: startDate,
     end_date: endDate,
   };
+  
   try {
     campaign = await campaignService.createCampaign(campaignData);
   } catch (error) {
