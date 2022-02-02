@@ -28,7 +28,7 @@ module.exports = async function sendEmail(email) {
     <p>Hola, tu cuenta ha sido bloqueda por haber superado el máximo de intentos en ingresar tu
       contraseña. Pulse en el siguiente enlace para desbloquearla.
     </p>
-    <button><a href='http://localhost:9000/api/v1/auth/unlock/${token}'>Desbloquea tu cuenta</a></button>`, // plain html body
+    <button style="color: #e84393"><a href='http://localhost:9000/api/v1/auth/unlock/${token}'>Desbloquea tu cuenta</a></button>`, // plain html body
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
