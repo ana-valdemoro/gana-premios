@@ -7,6 +7,7 @@ const passport = require('passport');
 const boom = require('@hapi/boom');
 const helmet = require('helmet');
 const _ = require('lodash');
+
 const config = require('./config');
 const logger = require('./config/winston');
 const { name } = require('../package.json');
@@ -38,7 +39,8 @@ app.get('/ping', async (req, res) =>
     uptime: process.uptime(),
     db: mongoose.connection.readyState,
     // cache: redisClient.connected
-  })); // eslint-disable-line
+  }),
+); // eslint-disable-line
 
 app.use(cors());
 app.use(bodyParser.json());

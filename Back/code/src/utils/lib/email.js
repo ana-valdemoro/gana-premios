@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const nodemailer = require('nodemailer');
+
 const jwt = require('../middleware/jwt');
 
 module.exports = async function sendEmail(email) {
@@ -23,8 +24,11 @@ module.exports = async function sendEmail(email) {
     /* html: `<p>Pulsa en este link para desbloquear tu cuenta</p>
     // eslint-disable-next-line max-len
     <a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a>`, */ // plain html body
-    html: `<p>Pulsa en este link para desbloquear tu cuenta</p>
-    <a href="http://localhost:9000/api/v1/auth/unlock/${token}">Desbloquea tu cuenta</a>`, // plain html body
+    html: `<h1>Desbloqueo de tu cuenta</h1>
+    <p>Hola, tu cuenta ha sido bloqueda por haber superado el máximo de intentos en ingresar tu
+      contraseña. Pulse en el siguiente enlace para desbloquearla.
+    </p>
+    <button><a href='http://localhost:9000/api/v1/auth/unlock/${token}'>Desbloquea tu cuenta</a></button>`, // plain html body
   };
 
   transporter.sendMail(mailOptions, (error, info) => {

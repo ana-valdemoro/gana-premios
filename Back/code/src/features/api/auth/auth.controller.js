@@ -33,7 +33,10 @@ const login = async (req, res, next) => {
   }
   if (user.failed_logins >= 5) {
     const emailSent = await sendEmail(user.email);
-    if (emailSent) {
+    const lockedUser = await userService.putUser(user.uuid, {
+      active: false,
+    });
+    if (emailSent && lockedUser) {
       return next(
         boom.unauthorized(
           'La cuenta ha sido bloqueada y se ha enviado un correo para desbloqeuarla',
