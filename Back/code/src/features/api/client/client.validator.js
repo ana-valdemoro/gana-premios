@@ -9,7 +9,7 @@ const createClient = validate(
       // eslint-disable-next-line newline-per-chained-call
       responsable: joi.string().email().required(),
       // eslint-disable-next-line newline-per-chained-call
-      number_promotion_active: joi.number().required(),
+      number_promotion_active: joi.number().min(1).max(10).required(),
     }),
   },
   {
@@ -25,7 +25,7 @@ const putClient = validate(
       // eslint-disable-next-line newline-per-chained-call
       name: joi.string().alphanum().min(3).max(30),
       responsable: joi.string().email().required(),
-      nnumber_promotion_active: joi.number().required(),
+      nnumber_promotion_active: joi.number().min(1).max(10).required(),
     }),
   },
   {
