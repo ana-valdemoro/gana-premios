@@ -17,12 +17,11 @@ const schema = new mongoose.Schema(
       unique: true,
     },
     campaign: {
-      required: true,
       type: String,
     },
-    promotion: {
-      type: String,
-      default: '',
+    number_promotion_active: {
+      required: true,
+      type: Number,
     },
     active: {
       required: true,
