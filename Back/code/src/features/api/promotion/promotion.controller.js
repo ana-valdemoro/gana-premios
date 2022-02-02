@@ -53,29 +53,33 @@ const createPromotion = async (req, res, next) => {
   res.status(201).json(promotionService.toPublic(promotion));
 };
 
-const putPromotion = async (req, res, next) => {
-  let { promotion } = req;
+const updatePromotion = async (req, res, next) => {
+  let response;
+  let promotion;
+
   if (res.locals && res.locals.promotion) {
-    // eslint-disable-next-line prefer-destructuring
     promotion = res.locals.promotion;
   }
 
-  const promotionData = req.body;
-  let response;
+  const promotionData = {
+    ...req.body,
+    uuid: promotion.uuid,
+    active: promotion.active,
+    deleted: promotion.deleted,
+    status: promotion.status,
+    promotion_history_uuid: promotion.promotion_history_uuid,
+    uuid_participants: promotion.uuid_participants,
+    additional_information: promotion.additional_information,
+  };
 
   try {
-    const promotionUuid = promotion.uuid;
-    delete promotionData.uuid;
-    response = await promotionService.putPromotion(promotionUuid, promotionData);
+    response = await promotionService.putPromotion(promotion.uuid, promotionData);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe esta promoción'));
-    }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
 
-  res.json(promotionService.toPublic(response));
+  return res.json(promotionService.toPublic(response));
 };
 
 const deletePromotion = async (req, res, next) => {
@@ -95,6 +99,6 @@ module.exports = {
   listPromotions,
   getPromotion,
   createPromotion,
-  putPromotion,
+  updatePromotion,
   deletePromotion,
 };

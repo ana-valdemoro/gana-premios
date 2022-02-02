@@ -12,7 +12,7 @@ async function loadPromotion(req, res, next) {
   try {
     promotion = await service.getPromotion(promotionUuid);
   } catch (error) {
-    return next(boom.notFound('Promoción no encontrada'));
+    return next(boom.badImplementation(error.message));
   }
 
   if (!promotion) return next(boom.notFound('Promoción no encontrada'));

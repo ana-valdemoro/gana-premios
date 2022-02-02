@@ -31,7 +31,7 @@ router.put(
   authorization('promotions:update'),
   validator.putPromotion,
   middleware.loadPromotion,
-  promotionController.putPromotion,
+  promotionController.updatePromotion,
 );
 
 // Borrar una promoción
