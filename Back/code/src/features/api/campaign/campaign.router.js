@@ -20,5 +20,14 @@ router.post(
 // Obtener una campaña
 router.get('/:campaignUuid', authorization('campaigns:view'), middleware.loadCampaign, campaignController.getCampaing);
 
+// Editar una campaña
+router.put(
+  '/:campaignUuid',
+  authorization('campaigns:update'),
+  validator.putCampaign,
+  middleware.loadCampaign,
+  campaignController.updateCampaign,
+);
+
 
 module.exports = router;

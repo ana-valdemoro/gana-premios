@@ -100,8 +100,27 @@ const getCampaing = async (req, res, next) => {
   }
 };
 
+const updateCampaign = async (req, res, next) => {
+  let { campaign } = res.locals;
+
+  const campaignData = req.body;
+  let response;
+
+  try {
+    const campaignUuid = campaign.uuid;
+    delete campaignData.uuid;
+    response = await campaignService.putCampaign(campaignUuid, campaignData);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
+  }
+
+  return res.json(campaignService.toPublic(response));
+};
+
 module.exports = {
   create,
   listCampaings,
   getCampaing,
+  updateCampaign,
 };
