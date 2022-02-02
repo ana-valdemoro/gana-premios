@@ -40,14 +40,37 @@ const create = async (req, res, next) => {
 };
 
 const listCampaings = async (req, res, next) => {
-  try {
-    const filters = campaignFilters(req.query, req.user.uuid);
+  let campaings;
+  const filters = campaignFilters(req.query, req.user.uuid);
+  const listCampaigns = [];
 
-    return res.json(await campaignService.getCampaigns(filters));
+  try {
+    campaings = await campaignService.getCampaigns(filters);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
+  
+  for (const campaign of campaings) {
+    try {
+      let client = await clientService.getClient(campaign.client_uuid);
+      console.log(client);
+      if(!client){
+        logger.error(`El cliente no existe`);
+      }else{
+        let campaignPublic = await campaignService.toPublic(campaign);
+        listCampaigns.push({ ...campaignPublic,client})
+      }
+
+    } catch (error) {
+      logger.error(`${error}`);
+      return next(boom.badImplementation(error.message));
+    }
+
+  }
+
+
+  return res.json(listCampaigns);
 };
 
 const getCampaing = async (req, res, next) => {
