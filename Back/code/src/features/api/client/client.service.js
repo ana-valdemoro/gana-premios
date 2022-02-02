@@ -6,7 +6,7 @@ const { Client } = require('../../../models/index');
 
 // const logger = require('../../../config/winston');
 
-// const toPublic = (client) => client.toJSON();
+const toPublic = (client) => client.toJSON();
 
 const getClients = async (filters, options) =>
   Client.find({ where: filters, client: options.client });
@@ -26,7 +26,7 @@ const putClient = async (uuid, data) => {
 const deleteClient = async (client) => client.remove();
 
 module.exports = {
-  // toPublic,
+  toPublic,
   getClients,
   getClient,
   createClient,

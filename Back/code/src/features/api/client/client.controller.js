@@ -24,7 +24,6 @@ const listClients = async (req, res, next) => {
 };
 
 const getClient = async (req, res, next) => {
-  console.log('holaaaaaa');
   const { clientUuid } = req.params;
   console.log(clientUuid);
   try {

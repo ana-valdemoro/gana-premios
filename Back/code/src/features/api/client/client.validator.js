@@ -9,7 +9,7 @@ const createClient = validate(
       // eslint-disable-next-line newline-per-chained-call
       responsable: joi.string().email().required(),
       // eslint-disable-next-line newline-per-chained-call
-      campaign: joi.string().alphanum().min(3).max(30).required(),
+      campaign: joi.string().min(3).max(30).required(),
     }),
   },
   {

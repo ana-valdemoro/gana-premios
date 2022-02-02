@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const jwt = require('../middleware/jwt');
 
 module.exports = async function sendEmail(email) {
-  const url = "http://localhost:9000/api/v1/";
+  const url = 'http://localhost:9000/api/v1/';
   const transporter = nodemailer.createTransport({
     host: 'smtp.mailtrap.io',
     port: 2525,
