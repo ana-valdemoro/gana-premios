@@ -103,13 +103,17 @@ const getCampaing = async (req, res, next) => {
 const updateCampaign = async (req, res, next) => {
   let { campaign } = res.locals;
 
-  const campaignData = req.body;
+  const campaignData = { 
+    ...req.body, 
+    uuid: campaign.uuid,
+    manager_uuid: campaign.manager_uuid,
+    active: campaign.active,
+    deleted: campaign.deleted,
+   };
   let response;
 
   try {
-    const campaignUuid = campaign.uuid;
-    delete campaignData.uuid;
-    response = await campaignService.putCampaign(campaignUuid, campaignData);
+    response = await campaignService.putCampaign(campaign.uuid, campaignData);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badData(error.message));

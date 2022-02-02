@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema(
   {
     uuid: {
-      required: true,
       type: String,
       unique: true,
     },
@@ -23,7 +22,7 @@ const schema = new mongoose.Schema(
     active: {
       required: true,
       type: Boolean,
-      default: false,
+      default: true,
     },
     deleted: {
       required: true,

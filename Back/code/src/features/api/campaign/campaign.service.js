@@ -15,7 +15,7 @@ const getCampaigns = (filters) => Campaign.find({ ...filters });
 
 const getCampaign = (uuid) => Campaign.findOne({ uuid });
 
-const putCampaign = async (uuid, data) => Campaign.findOneAndUpdate(uuid, data, { new: true });
+const putCampaign = async (uuid, data) => Campaign.findOneAndUpdate(uuid, { $set: data }, { new: true });
 
 module.exports = {
   toPublic,
