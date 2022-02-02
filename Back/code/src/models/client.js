@@ -20,11 +20,6 @@ const schema = new mongoose.Schema(
       required: true,
       type: Number,
     },
-    active: {
-      required: true,
-      type: Boolean,
-      default: false,
-    },
     deleted: {
       required: true,
       type: Boolean,
