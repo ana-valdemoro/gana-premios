@@ -28,7 +28,7 @@ const create = async (req, res, next) => {
     start_date: startDate,
     end_date: endDate,
   };
-  
+
   try {
     campaign = await campaignService.createCampaign(campaignData);
   } catch (error) {
@@ -51,10 +51,26 @@ const listCampaings = async (req, res, next) => {
 };
 
 const getCampaing = async (req, res, next) => {
+  let { campaign } = res.locals;
+
   try {
-    if (res.locals && res.locals.campaign) {
-      return res.json(await campaignService.toPublic(res.locals.campaign));
+    client = await clientService.getClient(campaign.client_uuid);
+
+    if(!client){
+      return next(boom.badData('El cliente no existe'));
     }
+
+    newCampaign = {
+      ...campaign,
+      client
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    return res.json(newCampaign);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));

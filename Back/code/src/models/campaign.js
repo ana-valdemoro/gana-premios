@@ -38,10 +38,6 @@ const schema = new mongoose.Schema(
       required: true,
       type: Date,
     },
-    promotions: {
-      type: Array,
-      default: [],
-    },
   },
   {
     timestamps: true,
