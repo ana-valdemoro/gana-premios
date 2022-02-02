@@ -1,3 +1,4 @@
+/* eslint-disable newline-per-chained-call */
 const joi = require('joi');
 const { validate } = require('express-validation');
 

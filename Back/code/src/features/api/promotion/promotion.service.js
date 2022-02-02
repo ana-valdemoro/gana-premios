@@ -35,8 +35,3 @@ module.exports = {
   FINISHED,
   DESERTED,
 };
-
-module.exports = {
-  toPublic,
-  createPromotion,
-};
