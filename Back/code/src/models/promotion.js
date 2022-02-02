@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
-const { DRAFT } = require('..');
 
 const promotionSchema = new mongoose.Schema(
   {
@@ -32,8 +31,8 @@ const promotionSchema = new mongoose.Schema(
       type: String,
     },
     start_date: {
-      type: Date,
       required: true,
+      type: Date,
     },
     end_date: {
       required: true,
@@ -46,8 +45,8 @@ const promotionSchema = new mongoose.Schema(
     },
     status: {
       required: true,
-      type: String,
-      default: DRAFT,
+      type: Number,
+      default: 0,
     },
     participation_rules_url: {
       required: true,
@@ -58,14 +57,16 @@ const promotionSchema = new mongoose.Schema(
       default: -1,
     },
     type: {
-      type: String,
       required: true,
+      type: String,
     },
     additional_information: {
       type: Object,
+      default: {},
     },
     uuid_participants: {
       type: [String],
+      default: [],
     },
     promotion_history_uuid: {
       type: String,

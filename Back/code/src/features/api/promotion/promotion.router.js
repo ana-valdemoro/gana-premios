@@ -17,19 +17,11 @@ router.post(
 // Listar las promociones paginadas
 router.get('/', authorization('promotions:view'), promotionController.listPromotions);
 
-// Crear una promoción
-router.post(
-  '/',
-  authorization('prmotions:create'),
-  validator.createPromotion,
-  promotionController.createPromotion,
-);
-
 // Editar una promoción
 router.put(
   '/:promotionUuid',
   authorization('promotions:update'),
-  validator.putPromotion,
+  // validator.putPromotion,
   middleware.loadPromotion,
   promotionController.putPromotion,
 );
@@ -38,7 +30,7 @@ router.put(
 router.delete(
   '/:promotionUuid',
   authorization('promotions:delete'),
-  validator.deletePromotion,
+  // validator.deletePromotion,
   middleware.loadPromotion,
   promotionController.deletePromotion,
 );

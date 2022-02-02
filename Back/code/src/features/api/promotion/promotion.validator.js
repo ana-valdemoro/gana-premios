@@ -6,14 +6,16 @@ const createPromotion = validate(
   {
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
-      promoImageUrl: joi.string().alphanum().min(3).max(30).required(),
-      prizeImageUrl: joi.string().alphanum().min(3).max(30).required(),
-      prizeDescription: joi.string().alphanum().min(20).max(500).required(),
-      prizeTitle: joi.string().alphanum().min(20).max(500).required(),
-      startDate: joi.string().alphanum().min(3).max(30).required(),
-      finishDate: joi.string().alphanum().min(3).max(30).required(),
-      status: joi.string().alphanum().min(3).max(30).required(),
-      pdffUrl: joi.string().alphanum().min(3).max(30).required(),
+      promotion_image_url: joi.string().required(),
+      prize_image_url: joi.string().required(),
+      prize_title: joi.string().min(20).max(250).required(),
+      prize_description: joi.string().min(20).max(500).required(),
+      campaign_uuid: joi.string().uuid(),
+      start_date: joi.date().required(),
+      end_date: joi.date().greater(joi.ref('start_date')).required(),
+      participation_rules_url:  joi.string().required(),
+      max_number_participants: joi.number().integer().min(1),
+      type: joi.string().required(), 
     }),
   },
   {

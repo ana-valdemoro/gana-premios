@@ -52,17 +52,6 @@ const createPromotion = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
-  /* try {
-    await activityService.createActivity({
-      action: activityActions.CREATE_PROMOTION,
-      author: req.user.email,
-      elementBefore: JSON.stringify({}),
-      elementAfter: JSON.stringify(promotion.toJSON()),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-  } */
-
   res.status(201).json(promotionService.toPublic(promotion));
 };
 
