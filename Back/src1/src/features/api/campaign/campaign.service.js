@@ -13,8 +13,11 @@ const createCampaign = async (data) => {
 
 const getCampaigns = (filters) => Campaign.find({ ...filters });
 
+const getCampaign = (uuid) => Campaign.findOne({ uuid });
+
 module.exports = {
   toPublic,
   createCampaign,
   getCampaigns,
+  getCampaign,
 };

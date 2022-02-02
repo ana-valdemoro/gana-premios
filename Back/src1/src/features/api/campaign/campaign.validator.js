@@ -17,16 +17,6 @@ const createCampaign = validate(
     keyByField: true,
   },
 );
-      startDate: joi.date().required(),
-      endDate: joi.date().greater(joi.ref('startDate')).required(),
-    }),
-  },
-  {
-    context: false,
-    statusCode: 422,
-    keyByField: true,
-  },
-);
 
 module.exports = {
   createCampaign,

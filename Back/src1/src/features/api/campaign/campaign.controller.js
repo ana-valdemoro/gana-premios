@@ -37,7 +37,19 @@ const listCampaings = async (req, res, next) => {
   }
 };
 
+const getCampaing = async (req, res, next) => {
+  try {
+    if (res.locals && res.locals.campaign) {
+      return res.json(await campaignService.toPublic(res.locals.campaign));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+};
+
 module.exports = {
   create,
   listCampaings,
+  getCampaing,
 };
