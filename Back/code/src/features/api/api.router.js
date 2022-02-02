@@ -28,5 +28,16 @@ module.exports = (app) => {
     // eslint-disable-next-line global-require
     require('./activity/activity.router'),
   );
-
+  app.use(
+    `/${tag}/clients`,
+    authorize,
+    // eslint-disable-next-line global-require
+    require('./client/client.router'),
+  );
+  app.use(
+    `/${tag}/campaigns`,
+    authorize,
+    // eslint-disable-next-line global-require
+    require('./campaign/campaign.router'),
+  );
 };
