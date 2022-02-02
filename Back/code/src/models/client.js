@@ -16,9 +16,6 @@ const schema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    campaign: {
-      type: String,
-    },
     number_promotion_active: {
       required: true,
       type: Number,
