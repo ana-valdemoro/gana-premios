@@ -4,6 +4,7 @@ const boom = require('@hapi/boom');
 const { UniqueConstraintError } = require('sequelize');
 
 const promotionService = require('./promotion.service');
+
 const queryOptions = require('../../../utils/queryOptions');
 const promotionFilters = require('./promotion.filters');
 const logger = require('../../../config/winston');
@@ -24,7 +25,7 @@ const getPromotion = async (req, res, next) => {
   const { promotionUuid } = req.params;
   console.log(promotionUuid);
   try {
-    const promotion = await promotionService.getClient(promotionUuid);
+    const promotion = await promotionService.getPromotion(promotionUuid);
     console.log(promotion);
     if (promotionUuid) {
       return res.json(promotion);
@@ -79,8 +80,9 @@ const putPromotion = async (req, res, next) => {
 
 const deletePromotion = async (req, res, next) => {
   const { promotion } = res.locals;
+
   try {
-    await promotionService.deletePromotion(promotion, req.promotion._id);
+    await promotionService.deletePromotion(promotion);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));

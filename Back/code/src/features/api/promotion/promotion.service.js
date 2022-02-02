@@ -19,6 +19,7 @@ const createPromotion = async (data) => {
   const dataToCreate = { ...data, uuid: uuidv4() };
   return Promotion.create(dataToCreate);
 };
+
 const putPromotion = async (uuid, data) => Promotion.findOneAndUpdate(uuid, data, { new: true });
 
 const deletePromotion = async (promotion) => promotion.remove();

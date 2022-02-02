@@ -6,6 +6,14 @@ const authorization = require('../../../utils/middleware/authorization');
 const middleware = require('./promotion.middleware');
 const validator = require('./promotion.validator');
 
+// Ver una promoción
+router.get(
+  '/:promotionUuid',
+  authorization('promotions:view'),
+  middleware.loadPromotion,
+  promotionController.getPromotion,
+);
+
 // Crear una promoción
 router.post(
   '/',
@@ -21,7 +29,7 @@ router.get('/', authorization('promotions:view'), promotionController.listPromot
 router.put(
   '/:promotionUuid',
   authorization('promotions:update'),
-  // validator.putPromotion,
+  validator.putPromotion,
   middleware.loadPromotion,
   promotionController.putPromotion,
 );
