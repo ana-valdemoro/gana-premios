@@ -16,7 +16,7 @@ const listClients = async (req, res, next) => {
     const filters = clientFilters(req.query);
     const options = queryOptions(req.query);
 
-    res.json(await clientService.getClient(filters, options));
+    res.json(await clientService.getClients(filters, options));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
@@ -123,7 +123,7 @@ const deleteClient = async (req, res, next) => {
     logger.error(`${error}`);
   }
 
-  res.status(204).json({});
+  res.status(200).json('El cliente ha sido borrado correctamente');
 };
 
 module.exports = {

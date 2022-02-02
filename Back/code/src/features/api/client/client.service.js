@@ -17,11 +17,7 @@ const createClient = async (data) => {
   const dataToCreate = { ...data, uuid: uuidv4() };
   return Client.create(dataToCreate);
 };
-
-const putClient = async (uuid, data) => {
-  const client = await getClient(uuid);
-  return client.save(data);
-};
+const putClient = async (uuid, data) => Client.findOneAndUpdate(uuid, data, { new: true });
 
 const deleteClient = async (client) => client.remove();
 
