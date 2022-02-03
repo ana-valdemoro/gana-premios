@@ -5,14 +5,14 @@ const campaignService = require('./campaign.service');
 const clientService = require('../client/client.service');
 
 const create = async (req, res, next) => {
-  const managerUuid = req.user.uuid;
-  const { name, clientUuid, startDate, endDate } = req.body;
+  const manager_uuid = req.user.uuid;
+  const { name, client_uuid, start_date, end_date } = req.body;
   let client;
 
   try {
-    client = await clientService.getClient(clientUuid);
+    client = await clientService.getClient(client_uuid);
 
-    if(!client){
+    if (!client) {
       return next(boom.badData('El cliente no existe'));
     }
   } catch (error) {
@@ -23,10 +23,10 @@ const create = async (req, res, next) => {
   let campaign;
   const campaignData = {
     name,
-    client_uuid: clientUuid,
-    manager_uuid: managerUuid,
-    start_date: startDate,
-    end_date: endDate,
+    client_uuid,
+    manager_uuid,
+    start_date,
+    end_date,
   };
 
   try {
@@ -50,43 +50,43 @@ const listCampaings = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
-  
+
+  // eslint-disable-next-line no-restricted-syntax
   for (const campaign of campaings) {
     try {
-      let client = await clientService.getClient(campaign.client_uuid);
+      // eslint-disable-next-line no-await-in-loop
+      const client = await clientService.getClient(campaign.client_uuid);
       console.log(client);
-      if(!client){
-        logger.error(`El cliente no existe`);
-      }else{
-        let campaignPublic = await campaignService.toPublic(campaign);
-        listCampaigns.push({ ...campaignPublic,client})
+      if (!client) {
+        logger.error('El cliente no existe');
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        const campaignPublic = await campaignService.toPublic(campaign);
+        listCampaigns.push({ ...campaignPublic, client });
       }
-
     } catch (error) {
       logger.error(`${error}`);
       return next(boom.badImplementation(error.message));
     }
-
   }
-
 
   return res.json(listCampaigns);
 };
 
 const getCampaing = async (req, res, next) => {
-  let { campaign } = res.locals;
+  const { campaign } = res.locals;
 
   try {
     client = await clientService.getClient(campaign.client_uuid);
 
-    if(!client){
+    if (!client) {
       return next(boom.badData('El cliente no existe'));
     }
 
     newCampaign = {
       ...campaign,
-      client
-    }
+      client,
+    };
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
@@ -101,15 +101,15 @@ const getCampaing = async (req, res, next) => {
 };
 
 const updateCampaign = async (req, res, next) => {
-  let { campaign } = res.locals;
+  const { campaign } = res.locals;
 
-  const campaignData = { 
-    ...req.body, 
+  const campaignData = {
+    ...req.body,
     uuid: campaign.uuid,
     manager_uuid: campaign.manager_uuid,
     active: campaign.active,
     deleted: campaign.deleted,
-   };
+  };
   let response;
 
   try {

@@ -18,7 +18,12 @@ router.post(
 );
 
 // Obtener una campaña
-router.get('/:campaignUuid', authorization('campaigns:view'), middleware.loadCampaign, campaignController.getCampaing);
+router.get(
+  '/:campaignUuid',
+  authorization('campaigns:view'),
+  middleware.loadCampaign,
+  campaignController.getCampaing,
+);
 
 // Editar una campaña
 router.put(
