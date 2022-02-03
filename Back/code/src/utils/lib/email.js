@@ -8,8 +8,8 @@ module.exports = async function sendEmail(email) {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '1d050c4c6a225e',
-      pass: '63704b510f7d4f',
+      user: '3f03301b811fff',
+      pass: 'fa6d7fe5be6fad',
     },
   });
 
@@ -28,7 +28,7 @@ module.exports = async function sendEmail(email) {
     <p>Hola, tu cuenta ha sido bloqueda por haber superado el máximo de intentos en ingresar tu
       contraseña. Pulse en el siguiente enlace para desbloquearla.
     </p>
-    <button style="color: #e84393"><a href='http://localhost:9000/api/v1/auth/unlock/${token}'>Desbloquea tu cuenta</a></button>`, // plain html body
+    <button style="color: #e84393"><a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a></button>`, // plain html body
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -40,8 +40,3 @@ module.exports = async function sendEmail(email) {
     return true;
   });
 };
-
-/* module.exports = {
-  sendEmail,
-};
-  */

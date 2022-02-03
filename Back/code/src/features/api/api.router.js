@@ -47,6 +47,4 @@ module.exports = (app) => {
     require('./promotion/promotion.router'),
   );
 
-  // Desboquear cuenta
-  app.get(`/${tag}/unlock-account/:email`, userController.unlockAccount);
 };

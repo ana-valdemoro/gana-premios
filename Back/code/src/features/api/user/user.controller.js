@@ -1,9 +1,6 @@
 /* eslint-disable no-useless-escape */
 const boom = require('@hapi/boom');
-const { cloneDeep } = require('lodash');
 const userService = require('./user.service');
-const activityService = require('../activity/activity.service');
-const activityActions = require('./user.activity');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
@@ -23,35 +20,6 @@ const activate = async (req, res) => {
   return res.json({
     status: 'OK',
   });
-};
-
-const unlockAccount = async (req, res, next) => {
-  const { token } = req.params;
-
-  let user;
-
-  try {
-    if (token !== '') {
-      user = await userService.getUserByToken(token);
-    }
-    console.log(user);
-    if (!user) {
-      return next(boom.unauthorized('Usuario no válido'));
-    }
-    const unlockedUser = await userService.putUser(user.uuid, {
-      failed_logins: 0,
-      token: '',
-      active: true,
-    });
-    console.log(unlockedUser);
-
-    if (unlockedUser) {
-      return res.status(204).json();
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-    return next(boom.badImplementation(error.message));
-  }
 };
 
 const forgot = async (req, res) => {
@@ -103,10 +71,12 @@ const listUsers = async (req, res, next) => {
     return next(boom.badImplementation(error.message));
   }
 };
+
 const createMongoUser = async (req, res, next) => {
   const userData = req.body;
   const userToCreate = { ...userData, role_uuid: '34703d0b-9ad1-42a5-bd42-4565467f54a8' };
   let user;
+
   try {
     user = await userService.createUser(userToCreate);
   } catch (error) {
@@ -118,45 +88,8 @@ const createMongoUser = async (req, res, next) => {
     return next(boom.badData(error.message));
   }
 
-  // try {
-  //   await activityService.createActivity({
-  //     action: activityActions.CREATE_USER,
-  //     author: req.user.email,
-  //     elementBefore: JSON.stringify({}),
-  //     elementAfter: JSON.stringify(user.toJSON()),
-  //   });
-  // } catch (error) {
-  //   logger.error(`${error}`);
-  // }
-
   res.status(201).json(userService.toPublic(user));
 };
-// const createUser = async (req, res, next) => {
-//   const userData = req.body;
-//   let user;
-//   try {
-//     user = await userService.createUser(userData);
-//   } catch (error) {
-//     if (error instanceof UniqueConstraintError) {
-//       return next(boom.badData('Ya existe un usuario con el email introducido'));
-//     }
-//     logger.error(`${error}`);
-//     return next(boom.badData(error.message));
-//   }
-
-// try {
-//   await activityService.createActivity({
-//     action: activityActions.CREATE_USER,
-//     author: req.user.email,
-//     elementBefore: JSON.stringify({}),
-//     elementAfter: JSON.stringify(user.toJSON()),
-//   });
-// } catch (error) {
-//   logger.error(`${error}`);
-// }
-
-//   res.status(201).json(userService.toPublic(user));
-// };
 
 const getUser = async (req, res, next) => {
   try {
@@ -193,39 +126,17 @@ const putUser = async (req, res, next) => {
     return next(boom.badData(error.message));
   }
 
-  try {
-    await activityService.createActivity({
-      action: activityActions.UPDATE_USER,
-      author: req.user.email,
-      elementBefore: JSON.stringify(user.toJSON()),
-      elementAfter: JSON.stringify(response.toJSON()),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-  }
-
   res.json(userService.toPublic(response));
 };
 
 const deleteUser = async (req, res, next) => {
   const { user } = res.locals;
-  const userBeforeDelete = cloneDeep(user);
 
   try {
     await userService.deleteUser(user, req.user._id);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
-  }
-
-  try {
-    await activityService.createActivity({
-      action: activityActions.DELETE_USER,
-      author: req.user.toJSON(),
-      elementBefore: userBeforeDelete.toJSON(),
-    });
-  } catch (error) {
-    logger.error(`${error}`);
   }
 
   res.status(204).json({});
@@ -241,5 +152,4 @@ module.exports = {
   putUser,
   deleteUser,
   createMongoUser,
-  unlockAccount,
 };

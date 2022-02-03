@@ -7,15 +7,6 @@ const userGroupService = require('../userGroup/userGroup.service');
 const sendEmail = require('../../../utils/lib/email');
 const jwt = require('../../../utils/middleware/jwt');
 
-const updateLoginAttemps = async (user, attempt) => {
-  try {
-    await userService.putUser(user.uuid, {
-      failed_logins: attempt,
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-  }
-};
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -31,11 +22,13 @@ const login = async (req, res, next) => {
   if (!user) {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
+
   if (user.failed_logins >= 5) {
     const emailSent = await sendEmail(user.email);
-    const lockedUser = await userService.putUser(user.uuid, {
+    const lockedUser = await userService.putUser(user._id, {
       active: false,
     });
+
     if (emailSent && lockedUser) {
       return next(
         boom.unauthorized(
@@ -43,18 +36,18 @@ const login = async (req, res, next) => {
         ),
       );
     }
+
     return next(boom.unauthorized('La cuenta ha sido bloqueada'));
   }
   try {
     const userHasValidPassword = await user.validPassword(password);
 
     if (!userHasValidPassword) {
-      const attempt = user.failed_logins + 1;
-      await updateLoginAttemps(user, attempt);
+      await userService.incrementLoginAttempts(user._id);
       return next(boom.unauthorized('La contraseña es errónea'));
     }
     if (user.failed_logins > 0) {
-      await updateLoginAttemps(user, 0);
+      await userService.resetLoginAttempts(user._id);
     }
   } catch (error) {
     logger.error(`${error}`);
@@ -84,16 +77,16 @@ const unlockAccount = async (req, res, next) => {
       console.log({ payload });
       user = await userService.getUserByEmail(payload.email);
     }
-    console.log(user);
+
     if (!user) {
       return next(boom.unauthorized('Usuario no válido'));
     }
-    const unlockedUser = await userService.putUser(user.uuid, {
+
+    const unlockedUser = await userService.putUser(user._id, {
       failed_logins: 0,
       // token: '',
       active: true,
     });
-    console.log(unlockedUser);
 
     if (unlockedUser) {
       return res.status(204).json();
