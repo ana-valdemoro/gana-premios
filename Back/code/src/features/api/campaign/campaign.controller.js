@@ -75,6 +75,8 @@ const listCampaings = async (req, res, next) => {
 
 const getCampaing = async (req, res, next) => {
   const { campaign } = res.locals;
+  let client;
+  let newCampaign;
 
   try {
     client = await clientService.getClient(campaign.client_uuid);

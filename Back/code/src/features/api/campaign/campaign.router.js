@@ -34,5 +34,4 @@ router.put(
   campaignController.updateCampaign,
 );
 
-
 module.exports = router;
