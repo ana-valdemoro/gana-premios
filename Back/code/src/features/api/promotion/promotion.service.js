@@ -20,7 +20,7 @@ const createPromotion = async (data) => {
 };
 
 const putPromotion = async (uuid, data) =>
-  Promotion.findOneAndUpdate(uuid, { $set: data }, { new: true });
+  Promotion.findOneAndUpdate({ uuid }, { $set: data }, { new: true });
 
 const deletePromotion = async (promotion) => promotion.remove();
 
