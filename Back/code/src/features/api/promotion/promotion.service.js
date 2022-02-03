@@ -10,8 +10,7 @@ const DESERTED = 3;
 
 const toPublic = (promotion) => promotion.toJSON();
 
-const getPromotions = async (filters, options) =>
-  Promotion.find({ where: filters, promotion: options.promotion });
+const getPromotions = async (filters) => Promotion.find({ ...filters });
 
 const getPromotion = async (uuid) => Promotion.findOne({ uuid });
 
@@ -20,7 +19,8 @@ const createPromotion = async (data) => {
   return Promotion.create(dataToCreate);
 };
 
-const putPromotion = async (uuid, data) => Promotion.findOneAndUpdate(uuid, { $set: data }, { new: true });
+const putPromotion = async (uuid, data) =>
+  Promotion.findOneAndUpdate(uuid, { $set: data }, { new: true });
 
 const deletePromotion = async (promotion) => promotion.remove();
 

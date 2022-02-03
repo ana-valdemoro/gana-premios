@@ -5,16 +5,14 @@ const { UniqueConstraintError } = require('sequelize');
 
 const promotionService = require('./promotion.service');
 
-const queryOptions = require('../../../utils/queryOptions');
 const promotionFilters = require('./promotion.filters');
 const logger = require('../../../config/winston');
 
 const listPromotions = async (req, res, next) => {
   try {
     const filters = promotionFilters(req.query);
-    const options = queryOptions(req.query);
 
-    res.json(await promotionService.getPromotions(filters, options));
+    res.json(await promotionService.getPromotions(filters));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
