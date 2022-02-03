@@ -1,4 +1,6 @@
+/* eslint-disable max-len */
 const nodemailer = require('nodemailer');
+
 const jwt = require('../middleware/jwt');
 
 module.exports = async function sendEmail(email) {
@@ -6,8 +8,8 @@ module.exports = async function sendEmail(email) {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '3f03301b811fff',
-      pass: 'fa6d7fe5be6fad',
+      user: '1d050c4c6a225e',
+      pass: '63704b510f7d4f',
     },
   });
 
@@ -16,11 +18,17 @@ module.exports = async function sendEmail(email) {
   });
 
   const mailOptions = {
-    from: 'ana.valdemoro@agiliacenter.com', // sender address
-    to: 'ana.valdemoro@agiliacenter.com', // list of receivers
+    from: 'angela.chicano@agiliacenter.com', // sender address
+    to: 'angela.chicano@agiliacenter.com', // list of receivers
     subject: 'Desbloquear cuenta', // Subject line
-    html: `<p>Pulsa en este link para desbloquear tu cuenta</p>
-    <a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a>`, // plain html body
+    /* html: `<p>Pulsa en este link para desbloquear tu cuenta</p>
+    // eslint-disable-next-line max-len
+    <a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a>`, */ // plain html body
+    html: `<h1>Desbloqueo de tu cuenta</h1>
+    <p>Hola, tu cuenta ha sido bloqueda por haber superado el máximo de intentos en ingresar tu
+      contraseña. Pulse en el siguiente enlace para desbloquearla.
+    </p>
+    <button style="color: #e84393"><a href='http://localhost:9000/api/v1/auth/unlock/${token}'>Desbloquea tu cuenta</a></button>`, // plain html body
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
