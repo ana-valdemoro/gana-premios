@@ -40,4 +40,13 @@ module.exports = (app) => {
     // eslint-disable-next-line global-require
     require('./campaign/campaign.router'),
   );
+  app.user(
+    `/${tag}/promotions`,
+    authorize,
+    // eslint-disable-next-line global-require
+    require('./promotion/promotion.router'),
+  );
+
+  // Desboquear cuenta
+  app.get(`/${tag}/unlock-account/:email`, userController.unlockAccount);
 };
