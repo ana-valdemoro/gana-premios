@@ -15,7 +15,7 @@ const seedUserGroups = [
   {
     uuid: uuid.v4(),
     name: 'Managers',
-    permissions: 'MANAGERS',
+    permissions: 'MANAGERS,campaigns:all,clients:view,promotions:all',
     deleted: false,
   },
   {
