@@ -18,7 +18,7 @@ BOILERPLATE NODE WITH MONGO - FORMACIÓN
 - JWT
 - Joi
 - Moment
-- Sequelize
+- Mongoose
 - Passport
 - Uuid
 
