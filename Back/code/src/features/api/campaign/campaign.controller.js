@@ -104,9 +104,28 @@ const getCampaing = async (req, res, next) => {
 
 const updateCampaign = async (req, res, next) => {
   const { campaign } = res.locals;
+  const { name, client_uuid, start_date, end_date } = req.body;
+  let client;
+
+  if (campaign.client_uuid !== client_uuid) {
+    try {
+      client = await clientService.getClient(client_uuid);
+
+      if (!client) {
+        return next(boom.badData('El cliente introducido no existe'));
+      }
+    } catch (error) {
+      logger.error(`${error}`);
+      return next(boom.badImplementation(error.message));
+    }
+  }
 
   const campaignData = {
-    ...req.body,
+    name,
+    start_date,
+    end_date,
+    // eslint-disable-next-line no-bitwise
+    client_uuid: client ? client.uuid : campaign.client_uuid,
     uuid: campaign.uuid,
     manager_uuid: campaign.manager_uuid,
     active: campaign.active,
