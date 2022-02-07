@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 const jwt = require('../middleware/jwt');
 
-module.exports = async function sendEmail(email) {
+module.exports = async function sendEmail(email, token) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.mailtrap.io',
     port: 2525,
@@ -13,9 +13,6 @@ module.exports = async function sendEmail(email) {
     },
   });
 
-  const token = jwt.generateJWT({
-    email,
-  });
 
   const mailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
@@ -31,12 +28,5 @@ module.exports = async function sendEmail(email) {
     <button style="color: #e84393"><a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a></button>`, // plain html body
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    console.log('entroo en sendMail');
-    if (error) {
-      throw new Error(error);
-    }
-    console.log('Message %s sent: %s', info.messageId, info.response);
-    return true;
-  });
+  return transporter.sendMail(mailOptions);
 };
