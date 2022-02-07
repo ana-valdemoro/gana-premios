@@ -22,6 +22,12 @@ const login = async (req, res, next) => {
     return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
   }
 
+  if (user.blocked) {
+    return next(
+      boom.unauthorized('Esta cuenta esta bloqueada revisa la bandeja de entrada de tu correo'),
+    );
+  }
+
   try {
     if (user.failed_logins >= 5) {
       await userService.blockAccount(user);
