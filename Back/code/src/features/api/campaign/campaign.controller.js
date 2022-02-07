@@ -80,6 +80,11 @@ const getCampaing = async (req, res, next) => {
   const { campaign } = res.locals;
   let client;
   let newCampaign;
+  const { user } = req;
+
+  if (user.priority === MANAGER_RESOURCES && user.uuid !== campaign.manager_uuid) {
+    return next(boom.unauthorized('No se pueden obtener campañas de las que no se es gestor'));
+  }
 
   try {
     client = await clientService.getClient(campaign.client_uuid);
