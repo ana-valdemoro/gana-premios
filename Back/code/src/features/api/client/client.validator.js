@@ -5,7 +5,7 @@ const createClient = validate(
   {
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
-      name: joi.string().alphanum().min(3).max(30).required(),
+      name: joi.string().min(3).max(30).required(),
       // eslint-disable-next-line newline-per-chained-call
       responsable: joi.string().email().required(),
       // eslint-disable-next-line newline-per-chained-call
@@ -23,9 +23,9 @@ const putClient = validate(
   {
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
-      name: joi.string().alphanum().min(3).max(30),
-      responsable: joi.string().email().required(),
-      number_promotion_active: joi.number().min(1).max(10).required(),
+      name: joi.string().min(3).max(30),
+      responsable: joi.string().email(),
+      number_promotion_active: joi.number().min(1).max(10),
     }),
   },
   {

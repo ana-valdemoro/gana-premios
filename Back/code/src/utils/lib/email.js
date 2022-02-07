@@ -8,8 +8,8 @@ module.exports = async function sendEmail(email) {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '3f03301b811fff',
-      pass: 'fa6d7fe5be6fad',
+      user: '1d050c4c6a225e',
+      pass: '63704b510f7d4f',
     },
   });
 

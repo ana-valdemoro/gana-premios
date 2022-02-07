@@ -7,7 +7,7 @@ const { User, UserGroup } = require('../models/index');
 // connection with database
 db.connect();
 
-const password = bcrypt.hashSync('123456', bcrypt.genSaltSync(10));
+const password = bcrypt.hashSync('Domingo_31', bcrypt.genSaltSync(10));
 
 const seedDB = async () => {
   const adminGroup = await UserGroup.findOne({ name: 'Admin' });
