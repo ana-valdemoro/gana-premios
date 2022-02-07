@@ -21,7 +21,7 @@ const listPromotions = async (req, res, next) => {
 
 const getPromotion = async (req, res, next) => {
   const { promotionUuid } = req.params;
-  console.log(promotionUuid);
+
   try {
     const promotion = await promotionService.getPromotion(promotionUuid);
     console.log(promotion);
@@ -36,9 +36,34 @@ const getPromotion = async (req, res, next) => {
 };
 
 const createPromotion = async (req, res, next) => {
-  const promotionData = req.body;
+  const {
+    promotionImageUrl,
+    prizeImageUrl,
+    prizeTitle,
+    prizeDescription,
+    campaignUuid,
+    startDate,
+    endDate,
+    participationRulesUrl,
+    maxNumberParticipants,
+    type,
+  } = req.body;
 
   let promotion;
+
+  const promotionData = {
+    promotion_image_url: promotionImageUrl,
+    prize_image_url: prizeImageUrl,
+    prize_title: prizeTitle,
+    prize_description: prizeDescription,
+    campaign_uuid: campaignUuid,
+    start_date: startDate,
+    end_date: endDate,
+    participation_rules_url: participationRulesUrl,
+    max_number_participants: maxNumberParticipants,
+    type,
+  };
+
   try {
     promotion = await promotionService.createPromotion(promotionData);
   } catch (error) {
@@ -52,6 +77,19 @@ const createPromotion = async (req, res, next) => {
 };
 
 const updatePromotion = async (req, res, next) => {
+  const {
+    promotionImageUrl,
+    prizeImageUrl,
+    prizeTitle,
+    prizeDescription,
+    campaignUuid,
+    startDate,
+    endDate,
+    participationRulesUrl,
+    maxNumberParticipants,
+    type,
+  } = req.body;
+
   let response;
   let promotion;
 
@@ -60,7 +98,16 @@ const updatePromotion = async (req, res, next) => {
   }
 
   const promotionData = {
-    ...req.body,
+    promotion_image_url: promotionImageUrl,
+    prize_image_url: prizeImageUrl,
+    prize_title: prizeTitle,
+    prize_description: prizeDescription,
+    campaign_uuid: campaignUuid,
+    start_date: startDate,
+    end_date: endDate,
+    participation_rules_url: participationRulesUrl,
+    max_number_participants: maxNumberParticipants,
+    type,
     uuid: promotion.uuid,
     active: promotion.active,
     deleted: promotion.deleted,
@@ -90,7 +137,7 @@ const deletePromotion = async (req, res, next) => {
     return next(boom.badImplementation(error.message));
   }
 
-  res.status(200).json('La promoción ha sido borrada correctamente');
+  res.status(200).json({});
 };
 
 module.exports = {
