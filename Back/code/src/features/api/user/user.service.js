@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const { User, UserGroup } = require('../../../models/index');
 const jwt = require('../../../utils/middleware/jwt');
 const logger = require('../../../config/winston');
-const sendEmail = require('../../../utils/lib/email');
+const mailService = require('../../../utils/lib/email');
 
 const ALL = 2;
 const MANAGER_RESOURCES = 1;
@@ -69,7 +69,7 @@ const blockAccount = async (user) => {
   }
 
   try {
-    await sendEmail(user.email, token);
+    await mailService.sendBlockedAccountEmail(user.email, token);
   } catch (error) {
     logger.info(`${error}`);
     return Promise.reject(new Error('Ha fallado el envio de email'));
