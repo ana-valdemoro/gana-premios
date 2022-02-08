@@ -57,6 +57,19 @@ const createPromotion = async (req, res, next) => {
     if (campaign.active === false) {
       return next(boom.badData('La campaña no está activa'));
     }
+
+    if (new Date(campaign.start_date) > new Date(startDate)) {
+      return next(
+        boom.badData(
+          'La fecha de creación de inicio de la promo debe ser mayor que la de la campaña',
+        ),
+      );
+    }
+    if (new Date(campaign.end_date) < new Date(endDate)) {
+      return next(
+        boom.badData('La fecha de finalización de la promo debe ser menor que la de la campaña'),
+      );
+    }
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
@@ -83,6 +96,7 @@ const createPromotion = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
+
   res.status(201).json(promotionService.toPublic(promotion));
 };
 
