@@ -104,7 +104,7 @@ const getCampaing = async (req, res, next) => {
 
 const updateCampaign = async (req, res, next) => {
   const { campaign } = res.locals;
-  const { name, clientUuid, startDate, endDate } = req.body;
+  const { name, clientUuid, startDate, endDate, active } = req.body;
   let client;
 
   if (campaign.client_uuid !== clientUuid) {
@@ -128,7 +128,7 @@ const updateCampaign = async (req, res, next) => {
     client_uuid: client ? client.uuid : campaign.client_uuid,
     uuid: campaign.uuid,
     manager_uuid: campaign.manager_uuid,
-    active: campaign.active,
+    active,
     deleted: campaign.deleted,
   };
   let response;

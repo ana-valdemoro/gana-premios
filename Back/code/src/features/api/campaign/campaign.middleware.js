@@ -17,7 +17,7 @@ async function loadCampaign(req, res, next) {
 
   if (!campaign) {
     return next(boom.notFound('Campaña no encontrado'));
-  } 
+  }
 
   res.locals.campaign = await service.toPublic(campaign);
   next();
