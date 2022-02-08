@@ -24,8 +24,8 @@ const putClient = validate(
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
       name: joi.string().min(3).max(30),
-      responsable: joi.string().email().required(),
-      numberPromotionActive: joi.number().min(1).max(10).required(),
+      responsable: joi.string().email(),
+      numberPromotionActive: joi.number().min(1).max(10),
     }),
   },
   {

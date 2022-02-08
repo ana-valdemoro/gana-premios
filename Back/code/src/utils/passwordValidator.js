@@ -26,6 +26,7 @@ const validatePasswordPattern = (email, password) => {
   }
 
   // Supported symbols : [-!$%^&*()_+|~=`{}[]:";'<>?,./]
+  // eslint-disable-next-line no-useless-escape
   const symbols = new RegExp(/^(?=.*[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).{1,}$/);
   if (!symbols.test(password)) {
     errors.push('La contraseña no incluye un símbolo');
