@@ -37,9 +37,15 @@ const getClient = async (req, res, next) => {
 };
 
 const createClient = async (req, res, next) => {
-  const clientData = req.body;
-
+  const { name, responsable, numberPromotionActive } = req.body;
   let client;
+
+  const clientData = {
+    name,
+    responsable,
+    number_promotion_active: numberPromotionActive,
+  };
+
   try {
     client = await clientService.createClient(clientData);
   } catch (error) {
@@ -50,17 +56,23 @@ const createClient = async (req, res, next) => {
     return next(boom.badData(error.message));
   }
 
-  res.status(201).json(clientService.toPublic(client));
+  return res.status(201).json(clientService.toPublic(client));
 };
 
 const putClient = async (req, res, next) => {
   let { client } = req;
+
   if (res.locals && res.locals.client) {
     // eslint-disable-next-line prefer-destructuring
     client = res.locals.client;
   }
 
-  const clientData = req.body;
+  const { name, responsable, numberPromotionActive } = req.body;
+  const clientData = {
+    name,
+    responsable,
+    number_promotion_active: numberPromotionActive,
+  };
   let response;
 
   try {
@@ -82,13 +94,13 @@ const deleteClient = async (req, res, next) => {
   const { client } = res.locals;
 
   try {
-    await clientService.deleteClient(client, req.client._id);
+    await clientService.deleteClient(client);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
 
-  res.status(200).json('El cliente ha sido borrado correctamente');
+  return res.status(200).json({});
 };
 
 module.exports = {

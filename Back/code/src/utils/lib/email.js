@@ -1,9 +1,10 @@
 /* eslint-disable max-len */
 const nodemailer = require('nodemailer');
+const Handlebars = require('handlebars');
+const fs = require('fs');
+const path = require('path');
 
-const jwt = require('../middleware/jwt');
-
-module.exports = async function sendEmail(email) {
+const sendEmail = async (mailOptions) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.mailtrap.io',
     port: 2525,
@@ -12,31 +13,24 @@ module.exports = async function sendEmail(email) {
       pass: 'fa6d7fe5be6fad',
     },
   });
+  return transporter.sendMail(mailOptions);
+};
 
-  const token = jwt.generateJWT({
-    email,
-  });
+const sendBlockedAccountEmail = async (email, token) => {
+  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/blocked.hbs'), 'utf8');
+  const template = Handlebars.compile(emailTemplateSource);
+  const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/account/${token}/activate` });
 
   const mailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
-    to: 'angela.chicano@agiliacenter.com', // list of receivers
+    to: email, // list of receivers
     subject: 'Desbloquear cuenta', // Subject line
-    /* html: `<p>Pulsa en este link para desbloquear tu cuenta</p>
-    // eslint-disable-next-line max-len
-    <a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a>`, */ // plain html body
-    html: `<h1>Desbloqueo de tu cuenta</h1>
-    <p>Hola, tu cuenta ha sido bloqueda por haber superado el máximo de intentos en ingresar tu
-      contraseña. Pulse en el siguiente enlace para desbloquearla.
-    </p>
-    <button style="color: #e84393"><a href="${process.env.FRONT_BASE_URL}/account/${token}/activate">Desbloquea tu cuenta</a></button>`, // plain html body
+    html: htmlToSend, // plain html body
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    console.log('entroo en sendMail');
-    if (error) {
-      throw new Error(error);
-    }
-    console.log('Message %s sent: %s', info.messageId, info.response);
-    return true;
-  });
+  return sendEmail(mailOptions);
+};
+
+module.exports = {
+  sendBlockedAccountEmail,
 };

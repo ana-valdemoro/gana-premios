@@ -5,12 +5,12 @@ const campaignService = require('./campaign.service');
 const clientService = require('../client/client.service');
 
 const create = async (req, res, next) => {
-  const manager_uuid = req.user.uuid;
-  const { name, client_uuid, start_date, end_date } = req.body;
+  const managerUuid = req.user.uuid;
+  const { name, clientUuid, startDate, endDate } = req.body;
   let client;
 
   try {
-    client = await clientService.getClient(client_uuid);
+    client = await clientService.getClient(clientUuid);
 
     if (!client) {
       return next(boom.badData('El cliente no existe'));
@@ -23,10 +23,10 @@ const create = async (req, res, next) => {
   let campaign;
   const campaignData = {
     name,
-    client_uuid,
-    manager_uuid,
-    start_date,
-    end_date,
+    client_uuid: clientUuid,
+    manager_uuid: managerUuid,
+    start_date: startDate,
+    end_date: endDate,
   };
 
   try {
@@ -104,12 +104,12 @@ const getCampaing = async (req, res, next) => {
 
 const updateCampaign = async (req, res, next) => {
   const { campaign } = res.locals;
-  const { name, client_uuid, start_date, end_date } = req.body;
+  const { name, clientUuid, startDate, endDate } = req.body;
   let client;
 
-  if (campaign.client_uuid !== client_uuid) {
+  if (campaign.client_uuid !== clientUuid) {
     try {
-      client = await clientService.getClient(client_uuid);
+      client = await clientService.getClient(clientUuid);
 
       if (!client) {
         return next(boom.badData('El cliente introducido no existe'));
@@ -122,8 +122,8 @@ const updateCampaign = async (req, res, next) => {
 
   const campaignData = {
     name,
-    start_date,
-    end_date,
+    start_date: startDate,
+    end_date: endDate,
     // eslint-disable-next-line no-bitwise
     client_uuid: client ? client.uuid : campaign.client_uuid,
     uuid: campaign.uuid,

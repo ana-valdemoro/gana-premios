@@ -55,6 +55,11 @@ const schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    blocked: {
+      required: true,
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -2,6 +2,8 @@
 const { v4: uuidv4 } = require('uuid');
 const { User, UserGroup } = require('../../../models/index');
 const jwt = require('../../../utils/middleware/jwt');
+const logger = require('../../../config/winston');
+const mailService = require('../../../utils/lib/email');
 
 const ALL = 2;
 const MANAGER_RESOURCES = 1;
@@ -47,6 +49,43 @@ const incrementLoginAttempts = async (id) =>
 
 const resetLoginAttempts = async (id) => User.findOneAndUpdate({ _id: id }, { failed_logins: 0 });
 
+const blockAccount = async (user) => {
+  const token = jwt.generateJWT({
+    uuid: '',
+    type: 'user',
+  });
+
+  try {
+    const updatedUser = await putUser(user._id, {
+      blocked: true,
+      token,
+    });
+    if (!updatedUser) {
+      return Promise.reject(new Error('No se ha actulizado el usuario'));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return Promise.reject(new Error('Ha fallado la BBDD'));
+  }
+
+  try {
+    await mailService.sendBlockedAccountEmail(user.email, token);
+  } catch (error) {
+    logger.info(`${error}`);
+    return Promise.reject(new Error('Ha fallado el envio de email'));
+  }
+
+  return true;
+};
+
+const unBlockAccount = async (id) => {
+  const data = {
+    failed_logins: 0,
+    token: '',
+    blocked: false,
+  };
+  return putUser(id, data);
+};
 // const deleteUser = async (user) => user.destroy();
 
 module.exports = {
@@ -60,6 +99,8 @@ module.exports = {
   putUser,
   incrementLoginAttempts,
   resetLoginAttempts,
+  blockAccount,
+  unBlockAccount,
   ALL,
   MANAGER_RESOURCES,
   PARTICIPANTS_RESOURCES,

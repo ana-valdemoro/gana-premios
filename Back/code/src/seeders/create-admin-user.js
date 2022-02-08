@@ -25,6 +25,7 @@ const seedDB = async () => {
     token: '',
     active: true,
     priority: 2,
+    blocked: false,
   };
   await User.deleteMany({});
   await User.insertMany(seedAdminShema);
