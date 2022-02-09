@@ -74,7 +74,8 @@ const listUsers = async (req, res, next) => {
 
 const createMongoUser = async (req, res, next) => {
   const userData = req.body;
-  const userToCreate = { ...userData, role_uuid: '34703d0b-9ad1-42a5-bd42-4565467f54a8' };
+  console.log(userData);
+  const userToCreate = { ...userData, role_uuid: 'eafcd4be-b15d-41ce-bd0e-757178955683' };
   let user;
 
   try {
@@ -148,7 +149,6 @@ module.exports = {
   recovery,
   listUsers,
   getUser,
-  // createUser,
   putUser,
   deleteUser,
   createMongoUser,

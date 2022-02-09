@@ -4,7 +4,7 @@ const logger = require('../../../config/winston');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
-const jwt = require('../../../utils/middleware/jwt');
+// const jwt = require('../../../utils/middleware/jwt');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
