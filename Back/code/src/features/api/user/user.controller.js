@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+const mediaService = require('../media/media.service');
 
 // Public functions
 const activate = async (req, res) => {
@@ -142,6 +143,28 @@ const deleteUser = async (req, res, next) => {
   res.status(204).json({});
 };
 
+const createLopd = async (req, res, next) => {
+  const { fileName, mediaType, uri } = req.body;
+  let media;
+
+  try {
+    media = await mediaService.createMedia(fileName, mediaType, uri);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  return res.json(await mediaService.toPublic(media));
+};
+
+const getLopd = async (req, res, next) => {
+  const { user } = req;
+
+  //Sacar la URI del servicio
+
+  return res.download(file, media.originalFileName);
+};
+
 module.exports = {
   activate,
   forgot,
@@ -152,4 +175,6 @@ module.exports = {
   putUser,
   deleteUser,
   createMongoUser,
+  createLopd,
+  getLopd,
 };

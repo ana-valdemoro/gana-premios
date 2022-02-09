@@ -7,11 +7,19 @@ const schema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    path: {
+    file_name: {
       required: true,
       type: String,
     },
-    url: {
+    original_file_name: {
+      required: true,
+      type: String,
+    },
+    extension: {
+      required: true,
+      type: String,
+    },
+    media_type: {
       required: true,
       type: String,
     },

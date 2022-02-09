@@ -24,4 +24,5 @@ module.exports = {
     pageSize: 15,
     maxPageSize: 100,
   },
+  mediaStorageFolder: '../../media',
 };
