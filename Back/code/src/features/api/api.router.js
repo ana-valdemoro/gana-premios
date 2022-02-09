@@ -47,4 +47,10 @@ module.exports = (app) => {
     require('./promotion/promotion.router'),
   );
 
+  app.use(
+    `/${tag}/medias`,
+    authorize,
+    // eslint-disable-next-line global-require
+    require('./media/media.router'),
+  );
 };
