@@ -4,7 +4,8 @@ const logger = require('../../../config/winston');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
-const jwt = require('../../../utils/middleware/jwt');
+// const { activateUser } = require('../user/user.validator');
+// const jwt = require('../../../utils/middleware/jwt');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -16,6 +17,11 @@ const login = async (req, res, next) => {
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
+  }
+  if (user.active !== true) {
+    return next(
+      boom.unauthorized('Tu usuario no está activo. Por favor, revisa tu correo electrónico'),
+    );
   }
 
   if (!user) {
@@ -125,12 +131,51 @@ const register = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
+  try {
+    const activateUser = await userService.activateAccount(user._id);
+    console.log(activateUser);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
 
   return res.status(201).json(user.toJSON());
+};
+
+const activateAccount = async (req, res, next) => {
+  const { token } = req.params;
+  let activeUser;
+  let user;
+
+  try {
+    if (token !== '') {
+      user = await userService.getUserByToken(token);
+    }
+
+    if (!user) {
+      return next(boom.unauthorized('Usuario no encontrado'));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    activeUser = await userService.activeAccount(user._id);
+    console.log(activeUser);
+
+    if (activeUser) {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
 };
 
 module.exports = {
   login,
   register,
   unBlockAccount,
+  activateAccount,
 };

@@ -16,21 +16,41 @@ const sendEmail = async (mailOptions) => {
   return transporter.sendMail(mailOptions);
 };
 
-const sendBlockedAccountEmail = async (email, token) => {
-  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/blocked.hbs'), 'utf8');
+// Mail para activar cuenta
+
+const sendActiveAccountEmail = async (email, token) => {
+  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/active.hbs'), 'utf8');
   const template = Handlebars.compile(emailTemplateSource);
   const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/account/${token}/activate` });
 
-  const mailOptions = {
+  const activeAccountMailOptions = {
+    from: 'angela.chicano@agiliacenter.com', // sender address
+    to: 'angela.chicano@agiliacenter.com', // list of receivers
+    subject: 'Activar cuenta', // Subject line
+    html: htmlToSend, // plain html body
+  };
+
+  return sendEmail(activeAccountMailOptions);
+};
+
+// Mail para desbloquear cuenta
+
+const sendBlockedAccountEmail = async (email, token) => {
+  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/blocked.hbs'), 'utf8');
+  const template = Handlebars.compile(emailTemplateSource);
+  const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/active-account/${token}` });
+
+  const blockedMailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
     to: email, // list of receivers
     subject: 'Desbloquear cuenta', // Subject line
     html: htmlToSend, // plain html body
   };
 
-  return sendEmail(mailOptions);
+  return sendEmail(blockedMailOptions);
 };
 
 module.exports = {
+  sendActiveAccountEmail,
   sendBlockedAccountEmail,
 };

@@ -6,7 +6,7 @@ const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
 // Public functions
-const activate = async (req, res) => {
+/* const activate = async (req, res) => {
   const { token } = req.params;
 
   try {
@@ -20,7 +20,7 @@ const activate = async (req, res) => {
   return res.json({
     status: 'OK',
   });
-};
+}; */
 
 const forgot = async (req, res) => {
   const { email } = req.body;
@@ -143,7 +143,7 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
-  activate,
+  // activate,
   forgot,
   recovery,
   listUsers,
