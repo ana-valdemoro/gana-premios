@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 const { Media } = require('../../../models/index');
 const fileUploader = require('../../../utils/fileUploader');
+const config = require('../../../config');
 
 const toPublic = (media) => media.toJSON();
 
@@ -34,8 +36,15 @@ const createMedia = async (fileName, mediaType, uri) => {
 
 const getMedia = async (uuid) => Media.findOne({ uuid });
 
+const getMediaUri = async (media) => fileUploader.getFile(media.uuid, media.extension);
+
+const getMediaPath = async (media) =>
+  path.join(__dirname, '../..', config.mediaStorageFolder, `${media.uuid}.${media.extension}`);
+
 module.exports = {
   toPublic,
   createMedia,
   getMedia,
+  getMediaUri,
+  getMediaPath,
 };

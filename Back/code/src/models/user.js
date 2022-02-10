@@ -47,7 +47,6 @@ const schema = new mongoose.Schema(
       max: 5,
     },
     password_history_uuid: {
-      // required: true,
       type: String,
       default: '',
     },
@@ -59,6 +58,10 @@ const schema = new mongoose.Schema(
       required: true,
       type: Boolean,
       default: false,
+    },
+    lopd_uuid: {
+      type: String,
+      default: '',
     },
   },
   {

@@ -26,5 +26,5 @@ router.post('/unlock/:token', userValidator.unlockUser, authController.unBlockAc
 
 router.post('/lopd', authorize, userValidator.createLopdUser, userController.createLopd);
 
-router.get('lopd', authorize, userController.getLopd);
+router.get('/lopd', authorize, userController.getLopd);
 module.exports = router;

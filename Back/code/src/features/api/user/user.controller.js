@@ -159,10 +159,28 @@ const createLopd = async (req, res, next) => {
 
 const getLopd = async (req, res, next) => {
   const { user } = req;
+  let media;
+  let path;
 
-  //Sacar la URI del servicio
+  if (user.lopd_uuid === '') {
+    return next(boom.badData('El usuario no ha subido la LOPD'));
+  }
 
-  return res.download(file, media.originalFileName);
+  try {
+    media = await mediaService.getMedia(user.lopd_uuid);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    path = await mediaService.getMediaPath(media);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  return res.download(path, media.original_file_name);
 };
 
 module.exports = {
