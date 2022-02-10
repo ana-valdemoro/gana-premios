@@ -6,7 +6,7 @@ const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
 // Public functions
-const activate = async (req, res) => {
+/* const activate = async (req, res) => {
   const { token } = req.params;
 
   try {
@@ -20,6 +20,36 @@ const activate = async (req, res) => {
   return res.json({
     status: 'OK',
   });
+}; */
+const activateAccount = async (req, res, next) => {
+  const { token } = req.params;
+  let activeUser;
+  let user;
+
+  try {
+    if (token !== '') {
+      user = await userService.getUserByToken(token);
+    }
+
+    if (!user) {
+      return next(boom.unauthorized('Usuario no encontrado'));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    activeUser = await userService.activeAccount(user._id);
+    console.log(activeUser);
+
+    if (activeUser) {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
 };
 
 const forgot = async (req, res) => {
@@ -88,6 +118,13 @@ const createMongoUser = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
+  try {
+    const activateUser = await userService.activateAccount(user._id);
+    console.log(activateUser);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
 
   res.status(201).json(userService.toPublic(user));
 };
@@ -144,7 +181,7 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
-  activate,
+  activateAccount,
   forgot,
   recovery,
   listUsers,

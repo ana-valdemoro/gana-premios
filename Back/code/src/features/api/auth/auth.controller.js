@@ -129,7 +129,39 @@ const register = async (req, res, next) => {
   return res.status(201).json(user.toJSON());
 };
 
+const activateAccount = async (req, res, next) => {
+  const { token } = req.params;
+  let activeUser;
+  let user;
+
+  try {
+    if (token !== '') {
+      user = await userService.getUserByToken(token);
+    }
+
+    if (!user) {
+      return next(boom.unauthorized('Usuario no encontrado'));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    activeUser = await userService.activeAccount(user._id);
+    console.log(activeUser);
+
+    if (activeUser) {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+};
+
 module.exports = {
+  activateAccount,
   login,
   register,
   unBlockAccount,

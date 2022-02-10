@@ -44,6 +44,40 @@ const createUser = async (data) => {
 
 const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { new: true });
 
+// Activación de cuenta
+
+/* const activate = async (token, data) => {
+  const payload = jwt.verifyJWT(token);
+  const user = await User.findOne({ where: { uuid: payload.uuid } });
+  return user.update(data);
+}; */
+
+const activateAccount = async (user) => {
+  const token = jwt.generateJWT({
+    uuid: '',
+    type: 'user',
+  });
+  console.log(token);
+  try {
+    await mailService.sendActiveAccountEmail(user.email, token);
+  } catch (error) {
+    logger.info(`${error}`);
+    return Promise.reject(new Error('Ha fallado el envio de email'));
+  }
+
+  return true;
+};
+
+const activeAccount = async (id) => {
+  const data = {
+    active: true,
+    token: '',
+  };
+  return putUser(id, data);
+};
+
+// Bloqueo de cuenta
+
 const incrementLoginAttempts = async (id) =>
   User.findOneAndUpdate({ _id: id }, { $inc: { failed_logins: 1 } }, { new: true });
 
@@ -97,6 +131,9 @@ module.exports = {
   createUser,
   getUser,
   putUser,
+  // activate,
+  activateAccount,
+  activeAccount,
   incrementLoginAttempts,
   resetLoginAttempts,
   blockAccount,

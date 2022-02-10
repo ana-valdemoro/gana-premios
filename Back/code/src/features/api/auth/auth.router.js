@@ -7,7 +7,7 @@ const userController = require('../user/user.controller');
 const userValidator = require('../user/user.validator');
 
 // Activar de usuario
-router.post('/activate/:token', userValidator.activateUser, userController.activate);
+router.post('/activate/:token', userValidator.activateUser, authController.activateAccount);
 
 // Login del usuario
 router.post('/login', userValidator.loginUser, authController.login);
