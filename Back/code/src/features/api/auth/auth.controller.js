@@ -150,11 +150,9 @@ const activateAccount = async (req, res, next) => {
   try {
     if (token !== '') {
       user = await userService.getUserByToken(token);
-      console.log(user);
     }
 
     if (!user) {
-      console.log(user);
       return next(boom.unauthorized('Usuario no encontrado'));
     }
   } catch (error) {
