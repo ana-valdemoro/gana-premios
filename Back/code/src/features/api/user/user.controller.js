@@ -5,22 +5,6 @@ const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 
-// Public functions
-/* const activate = async (req, res) => {
-  const { token } = req.params;
-
-  try {
-    if (token !== '') {
-      await userService.activate(token, { active: true, token: '' });
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-  }
-
-  return res.json({
-    status: 'OK',
-  });
-}; */
 const activateAccount = async (req, res, next) => {
   const { token } = req.params;
   let activeUser;

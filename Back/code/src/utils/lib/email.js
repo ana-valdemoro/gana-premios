@@ -16,10 +16,10 @@ const sendEmail = async (mailOptions) => {
   return transporter.sendMail(mailOptions);
 };
 
-// Mail para activar cuenta de manager
+// Mail para activar cuenta
 
 const sendActiveAccountEmail = async (email, token) => {
-  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/accountManager.hbs'), 'utf8');
+  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/active.hbs'), 'utf8');
   const template = Handlebars.compile(emailTemplateSource);
   const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/account/${token}/activate` });
 

@@ -46,12 +46,6 @@ const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { n
 
 // Activación de cuenta
 
-/* const activate = async (token, data) => {
-  const payload = jwt.verifyJWT(token);
-  const user = await User.findOne({ where: { uuid: payload.uuid } });
-  return user.update(data);
-}; */
-
 const activateAccount = async (user) => {
   const token = jwt.generateJWT({
     uuid: '',
@@ -95,7 +89,7 @@ const blockAccount = async (user) => {
       token,
     });
     if (!updatedUser) {
-      return Promise.reject(new Error('No se ha actulizado el usuario'));
+      return Promise.reject(new Error('No se ha actualizado el usuario'));
     }
   } catch (error) {
     logger.error(`${error}`);
