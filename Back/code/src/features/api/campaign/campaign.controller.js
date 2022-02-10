@@ -3,6 +3,7 @@ const logger = require('../../../config/winston');
 const campaignFilters = require('./campaign.filters');
 const campaignService = require('./campaign.service');
 const clientService = require('../client/client.service');
+const { ALL, MANAGER_RESOURCES } = require('../user/user.service');
 
 const create = async (req, res, next) => {
   const managerUuid = req.user.uuid;
@@ -41,7 +42,9 @@ const create = async (req, res, next) => {
 
 const listCampaings = async (req, res, next) => {
   let campaings;
-  const filters = campaignFilters(req.query, req.user.uuid);
+  const { user } = req;
+  const filters =
+    user.priority === ALL ? campaignFilters(req.query) : campaignFilters(req.query, user.uuid);
   const listCampaigns = [];
 
   try {
@@ -77,6 +80,11 @@ const getCampaing = async (req, res, next) => {
   const { campaign } = res.locals;
   let client;
   let newCampaign;
+  const { user } = req;
+
+  if (user.priority === MANAGER_RESOURCES && user.uuid !== campaign.manager_uuid) {
+    return next(boom.unauthorized('No se pueden obtener campañas de las que no se es gestor'));
+  }
 
   try {
     client = await clientService.getClient(campaign.client_uuid);
