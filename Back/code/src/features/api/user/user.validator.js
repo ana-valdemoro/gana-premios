@@ -107,6 +107,23 @@ const recoveryUser = validate(
   },
 );
 
+const createLopdUser = validate(
+  {
+    body: joi
+      .object({
+        fileName: joi.string().required(),
+        mediaType: joi.string().required(),
+        uri: joi.string().base64().required(),
+      })
+      .unknown(false),
+  },
+  {
+    context: false,
+    statusCode: 422,
+    keyByField: true,
+  },
+);
+
 module.exports = {
   createUser,
   putUser,
@@ -116,4 +133,5 @@ module.exports = {
   emailRecoveryUser,
   recoveryUser,
   unlockUser,
+  createLopdUser,
 };

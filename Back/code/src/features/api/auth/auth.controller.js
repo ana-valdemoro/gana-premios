@@ -24,7 +24,7 @@ const login = async (req, res, next) => {
 
   if (user.blocked) {
     return next(
-      boom.unauthorized('Esta cuenta esta bloqueada revisa la bandeja de entrada de tu correo'),
+      boom.unauthorized('Esta cuenta esta bloqueada. Revisa la bandeja de entrada de tu correo'),
     );
   }
 

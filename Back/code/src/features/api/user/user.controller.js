@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+const mediaService = require('../media/media.service');
 
 // Public functions
 const activate = async (req, res) => {
@@ -142,6 +143,46 @@ const deleteUser = async (req, res, next) => {
   res.status(204).json({});
 };
 
+const createLopd = async (req, res, next) => {
+  const { fileName, mediaType, uri } = req.body;
+  let media;
+
+  try {
+    media = await mediaService.createMedia(fileName, mediaType, uri);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  return res.json(await mediaService.toPublic(media));
+};
+
+const getLopd = async (req, res, next) => {
+  const { user } = req;
+  let media;
+  let path;
+
+  if (user.lopd_uuid === '') {
+    return next(boom.badData('El usuario no ha subido la LOPD'));
+  }
+
+  try {
+    media = await mediaService.getMedia(user.lopd_uuid);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    path = await mediaService.getMediaPath(media);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  return res.download(path, media.original_file_name);
+};
+
 module.exports = {
   activate,
   forgot,
@@ -152,4 +193,6 @@ module.exports = {
   putUser,
   deleteUser,
   createMongoUser,
+  createLopd,
+  getLopd,
 };
