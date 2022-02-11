@@ -3,6 +3,7 @@ const service = require('./campaign.service');
 
 async function loadCampaign(req, res, next) {
   const { campaignUuid } = req.params;
+  console.log(campaignUuid);
   let campaign;
 
   if (!campaignUuid) {

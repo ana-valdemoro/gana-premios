@@ -4,16 +4,43 @@ const logger = require('../../../config/winston');
 const promotionFilters = require('./promotion.filters');
 const promotionService = require('./promotion.service');
 const campaignService = require('../campaign/campaign.service');
+const queryOptions = require('../../../utils/queryOptions');
 
 const listPromotions = async (req, res, next) => {
+  const filters = promotionFilters(req.query);
+  const options = queryOptions(req.query);
   try {
-    const filters = promotionFilters(req.query);
-
     res.json(await promotionService.getPromotions(filters));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
+};
+
+const getCampaignPromotions = async (req, res, next) => {
+  const { campaign } = res.locals;
+  const filters = promotionFilters(req.query, campaign.uuid);
+  const options = queryOptions(req.query);
+  let promotions;
+  let totalDocuments;
+
+  try {
+    promotions = await promotionService.getPaginatedPromotions(filters, options);
+    totalDocuments = await promotionService.countPromotionsInsideCampaign(campaign.uuid);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  const response = {
+    data: promotions,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: promotions.length,
+    totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
+  };
+
+  return res.json(response);
 };
 
 const getPromotion = async (req, res, next) => {
@@ -141,4 +168,5 @@ module.exports = {
   createPromotion,
   updatePromotion,
   deletePromotion,
+  getCampaignPromotions,
 };
