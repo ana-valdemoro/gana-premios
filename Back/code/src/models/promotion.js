@@ -48,7 +48,7 @@ const promotionSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    participation_rules_url: {
+    participation_rules: {
       required: true,
       type: String,
     },

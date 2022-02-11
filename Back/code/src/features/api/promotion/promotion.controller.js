@@ -41,7 +41,7 @@ const createPromotion = async (req, res, next) => {
     campaignUuid,
     startDate,
     endDate,
-    participationRulesUrl,
+    participationRules,
     maxNumberParticipants,
     type,
   } = req.body;
@@ -85,7 +85,7 @@ const createPromotion = async (req, res, next) => {
     campaign_uuid: campaignUuid,
     start_date: startDate,
     end_date: endDate,
-    participation_rules_url: participationRulesUrl,
+    participation_rules: participationRules,
     max_number_participants: maxNumberParticipants,
     type,
   };
@@ -109,7 +109,7 @@ const updatePromotion = async (req, res, next) => {
     campaignUuid,
     startDate,
     endDate,
-    participationRulesUrl,
+    participationRules,
     maxNumberParticipants,
     type,
   } = req.body;
@@ -129,7 +129,7 @@ const updatePromotion = async (req, res, next) => {
     campaign_uuid: campaignUuid,
     start_date: startDate,
     end_date: endDate,
-    participation_rules_url: participationRulesUrl,
+    participation_rules: participationRules,
     max_number_participants: maxNumberParticipants,
     type,
     uuid: promotion.uuid,
