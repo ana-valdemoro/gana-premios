@@ -9,6 +9,11 @@ pagination.getParams = (page, pageSize) => {
     limit = config.pagination.maxPageSize;
   }
 
+  // Si el usuario pone limit = -1, quiere que le devolvamos todo
+  if (limit === -1) {
+    return { limit: null, page: null };
+  }
+
   return {
     limit,
     page: parseInt(page, 10) || 1,
