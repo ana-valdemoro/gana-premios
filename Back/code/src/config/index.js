@@ -21,7 +21,7 @@ module.exports = {
     dir: `../${process.env.DB_MODEL}`,
   },
   pagination: {
-    pageSize: 15,
+    pageSize: 10,
     maxPageSize: 100,
   },
   mediaStorageFolder: '../../media',
