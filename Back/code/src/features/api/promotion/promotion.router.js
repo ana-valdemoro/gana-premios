@@ -19,6 +19,7 @@ router.post(
   '/',
   authorization('promotions:create'),
   validator.createPromotion,
+  middleware.checkCampaignRequirements,
   promotionController.createPromotion,
 );
 
