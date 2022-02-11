@@ -6,7 +6,8 @@ const clientService = require('../client/client.service');
 const { ALL, MANAGER_RESOURCES } = require('../user/user.service');
 
 const create = async (req, res, next) => {
-  const managerUuid = req.user.uuid;
+  const { user } = req;
+  const managerUuid = user.priority === MANAGER_RESOURCES ? user.uuid : req.body.managerUuid;
   const { name, clientUuid, startDate, endDate } = req.body;
   let client;
 
