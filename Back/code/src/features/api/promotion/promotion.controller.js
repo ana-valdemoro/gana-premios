@@ -9,12 +9,27 @@ const queryOptions = require('../../../utils/queryOptions');
 const listPromotions = async (req, res, next) => {
   const filters = promotionFilters(req.query);
   const options = queryOptions(req.query);
+  let promotions;
+  let totalDocuments;
+  console.log(filters);
+
   try {
-    res.json(await promotionService.getPromotions(filters));
+    promotions = await promotionService.getPaginatedPromotions(filters, options);
+    totalDocuments =  filters.campaign_uuid ? await promotionService.countPromotionsInsideCampaign(filters.campaign_uuid) : await promotionService.countAllPromotions();
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
+
+  const response = {
+    data: promotions,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: promotions.length,
+    totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
+  };
+
+  return res.json(response);
 };
 
 const getCampaignPromotions = async (req, res, next) => {

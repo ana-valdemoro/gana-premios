@@ -25,7 +25,7 @@ router.post(
 );
 
 // Listar las promociones para el admin paginadas
-router.get('/', authorization('promotions:view'), promotionController.listPromotions);
+router.get('/', authorization('ADMIN'), promotionController.listPromotions);
 
 // Listar las promociones paginadas
 router.get('/campaign/:campaignUuid', authorization('promotions:view'), campaignMiddleware.loadCampaign, promotionController.getCampaignPromotions);
