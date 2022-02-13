@@ -18,8 +18,8 @@ router.get('/', authorization('users:view'), userController.listUsers);
 router.post(
   '/manager',
   authorization('users:create'),
-  validator.createUser,
-  userController.createMongoUser,
+  validator.createManagerUser,
+  userController.createManagerUser,
 );
 
 // Editar un usuario

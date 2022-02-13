@@ -8,7 +8,6 @@ const createUser = validate(
       name: joi.string().alphanum().min(3).max(30).required(),
       email: joi.string().email().required(),
       password: joi.string().required(),
-      priority: joi.number().required(),
     }),
   },
   {
@@ -18,6 +17,21 @@ const createUser = validate(
   },
 );
 
+const createManagerUser = validate(
+  {
+    body: joi.object({
+      // eslint-disable-next-line newline-per-chained-call
+      name: joi.string().alphanum().min(3).max(30).required(),
+      email: joi.string().email().required(),
+      password: joi.string().required(),
+    }),
+  },
+  {
+    context: false,
+    statusCode: 422,
+    keyByField: true,
+  },
+);
 const putUser = validate(
   {
     body: joi.object({
@@ -110,6 +124,7 @@ const recoveryUser = validate(
 
 module.exports = {
   createUser,
+  createManagerUser,
   putUser,
   deleteUser,
   activateUser,

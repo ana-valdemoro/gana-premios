@@ -4,6 +4,8 @@ const userService = require('./user.service');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+const userGroupService = require('../userGroup/userGroup.service');
+const { MANAGERS_RESOURCES } = require('./user.service');
 
 const activateAccount = async (req, res, next) => {
   const { token } = req.params;
@@ -86,14 +88,17 @@ const listUsers = async (req, res, next) => {
   }
 };
 
-const createMongoUser = async (req, res, next) => {
+const createManagerUser = async (req, res, next) => {
+  const searchRole = await userGroupService.getRoleByName('Managers');
   const userData = req.body;
-  console.log(userData);
-  const userToCreate = { ...userData, role_uuid: 'eafcd4be-b15d-41ce-bd0e-757178955683' };
   let user;
 
   try {
-    user = await userService.createUser(userToCreate);
+    user = await userService.createUser({
+      ...userData,
+      role_uuid: searchRole.uuid,
+      priority: MANAGERS_RESOURCES,
+    });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
       const dupField = Object.keys(error.keyValue)[0];
@@ -172,5 +177,5 @@ module.exports = {
   getUser,
   putUser,
   deleteUser,
-  createMongoUser,
+  createManagerUser,
 };
