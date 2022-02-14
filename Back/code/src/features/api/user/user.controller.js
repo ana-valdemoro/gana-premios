@@ -7,6 +7,7 @@ const logger = require('../../../config/winston');
 const mediaService = require('../media/media.service');
 const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGERS_RESOURCES } = require('./user.service');
+const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 
 const activateAccount = async (req, res, next) => {
   const { token } = req.params;
@@ -90,11 +91,23 @@ const listUsers = async (req, res, next) => {
 };
 
 const createManagerUser = async (req, res, next) => {
-  const searchRole = await userGroupService.getRoleByName('Managers');
   const userData = req.body;
   let user;
 
+  const isValidPassword = validatePasswordPattern(userData.email, userData.password);
+
+  if (!isValidPassword.status) {
+    const errorResponse = {
+      statusCode: 422,
+      message: 'Contraseña inválida',
+      errors: isValidPassword.errors,
+    };
+    return res.status(422).json(errorResponse);
+  }
+
   try {
+    const searchRole = await userGroupService.getRoleByName('Managers');
+
     user = await userService.createUser({
       ...userData,
       role_uuid: searchRole.uuid,
@@ -105,12 +118,13 @@ const createManagerUser = async (req, res, next) => {
       const dupField = Object.keys(error.keyValue)[0];
       return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
     }
+
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
+
   try {
     const activateUser = await userService.activateAccount(user._id);
-    console.log(activateUser);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
