@@ -19,12 +19,10 @@ const promotionSchema = new mongoose.Schema(
     prize_title: {
       required: true,
       type: String,
-      unique: true,
     },
     prize_description: {
       required: true,
       type: String,
-      unique: true,
     },
     campaign_uuid: {
       required: true,
