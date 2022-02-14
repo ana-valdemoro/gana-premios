@@ -5,22 +5,38 @@ const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
 const mediaService = require('../media/media.service');
+const userGroupService = require('../userGroup/userGroup.service');
+const { MANAGERS_RESOURCES } = require('./user.service');
 
-// Public functions
-const activate = async (req, res) => {
+const activateAccount = async (req, res, next) => {
   const { token } = req.params;
+  let activeUser;
+  let user;
 
   try {
     if (token !== '') {
-      await userService.activate(token, { active: true, token: '' });
+      user = await userService.getUserByToken(token);
+    }
+
+    if (!user) {
+      return next(boom.unauthorized('Usuario no encontrado'));
     }
   } catch (error) {
     logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
   }
 
-  return res.json({
-    status: 'OK',
-  });
+  try {
+    activeUser = await userService.activeAccount(user._id);
+    console.log(activeUser);
+
+    if (activeUser) {
+      return res.status(204).json();
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
 };
 
 const forgot = async (req, res) => {
@@ -73,13 +89,17 @@ const listUsers = async (req, res, next) => {
   }
 };
 
-const createMongoUser = async (req, res, next) => {
+const createManagerUser = async (req, res, next) => {
+  const searchRole = await userGroupService.getRoleByName('Managers');
   const userData = req.body;
-  const userToCreate = { ...userData, role_uuid: '34703d0b-9ad1-42a5-bd42-4565467f54a8' };
   let user;
 
   try {
-    user = await userService.createUser(userToCreate);
+    user = await userService.createUser({
+      ...userData,
+      role_uuid: searchRole.uuid,
+      priority: MANAGERS_RESOURCES,
+    });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
       const dupField = Object.keys(error.keyValue)[0];
@@ -87,6 +107,13 @@ const createMongoUser = async (req, res, next) => {
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
+  }
+  try {
+    const activateUser = await userService.activateAccount(user._id);
+    console.log(activateUser);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
   }
 
   res.status(201).json(userService.toPublic(user));
@@ -184,15 +211,14 @@ const getLopd = async (req, res, next) => {
 };
 
 module.exports = {
-  activate,
+  activateAccount,
   forgot,
   recovery,
   listUsers,
   getUser,
-  // createUser,
   putUser,
   deleteUser,
-  createMongoUser,
   createLopd,
   getLopd,
+  createManagerUser,
 };

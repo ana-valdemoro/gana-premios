@@ -52,7 +52,7 @@ const schema = new mongoose.Schema(
     },
     priority: {
       type: Number,
-      required: true,
+      // required: true,
     },
     blocked: {
       required: true,

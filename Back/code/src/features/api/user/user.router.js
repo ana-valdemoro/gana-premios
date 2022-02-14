@@ -14,12 +14,12 @@ router.get('/:userUuid', authorization('users:view'), middleware.loadUser, userC
 // Listar los usuarios paginados
 router.get('/', authorization('users:view'), userController.listUsers);
 
-// Crear un usuario
+// Crear un usuario manager
 router.post(
-  '/',
+  '/manager',
   authorization('users:create'),
-  validator.createUser,
-  userController.createMongoUser,
+  validator.createManagerUser,
+  userController.createManagerUser,
 );
 
 // Editar un usuario
