@@ -47,14 +47,14 @@ async function checkCampaignRequirements(req, res, next) {
     return next(boom.badData('La campaña no está activa'));
   }
 
-  if (new Date(campaign.start_date) > new Date(startDate)) {
+  if (new Date(campaign.start_date) >= new Date(startDate)) {
     return next(
       boom.badData(
         'La fecha de creación de inicio de la promo debe ser mayor que la de la campaña',
       ),
     );
   }
-  if (new Date(campaign.end_date) < new Date(endDate)) {
+  if (new Date(campaign.end_date) <= new Date(endDate)) {
     return next(
       boom.badData('La fecha de finalización de la promo debe ser menor que la de la campaña'),
     );
