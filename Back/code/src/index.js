@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const boom = require('@hapi/boom');
 const helmet = require('helmet');
-const _ = require('lodash');
+const get = require('lodash/get');
 
 const config = require('./config');
 const logger = require('./config/winston');
@@ -75,11 +75,11 @@ app.use((err, req, res, next) => {
   const error = err.isBoom ? err : boom.badImplementation();
   const { output } = error;
 
-  const statusCode = _.get(output, 'payload.statusCode', 500);
+  const statusCode = get(output, 'payload.statusCode', 500);
   if (!res._headerSent) {
     return res.status(statusCode || 500).json({
       statusCode,
-      message: _.get(output, 'payload.message', 'api.error.internal_error'),
+      message: get(output, 'payload.message', 'api.error.internal_error'),
     });
   }
 });
