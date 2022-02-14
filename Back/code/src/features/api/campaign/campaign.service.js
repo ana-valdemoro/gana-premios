@@ -11,7 +11,19 @@ const createCampaign = async (data) => {
   return Campaign.create(dataToCreate);
 };
 
-const getCampaigns = (filters) => Campaign.find({ ...filters });
+const getPaginatedCampaigns = async (filters, options) => {
+  const offset = options.page * options.limit - options.limit;
+
+  return Campaign.find({ ...filters })
+    .skip(offset)
+    .limit(options.limit);
+};
+
+const countManagerDocuments = async (managerUuid) => {
+  return Campaign.countDocuments({ manager_uuid: managerUuid })
+};
+
+const countAllDocuments = async () => Campaign.countDocuments();
 
 const getCampaign = (uuid) => Campaign.findOne({ uuid });
 
@@ -21,7 +33,9 @@ const putCampaign = async (uuid, data) =>
 module.exports = {
   toPublic,
   createCampaign,
-  getCampaigns,
+  getPaginatedCampaigns,
   getCampaign,
   putCampaign,
+  countManagerDocuments,
+  countAllDocuments
 };

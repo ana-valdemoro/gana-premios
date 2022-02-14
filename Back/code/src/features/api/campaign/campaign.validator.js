@@ -9,6 +9,7 @@ const createCampaign = validate(
       clientUuid: joi.string().uuid().required(),
       startDate: joi.date().required(),
       endDate: joi.date().greater(joi.ref('startDate')).required(),
+      managerUuid: joi.string().uuid(),
     }),
   },
   {
@@ -26,6 +27,7 @@ const putCampaign = validate(
       clientUuid: joi.string().uuid().required(),
       startDate: joi.date().required(),
       endDate: joi.date().greater(joi.ref('startDate')).required(),
+      active: joi.boolean(),
     }),
   },
   {

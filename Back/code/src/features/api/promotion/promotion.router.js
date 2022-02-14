@@ -4,6 +4,7 @@ const router = express.Router();
 const promotionController = require('./promotion.controller');
 const authorization = require('../../../utils/middleware/authorization');
 const middleware = require('./promotion.middleware');
+const campaignMiddleware = require('../campaign/campaign.middleware');
 const validator = require('./promotion.validator');
 
 // Ver una promoción
@@ -19,11 +20,15 @@ router.post(
   '/',
   authorization('promotions:create'),
   validator.createPromotion,
+  middleware.checkCampaignRequirements,
   promotionController.createPromotion,
 );
 
+// Listar las promociones para el admin paginadas
+router.get('/', authorization('ADMIN'), promotionController.listPromotions);
+
 // Listar las promociones paginadas
-router.get('/', authorization('promotions:view'), promotionController.listPromotions);
+router.get('/campaign/:campaignUuid', authorization('promotions:view'), campaignMiddleware.loadCampaign, promotionController.getCampaignPromotions);
 
 // Editar una promoción
 router.put(

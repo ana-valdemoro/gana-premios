@@ -9,15 +9,27 @@ const clientFilters = require('./client.filters');
 const logger = require('../../../config/winston');
 
 const listClients = async (req, res, next) => {
-  try {
-    const filters = clientFilters(req.query);
-    const options = queryOptions(req.query);
+  const filters = clientFilters(req.query);
+  const options = queryOptions(req.query);
+  let clients; 
+  let totalDocuments;
 
-    res.json(await clientService.getClients(filters, options));
+  try {
+    clients = await clientService.getPaginatedClients(filters, options);
+    totalDocuments = await clientService.countDocuments();
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
+
+  const response = {
+    data: clients,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: clients.length,
+    totalPages: options.limit ? Math.ceil( totalDocuments / options.limit) : 1,
+  };
+  return res.json(response);
 };
 
 const getClient = async (req, res, next) => {

@@ -4,9 +4,11 @@ const campaignFilters = require('./campaign.filters');
 const campaignService = require('./campaign.service');
 const clientService = require('../client/client.service');
 const { ALL, MANAGER_RESOURCES } = require('../user/user.service');
+const queryOptions = require('../../../utils/queryOptions');
 
 const create = async (req, res, next) => {
-  const managerUuid = req.user.uuid;
+  const { user } = req;
+  const managerUuid = user.priority === MANAGER_RESOURCES ? user.uuid : req.body.managerUuid;
   const { name, clientUuid, startDate, endDate } = req.body;
   let client;
 
@@ -41,14 +43,30 @@ const create = async (req, res, next) => {
 };
 
 const listCampaings = async (req, res, next) => {
-  let campaings;
   const { user } = req;
-  const filters =
-    user.priority === ALL ? campaignFilters(req.query) : campaignFilters(req.query, user.uuid);
+  let filters;
+  const options = queryOptions(req.query);
   const listCampaigns = [];
+  let campaings;
+  let totalDocuments;
+
 
   try {
-    campaings = await campaignService.getCampaigns(filters);
+    if (user.priority === ALL ){
+      filters = campaignFilters(req.query);
+      totalDocuments = await campaignService.countAllDocuments();
+    }else{
+      filters = campaignFilters(req.query, user.uuid);
+      totalDocuments = await campaignService.countManagerDocuments(user.uuid);
+    }
+    
+  } catch (error) {
+    logger.error(`${error}`);
+      return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    campaings = await campaignService.getPaginatedCampaigns(filters, options);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
@@ -59,9 +77,10 @@ const listCampaings = async (req, res, next) => {
     try {
       // eslint-disable-next-line no-await-in-loop
       const client = await clientService.getClient(campaign.client_uuid);
-      console.log(client);
+
       if (!client) {
         logger.error('El cliente no existe');
+        listCampaigns.push({ ...campaignPublic });
       } else {
         // eslint-disable-next-line no-await-in-loop
         const campaignPublic = await campaignService.toPublic(campaign);
@@ -73,7 +92,15 @@ const listCampaings = async (req, res, next) => {
     }
   }
 
-  return res.json(listCampaigns);
+  const response = {
+    data: listCampaigns,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: listCampaigns.length,
+    totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
+  };
+
+  return res.json(response);
 };
 
 const getCampaing = async (req, res, next) => {
@@ -112,7 +139,7 @@ const getCampaing = async (req, res, next) => {
 
 const updateCampaign = async (req, res, next) => {
   const { campaign } = res.locals;
-  const { name, clientUuid, startDate, endDate } = req.body;
+  const { name, clientUuid, startDate, endDate, active } = req.body;
   let client;
 
   if (campaign.client_uuid !== clientUuid) {
@@ -136,7 +163,7 @@ const updateCampaign = async (req, res, next) => {
     client_uuid: client ? client.uuid : campaign.client_uuid,
     uuid: campaign.uuid,
     manager_uuid: campaign.manager_uuid,
-    active: campaign.active,
+    active,
     deleted: campaign.deleted,
   };
   let response;

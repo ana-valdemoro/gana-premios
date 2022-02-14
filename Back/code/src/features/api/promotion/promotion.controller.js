@@ -1,22 +1,61 @@
 /* eslint-disable import/no-unresolved */
 const boom = require('@hapi/boom');
-
-const { UniqueConstraintError } = require('sequelize');
-
-const promotionService = require('./promotion.service');
-
-const promotionFilters = require('./promotion.filters');
 const logger = require('../../../config/winston');
+const promotionFilters = require('./promotion.filters');
+const promotionService = require('./promotion.service');
+const campaignService = require('../campaign/campaign.service');
+const queryOptions = require('../../../utils/queryOptions');
 
 const listPromotions = async (req, res, next) => {
-  try {
-    const filters = promotionFilters(req.query);
+  const filters = promotionFilters(req.query);
+  const options = queryOptions(req.query);
+  let promotions;
+  let totalDocuments;
+  console.log(filters);
 
-    res.json(await promotionService.getPromotions(filters));
+  try {
+    promotions = await promotionService.getPaginatedPromotions(filters, options);
+    totalDocuments =  filters.campaign_uuid ? await promotionService.countPromotionsInsideCampaign(filters.campaign_uuid) : await promotionService.countAllPromotions();
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
+
+  const response = {
+    data: promotions,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: promotions.length,
+    totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
+  };
+
+  return res.json(response);
+};
+
+const getCampaignPromotions = async (req, res, next) => {
+  const { campaign } = res.locals;
+  const filters = promotionFilters(req.query, campaign.uuid);
+  const options = queryOptions(req.query);
+  let promotions;
+  let totalDocuments;
+
+  try {
+    promotions = await promotionService.getPaginatedPromotions(filters, options);
+    totalDocuments = await promotionService.countPromotionsInsideCampaign(campaign.uuid);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  const response = {
+    data: promotions,
+    page: options.page || 1,
+    perPage: options.limit || -1,
+    totalItems: promotions.length,
+    totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
+  };
+
+  return res.json(response);
 };
 
 const getPromotion = async (req, res, next) => {
@@ -44,7 +83,7 @@ const createPromotion = async (req, res, next) => {
     campaignUuid,
     startDate,
     endDate,
-    participationRulesUrl,
+    participationRules,
     maxNumberParticipants,
     type,
   } = req.body;
@@ -59,7 +98,7 @@ const createPromotion = async (req, res, next) => {
     campaign_uuid: campaignUuid,
     start_date: startDate,
     end_date: endDate,
-    participation_rules_url: participationRulesUrl,
+    participation_rules: participationRules,
     max_number_participants: maxNumberParticipants,
     type,
   };
@@ -67,12 +106,10 @@ const createPromotion = async (req, res, next) => {
   try {
     promotion = await promotionService.createPromotion(promotionData);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe esta promoción'));
-    }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
+
   res.status(201).json(promotionService.toPublic(promotion));
 };
 
@@ -85,7 +122,7 @@ const updatePromotion = async (req, res, next) => {
     campaignUuid,
     startDate,
     endDate,
-    participationRulesUrl,
+    participationRules,
     maxNumberParticipants,
     type,
   } = req.body;
@@ -105,7 +142,7 @@ const updatePromotion = async (req, res, next) => {
     campaign_uuid: campaignUuid,
     start_date: startDate,
     end_date: endDate,
-    participation_rules_url: participationRulesUrl,
+    participation_rules: participationRules,
     max_number_participants: maxNumberParticipants,
     type,
     uuid: promotion.uuid,
@@ -146,4 +183,5 @@ module.exports = {
   createPromotion,
   updatePromotion,
   deletePromotion,
+  getCampaignPromotions,
 };

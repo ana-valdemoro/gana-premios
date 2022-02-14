@@ -4,12 +4,10 @@ module.exports = (params) => {
   const query = {};
 
   if (params.name) {
-    query.name = {
-      [Op.like]: `%${params.name}%`,
-    };
+    query.name = params.name;
   }
 
-  query.deleted = { [Op.ne]: true };
+  query.deleted = false;
 
   return query;
 };
