@@ -1,4 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 // material
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Link, Container, Typography } from '@mui/material';
@@ -8,7 +10,6 @@ import AuthLayout from '../layouts/AuthLayout';
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
-import AuthSocial from '../components/authentication/AuthSocial';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,14 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
+  const { error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (error) {
+      console.log('No nos hemos podido loguear');
+    }
+  }, [error]);
+
   return (
     <RootStyle title="Login | Minimal-UI">
       <AuthLayout>
@@ -64,9 +73,12 @@ export default function Login() {
             <Typography variant="h4" gutterBottom>
               Sign in to Minimal
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+            {error ? (
+              <Typography sx={{ color: 'text.error' }}>{error}</Typography>
+            ) : (
+              <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+            )}
           </Stack>
-          <AuthSocial />
 
           <LoginForm />
 
