@@ -15,10 +15,10 @@ router.post('/login', userValidator.loginUser, authController.login);
 // Registrar usuario
 router.post('/register', userValidator.createUser, authController.register);
 
-// Send email for recovery pass (User)
-router.post('/forgot', userValidator.emailRecoveryUser, userController.forgot);
+// Send email for recovery pass
+router.post('/forgot', userValidator.emailRecoveryUser, userController.forgotPassword);
 
-// Restablecer contraseña (User)
+// Restablecer contraseña
 router.post('/recovery', userValidator.recoveryUser, userController.recovery);
 
 // Desbloquear cuenta
