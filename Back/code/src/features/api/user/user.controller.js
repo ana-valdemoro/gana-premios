@@ -40,7 +40,7 @@ const activateAccount = async (req, res, next) => {
   }
 };
 
-const forgot = async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -226,7 +226,7 @@ const getLopd = async (req, res, next) => {
 
 module.exports = {
   activateAccount,
-  forgot,
+  forgotPassword,
   recovery,
   listUsers,
   getUser,

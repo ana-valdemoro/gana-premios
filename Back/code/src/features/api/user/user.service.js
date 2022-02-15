@@ -51,7 +51,6 @@ const activateAccount = async (user) => {
     uuid: '',
     type: 'user',
   });
-  console.log(token);
   try {
     await mailService.sendActiveAccountEmail(user.email, token);
   } catch (error) {
@@ -68,6 +67,40 @@ const activeAccount = async (id) => {
     token: '',
   };
   return putUser(id, data);
+};
+
+// Olvidar contraseña
+
+const forgotPassword = async (user) => {
+  const token = jwt.generateJWT({
+    uuid: user.uuid,
+    type: 'user',
+   });
+
+  try {
+    await mailService.sendRecoveryPasswordEmail(user, token);
+   } catch (error) {
+    logger.info(`${error}`);
+  }
+
+  return true;
+ };
+
+// Recuperación de contraseña
+
+const recoverPassword = async (user) => {
+  const token = jwt.generateJWT({
+    uuid: '',
+    type: 'user',
+  });
+  try {
+    await mailService.sendRecoveryPasswordEmail(user.email, token);
+  } catch (error) {
+    logger.info(`${error}`);
+    return Promise.reject(new Error('Ha fallado el envio de email'));
+  }
+
+  return true;
 };
 
 // Bloqueo de cuenta
@@ -128,6 +161,8 @@ module.exports = {
   // activate,
   activateAccount,
   activeAccount,
+  forgotPassword,
+  recoverPassword,
   incrementLoginAttempts,
   resetLoginAttempts,
   blockAccount,

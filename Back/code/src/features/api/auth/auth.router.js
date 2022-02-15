@@ -12,7 +12,7 @@ router.post('/activate/:token', userValidator.activateUser, authController.activ
 // Login del usuario
 router.post('/login', userValidator.loginUser, authController.login);
 
-// Register user
+// Registrar usuario
 router.post('/register', userValidator.createUser, authController.register);
 
 // Send email for recovery pass (User)
