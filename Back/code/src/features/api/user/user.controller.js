@@ -84,6 +84,8 @@ const recovery = async (req, res) => {
   return res.json({
     status: 'OK',
   });
+
+  user.password = newPassword;
 };
 
 const listUsers = async (req, res, next) => {
