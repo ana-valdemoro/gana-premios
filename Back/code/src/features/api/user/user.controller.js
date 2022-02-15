@@ -60,16 +60,27 @@ const forgotPassword = async (req, res) => {
 };
 
 const recovery = async (req, res) => {
-  const { token, password, confirmPassword } = req.body;
+  const { newPassword, token } = req.body;
+  //const userData = req.body;
+  //const { token, password, confirmPassword } = req.body;
+  if (!(newPassword && token)) {
+    res.status(422).json('Todos los campos son requeridos');
+  }
+  /*  const isValidPassword = validatePasswordPattern(userData.password);
+  if (!isValidPassword) {
+    const errorResponse = {
+      statusCode: 422,
+      message: 'Contraseña inválida',
+      errors: isValidPassword.errors,
+    };
+    return res.status(422).json(errorResponse);
+  } */
 
   try {
-    if (password === confirmPassword) {
-      await userService.recoveryPassword(token, { password });
-    }
+    await userService.recoveryPassword(token, password);
   } catch (error) {
     logger.error(`${error}`);
   }
-
   return res.json({
     status: 'OK',
   });

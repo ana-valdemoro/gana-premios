@@ -75,32 +75,24 @@ const forgotPassword = async (user) => {
   const token = jwt.generateJWT({
     uuid: user.uuid,
     type: 'user',
-   });
+  });
 
   try {
     await mailService.sendRecoveryPasswordEmail(user, token);
-   } catch (error) {
+  } catch (error) {
     logger.info(`${error}`);
   }
 
   return true;
- };
+};
 
 // Recuperación de contraseña
 
-const recoverPassword = async (user) => {
-  const token = jwt.generateJWT({
-    uuid: '',
-    type: 'user',
-  });
-  try {
-    await mailService.sendRecoveryPasswordEmail(user.email, token);
-  } catch (error) {
-    logger.info(`${error}`);
-    return Promise.reject(new Error('Ha fallado el envio de email'));
-  }
-
-  return true;
+const recoveryPassword = async (token, data) => {
+  //TODO: Send email with token for recovery pass
+  const payload = jwt.verifyJWT(token);
+  const user = await User.findOneAndUpdate({ token: payload.token, newPassword: payload.password });
+  return user.update(data);
 };
 
 // Bloqueo de cuenta
@@ -162,7 +154,7 @@ module.exports = {
   activateAccount,
   activeAccount,
   forgotPassword,
-  recoverPassword,
+  recoveryPassword,
   incrementLoginAttempts,
   resetLoginAttempts,
   blockAccount,
