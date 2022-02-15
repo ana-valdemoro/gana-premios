@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -17,11 +17,23 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
+// store
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../../store/reducers/authSlice';
+
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const { user, isLoggedIn } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -35,8 +47,10 @@ export default function LoginForm() {
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values, { setSubmitting }) => {
+      dispatch(login(values)).then(() => {
+        setSubmitting(false);
+      });
     }
   });
 
