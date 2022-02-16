@@ -1,7 +1,10 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Card, Link, Container, Typography } from '@mui/material';
+import { clearMessage } from '../store/reducers/messageSlice';
 // layouts
 import AuthLayout from '../layouts/AuthLayout';
 // components
@@ -39,6 +42,13 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
+  const { message } = useSelector((state) => state.message);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
   return (
     <RootStyle title="Register | Minimal-UI">
       <AuthLayout>
@@ -66,6 +76,14 @@ export default function Register() {
             <Typography sx={{ color: 'text.secondary' }}>
               Free forever. No credit card needed.
             </Typography>
+            {message ? <Typography sx={{ color: 'text.error' }}>{message}</Typography> : null}
+            {/* {message && (
+              <div className="form-group">
+                <div className="alert alert-danger" role="alert">
+                  {message}
+                </div>
+              </div>
+            )} */}
           </Box>
 
           <RegisterForm />

@@ -6,21 +6,23 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
+import authService from '../../../services/authenticationService';
 
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const { message } = useSelector((state) => state.message);
 
   const RegisterSchema = Yup.object().shape({
-    fullName: Yup.string()
-      .min(3, 'Too Short!')
-      .max(30, 'Too Long!')
-      .required('Full name is required'),
+    name: Yup.string().min(3, 'Too Short!').max(30, 'Too Long!').required('Full name is required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().test({
       password: 'validator-custom-password',
@@ -73,14 +75,24 @@ export default function RegisterForm() {
 
   const formik = useFormik({
     initialValues: {
-      fullName: '',
+      name: '',
       email: '',
       password: ''
     },
     validationSchema: RegisterSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      setSubmitting(false);
-      navigate('/dashboard', { replace: true });
+    onSubmit: async (values, { setSubmitting }) => {
+      console.log(values);
+      if (message !== '') {
+        dispatch(clearMessage());
+      }
+      const response = await authService.register(values);
+      console.log(response);
+      if (response.statusCode === 422) {
+        dispatch(setMessage(response));
+      } else {
+        setSubmitting(false);
+        navigate('/login', { replace: true });
+      }
     }
   });
 
@@ -93,9 +105,9 @@ export default function RegisterForm() {
           <TextField
             fullWidth
             label="Full name"
-            {...getFieldProps('fullName')}
-            error={Boolean(touched.fullName && errors.fullName)}
-            helperText={touched.fullName && errors.fullName}
+            {...getFieldProps('name')}
+            error={Boolean(touched.name && errors.name)}
+            helperText={touched.name && errors.name}
           />
 
           <TextField
