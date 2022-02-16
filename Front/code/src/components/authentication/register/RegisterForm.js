@@ -50,7 +50,7 @@ export default function RegisterForm() {
         dispatch(setMessage(response));
       } else {
         setSubmitting(false);
-        navigate('/login', { replace: true });
+        navigate('/lopd', { replace: true });
       }
     }
   });
