@@ -48,9 +48,13 @@ const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { n
 // Activación de cuenta
 
 const activateAccount = async (user) => {
+  const token = jwt.generateJWT({
+    uuid: '',
+    type: 'user',
+  });
+  console.log(token);
   try {
-    console.log({ user });
-    await mailService.sendActiveAccountEmail(user.email, user.token);
+    await mailService.sendActiveAccountEmail(user.email, token);
   } catch (error) {
     logger.info(`${error}`);
     return Promise.reject(new Error('Ha fallado el envio de email'));
