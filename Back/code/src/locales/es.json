@@ -1,0 +1,11 @@
+{
+  "errorMailPassword": "El email y la contraseña introducidos no son válidos",
+  "lockedAccount": "La cuenta ha sido bloqueada y se ha enviado un correo para desbloquearla",
+  "unlockedMailTitle": "Desbloqueo de cuenta",
+  "unlockSubject": "Desbloquear cuenta",
+  "unlockedAccountcheckMail": "Esta cuenta esta bloqueada. Revisa la bandeja de entrada de tu correo",
+  "invalidPassword": "La contraseña es errónea",
+  "invalidUser": "Usuario no válido",
+  "invalidPassword2": "Contraseña inválida",
+  "clientNonExist": "El cliente no existe"
+}

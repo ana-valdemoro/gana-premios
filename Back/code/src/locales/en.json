@@ -1,0 +1,11 @@
+{
+  "errorMailPassword": "The email and password entered are not valid",
+  "lockedAccount": "The account has been blocked and an email has been sent to unblock it",
+  "unlockedMailTitle": "Unlock your account",
+  "unlockSubject": "Unlock your account",
+  "unlockedAccountcheckMail": "This account is locked. Check your email inbox",
+  "invalidPassword": "The password is wrong",
+  "invalidUser": "Invalid user",
+  "invalidPassword2": "Invalid password",
+  "clientNonExist": "the client does not exist"
+}

@@ -23,6 +23,7 @@
     "express-validation": "^3.0.5",
     "handlebars": "^4.7.7",
     "helmet": "^4.6.0",
+    "i18n": "^0.14.1",
     "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
