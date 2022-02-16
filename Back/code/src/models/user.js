@@ -65,7 +65,7 @@ const schema = new mongoose.Schema(
     },
     language: {
       type: String,
-      default: 'es',
+      default: 'en',
     },
   },
   {

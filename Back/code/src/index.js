@@ -16,7 +16,7 @@ const { name } = require('../package.json');
 
 i18n.configure({
   locales: ['en', 'es'],
-  defaultLocale: 'es',
+  defaultLocale: 'en',
   register: global,
   directory: path.join(__dirname, '/locales'),
 });
