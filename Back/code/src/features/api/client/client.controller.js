@@ -7,11 +7,12 @@ const clientService = require('./client.service');
 const queryOptions = require('../../../utils/queryOptions');
 const clientFilters = require('./client.filters');
 const logger = require('../../../config/winston');
+const { getTranslation } = require('../../../utils/getTranslation');
 
 const listClients = async (req, res, next) => {
   const filters = clientFilters(req.query);
   const options = queryOptions(req.query);
-  let clients; 
+  let clients;
   let totalDocuments;
 
   try {
@@ -27,7 +28,7 @@ const listClients = async (req, res, next) => {
     page: options.page || 1,
     perPage: options.limit || -1,
     totalItems: clients.length,
-    totalPages: options.limit ? Math.ceil( totalDocuments / options.limit) : 1,
+    totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
   };
   return res.json(response);
 };
@@ -62,7 +63,7 @@ const createClient = async (req, res, next) => {
     client = await clientService.createClient(clientData);
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe este cliente'));
+      return next(boom.badData(getTranslation('clientExist')));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
@@ -93,7 +94,7 @@ const putClient = async (req, res, next) => {
     response = await clientService.putClient(clientUuid, clientData);
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
-      return next(boom.badData('Ya existe este cliente'));
+      return next(boom.badData('clientExist'));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));

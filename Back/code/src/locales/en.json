@@ -7,5 +7,11 @@
   "invalidPassword": "The password is wrong",
   "invalidUser": "Invalid user",
   "invalidPassword2": "Invalid password",
-  "clientNonExist": "the client does not exist"
+  "clientNonExist": "the client does not exist",
+  "noManagerGetCampaign": "You cannot obtain campaigns of which you are not a manager",
+  "clientNonExist2": "The customer entered does not exist",
+  "campaignIdRequired": "Campaign ID is required",
+  "campaignNotFound": "Campaign not found",
+  "clientExist": "This client already exists",
+  "userNotFound": "User not found"
 }

@@ -19,9 +19,7 @@ const getPaginatedClients = async (filters, options) => {
     .limit(options.limit);
 };
 
-const countDocuments = async () => {
-  return Client.countDocuments();
-};
+const countDocuments = async () => Client.countDocuments();
 
 const getClient = async (uuid) => Client.findOne({ uuid });
 

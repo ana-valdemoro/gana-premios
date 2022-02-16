@@ -153,7 +153,7 @@ const activateAccount = async (req, res, next) => {
     }
 
     if (!user) {
-      return next(boom.unauthorized('Usuario no encontrado'));
+      return next(boom.unauthorized(res.__('userNotFound')));
     }
   } catch (error) {
     logger.error(`${error}`);

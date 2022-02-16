@@ -5,6 +5,7 @@ const campaignService = require('./campaign.service');
 const clientService = require('../client/client.service');
 const { ALL, MANAGER_RESOURCES } = require('../user/user.service');
 const queryOptions = require('../../../utils/queryOptions');
+const { getTranslation } = require('../../../utils/getTranslation');
 
 const create = async (req, res, next) => {
   const { user } = req;
@@ -16,7 +17,8 @@ const create = async (req, res, next) => {
     client = await clientService.getClient(clientUuid);
 
     if (!client) {
-      return next(boom.badData('El cliente no existe'));
+      console.log('holaaaaaaaaa', user.language);
+      return next(boom.badData(getTranslation('clientNonExist', user.language)));
     }
   } catch (error) {
     logger.error(`${error}`);
@@ -50,19 +52,17 @@ const listCampaings = async (req, res, next) => {
   let campaings;
   let totalDocuments;
 
-
   try {
-    if (user.priority === ALL ){
+    if (user.priority === ALL) {
       filters = campaignFilters(req.query);
       totalDocuments = await campaignService.countAllDocuments();
-    }else{
+    } else {
       filters = campaignFilters(req.query, user.uuid);
       totalDocuments = await campaignService.countManagerDocuments(user.uuid);
     }
-    
   } catch (error) {
     logger.error(`${error}`);
-      return next(boom.badImplementation(error.message));
+    return next(boom.badImplementation(error.message));
   }
 
   try {
@@ -77,13 +77,12 @@ const listCampaings = async (req, res, next) => {
     try {
       // eslint-disable-next-line no-await-in-loop
       const client = await clientService.getClient(campaign.client_uuid);
-
+      // eslint-disable-next-line no-await-in-loop
+      const campaignPublic = await campaignService.toPublic(campaign);
       if (!client) {
         logger.error('El cliente no existe');
         listCampaigns.push({ ...campaignPublic });
       } else {
-        // eslint-disable-next-line no-await-in-loop
-        const campaignPublic = await campaignService.toPublic(campaign);
         listCampaigns.push({ ...campaignPublic, client });
       }
     } catch (error) {
@@ -110,14 +109,14 @@ const getCampaing = async (req, res, next) => {
   const { user } = req;
 
   if (user.priority === MANAGER_RESOURCES && user.uuid !== campaign.manager_uuid) {
-    return next(boom.unauthorized('No se pueden obtener campañas de las que no se es gestor'));
+    return next(boom.unauthorized(getTranslation('noManagerGetCampaign', user.language)));
   }
 
   try {
     client = await clientService.getClient(campaign.client_uuid);
 
     if (!client) {
-      return next(boom.badData('El cliente no existe'));
+      return next(boom.badData(getTranslation('clientNonExist', user.language)));
     }
 
     newCampaign = {
@@ -147,7 +146,7 @@ const updateCampaign = async (req, res, next) => {
       client = await clientService.getClient(clientUuid);
 
       if (!client) {
-        return next(boom.badData('El cliente introducido no existe'));
+        return next(boom.badData(getTranslation('clientNonExist2')));
       }
     } catch (error) {
       logger.error(`${error}`);
