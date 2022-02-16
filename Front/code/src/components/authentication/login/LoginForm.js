@@ -33,7 +33,7 @@ export default function LoginForm() {
     if (isLoggedIn) {
       navigate('/dashboard', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, isLoggedIn, navigate]);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
