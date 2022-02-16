@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
 const { User, UserGroup } = require('../../../models/index');
 const jwt = require('../../../utils/middleware/jwt');
 const logger = require('../../../config/winston');
@@ -47,12 +48,9 @@ const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { n
 // Activación de cuenta
 
 const activateAccount = async (user) => {
-  const token = jwt.generateJWT({
-    uuid: '',
-    type: 'user',
-  });
   try {
-    await mailService.sendActiveAccountEmail(user.email, token);
+    console.log({ user });
+    await mailService.sendActiveAccountEmail(user.email, user.token);
   } catch (error) {
     logger.info(`${error}`);
     return Promise.reject(new Error('Ha fallado el envio de email'));
@@ -88,12 +86,20 @@ const forgotPassword = async (user) => {
 
 // Recuperación de contraseña
 
-const recoveryPassword = async (token, data) => {
-  //TODO: Send email with token for recovery pass
+const recoveryPassword = async (token, password) => {
   const payload = jwt.verifyJWT(token);
-  const user = await User.findOneAndUpdate({ token: payload.token, newPassword: payload.password });
-  return user.update(data);
+  const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  const user = await User.findOneAndUpdate({ uuid: payload.uuid }, { password: hashedPassword });
+  console.log(user);
+  return user;
 };
+
+// const recoveryPassword = async (token, data) => {
+//   // TODO: Send email with token for recovery pass
+//   const payload = jwt.verifyJWT(token);
+//   const user = await User.findOne({ where: { uuid: payload.uuid } });
+//   return user.update(data);
+// };
 
 // Bloqueo de cuenta
 

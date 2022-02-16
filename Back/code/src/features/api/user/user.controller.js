@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+const jwt = require('../../../utils/middleware/jwt');
 const mediaService = require('../media/media.service');
 const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGERS_RESOURCES } = require('./user.service');
@@ -59,33 +60,31 @@ const forgotPassword = async (req, res) => {
   });
 };
 
-const recovery = async (req, res) => {
-  const { newPassword, token } = req.body;
-  //const userData = req.body;
-  //const { token, password, confirmPassword } = req.body;
-  if (!(newPassword && token)) {
-    res.status(422).json('Todos los campos son requeridos');
-  }
-  /*  const isValidPassword = validatePasswordPattern(userData.password);
-  if (!isValidPassword) {
-    const errorResponse = {
-      statusCode: 422,
-      message: 'Contraseña inválida',
-      errors: isValidPassword.errors,
-    };
-    return res.status(422).json(errorResponse);
-  } */
+const recovery = async (req, res, next) => {
+  const { password, token } = req.body;
 
   try {
-    await userService.recoveryPassword(token, password);
+    const { status, errors } = validatePasswordPattern(undefined, password);
+    if (!status) {
+      const errorResponse = {
+        statusCode: 422,
+        message: 'Contraseña inválida',
+        errors,
+      };
+      return res.status(422).json(errorResponse);
+    }
+    const payload = jwt.verifyJWT(token);
+    if (status && payload) {
+      await userService.recoveryPassword(token, password);
+      return res.json({
+        status: 'OK',
+      });
+    }
+    throw new Error('no se ha podido actualizar la contraseña');
   } catch (error) {
     logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
   }
-  return res.json({
-    status: 'OK',
-  });
-
-  user.password = newPassword;
 };
 
 const listUsers = async (req, res, next) => {
