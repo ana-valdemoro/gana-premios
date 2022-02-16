@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import validatePassword from '../../../services/passwordValidator';
+import validatePassword from '../../../utils/passwordValidator';
 import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
 
