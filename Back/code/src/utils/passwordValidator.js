@@ -15,6 +15,11 @@ const validatePasswordPattern = (email, password) => {
     errors.push('La contraseña debe contener al menos 9 caracteres');
   }
 
+  const number = new RegExp(/^(?=.*[0-9]).{1,}$/);
+  if (!number.test(password)) {
+    errors.push('La contraseña debe incluir un número');
+  }
+
   const lowercase = new RegExp(/^(?=.*[a-z]).{1,}$/);
   if (!lowercase.test(password)) {
     errors.push('La contraseña no incluye una letra en minúscula');
