@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
@@ -16,24 +17,69 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string()
+    fullName: Yup.string()
       .min(3, 'Too Short!')
-      .max(20, 'Too Long!')
-      .required('First name required'),
-    lastName: Yup.string().min(3, 'Too Short!').max(20, 'Too Long!').required('Last name required'),
+      .max(30, 'Too Long!')
+      .required('Full name is required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().min(9, 'Too short!').required('Password is required')
+    password: Yup.string().test({
+      password: 'validator-custom-password',
+      // eslint-disable-next-line object-shorthand
+      test: function validatePassword(password) {
+        const errors = [];
+
+        if (!password) {
+          return this.createError({
+            message: `Password is required`,
+            path: `password`
+          });
+        }
+
+        if (password.length < 9) {
+          errors.push('Must contain 9 characters');
+        }
+
+        const lowercase = new RegExp(/^(?=.*[a-z]).{1,}$/);
+        if (!lowercase.test(password)) {
+          errors.push('One lowercase');
+        }
+
+        const uppercase = new RegExp(/^(?=.*[A-Z]).{1,}$/);
+        if (!uppercase.test(password)) {
+          errors.push('One uppercase');
+        }
+
+        const number = new RegExp(/^(?=.*[0-9]).{1,}$/);
+        if (!number.test(password)) {
+          errors.push('One number');
+        }
+
+        // eslint-disable-next-line no-useless-escape
+        const symbols = new RegExp(/^(?=.*[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).{1,}$/);
+        if (!symbols.test(password)) {
+          const chars = '-;!$%^&*()_+|~=`{}[]:"\'<>?,./';
+          errors.push(`One Special Case Character of ${chars}`);
+        }
+
+        return errors.length > 0
+          ? this.createError({
+              message: `${errors.join(', ')}`,
+              path: `password`
+            })
+          : true;
+      }
+    })
   });
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
+      fullName: '',
       email: '',
       password: ''
     },
     validationSchema: RegisterSchema,
-    onSubmit: () => {
+    onSubmit: (values, { setSubmitting }) => {
+      setSubmitting(false);
       navigate('/dashboard', { replace: true });
     }
   });
@@ -44,23 +90,13 @@ export default function RegisterForm() {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              fullWidth
-              label="First name"
-              {...getFieldProps('firstName')}
-              error={Boolean(touched.firstName && errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
-            />
-
-            <TextField
-              fullWidth
-              label="Last name"
-              {...getFieldProps('lastName')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
-          </Stack>
+          <TextField
+            fullWidth
+            label="Full name"
+            {...getFieldProps('fullName')}
+            error={Boolean(touched.fullName && errors.fullName)}
+            helperText={touched.fullName && errors.fullName}
+          />
 
           <TextField
             fullWidth
