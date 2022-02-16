@@ -9,4 +9,13 @@ const login = async (userCredentials) =>
     body: JSON.stringify(userCredentials)
   }).then((res) => res.json());
 
-export default { login };
+const register = async (user) =>
+  fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  }).then((res) => res.json());
+
+export default { login, register };
