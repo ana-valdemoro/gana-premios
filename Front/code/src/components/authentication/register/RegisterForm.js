@@ -13,6 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import validatePassword from '../../../utils/passwordValidator';
 import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
+import Notification from '../../alerts/Notification';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,7 @@ export default function RegisterForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'success' });
   const { message } = useSelector((state) => state.message);
 
   const RegisterSchema = Yup.object().shape({
@@ -48,9 +50,13 @@ export default function RegisterForm() {
       console.log(response);
       if (response.statusCode === 422) {
         dispatch(setMessage(response));
+        setNotify({ isOpen: true, message: 'Sign up fails', type: 'error' });
       } else {
         setSubmitting(false);
-        navigate('/lopd', { replace: true });
+        setNotify({ isOpen: true, message: 'Sign up Successfully', type: 'success' });
+        setTimeout(() => {
+          navigate('/login', { replace: true });
+        }, 3000);
       }
     }
   });
@@ -58,57 +64,60 @@ export default function RegisterForm() {
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
-          <TextField
-            fullWidth
-            label="Full name"
-            {...getFieldProps('name')}
-            error={Boolean(touched.name && errors.name)}
-            helperText={touched.name && errors.name}
-          />
+    <>
+      <Notification notify={notify} setNotify={setNotify} />
+      <FormikProvider value={formik}>
+        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+          <Stack spacing={3}>
+            <TextField
+              fullWidth
+              label="Full name"
+              {...getFieldProps('name')}
+              error={Boolean(touched.name && errors.name)}
+              helperText={touched.name && errors.name}
+            />
 
-          <TextField
-            fullWidth
-            autoComplete="username"
-            type="email"
-            label="Email address"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
-          />
+            <TextField
+              fullWidth
+              autoComplete="username"
+              type="email"
+              label="Email address"
+              {...getFieldProps('email')}
+              error={Boolean(touched.email && errors.email)}
+              helperText={touched.email && errors.email}
+            />
 
-          <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-          />
+            <TextField
+              fullWidth
+              autoComplete="current-password"
+              type={showPassword ? 'text' : 'password'}
+              label="Password"
+              {...getFieldProps('password')}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
+                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              error={Boolean(touched.password && errors.password)}
+              helperText={touched.password && errors.password}
+            />
 
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Register
-          </LoadingButton>
-        </Stack>
-      </Form>
-    </FormikProvider>
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+            >
+              Sign up
+            </LoadingButton>
+          </Stack>
+        </Form>
+      </FormikProvider>
+    </>
   );
 }

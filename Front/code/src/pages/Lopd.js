@@ -9,7 +9,6 @@ import AuthLayout from '../layouts/AuthLayout';
 // components
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
-import { LoginForm } from '../components/authentication/login';
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +71,7 @@ export default function Lopd() {
               <Typography sx={{ color: 'text.error' }}>{error}</Typography>
             ) : (
               <Typography sx={{ color: 'text.secondary' }}>
-                Click the button to download it!.
+                Click the button to download it!
               </Typography>
             )}
           </Stack>
