@@ -34,12 +34,11 @@ async function checkCampaignRequirements(req, res, next) {
     return next(boom.badImplementation(error.message));
   }
 
-  
   if (!campaign) {
     return next(boom.badData('La campaña no existe'));
   }
-  
-  if(user.priority === MANAGER_RESOURCES && user.uuid !== campaign.manager_uuid){
+
+  if (user.priority === MANAGER_RESOURCES && user.uuid !== campaign.manager_uuid) {
     return next(boom.badData('No puedes crear promociones a una campaña de la que no eres gestor'));
   }
 
@@ -47,14 +46,11 @@ async function checkCampaignRequirements(req, res, next) {
     return next(boom.badData('La campaña no está activa'));
   }
 
-  if (new Date(campaign.start_date) >= new Date(startDate)) {
-    return next(
-      boom.badData(
-        'La fecha de creación de inicio de la promo debe ser mayor que la de la campaña',
-      ),
-    );
+  if (new Date(startDate) < new Date(campaign.start_date)) {
+    return next(boom.badData('La fecha de inicio de la promo debe ser mayor que la de la campaña'));
   }
-  if (new Date(campaign.end_date) <= new Date(endDate)) {
+
+  if (new Date(endDate) > new Date(campaign.end_date)) {
     return next(
       boom.badData('La fecha de finalización de la promo debe ser menor que la de la campaña'),
     );
