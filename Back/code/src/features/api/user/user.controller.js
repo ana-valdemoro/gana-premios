@@ -7,7 +7,7 @@ const logger = require('../../../config/winston');
 const jwt = require('../../../utils/middleware/jwt');
 const mediaService = require('../media/media.service');
 const userGroupService = require('../userGroup/userGroup.service');
-const { MANAGERS_RESOURCES } = require('./user.service');
+const { MANAGER_RESOURCES } = require('./user.service');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 
 const activateAccount = async (req, res, next) => {
@@ -123,7 +123,7 @@ const createManagerUser = async (req, res, next) => {
     user = await userService.createUser({
       ...userData,
       role_uuid: searchRole.uuid,
-      priority: MANAGERS_RESOURCES,
+      priority: MANAGER_RESOURCES,
     });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
@@ -136,7 +136,7 @@ const createManagerUser = async (req, res, next) => {
   }
 
   try {
-    const activateUser = await userService.activateAccount(user._id);
+    await userService.activateAccount(user);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));

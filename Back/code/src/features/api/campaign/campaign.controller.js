@@ -17,7 +17,6 @@ const create = async (req, res, next) => {
     client = await clientService.getClient(clientUuid);
 
     if (!client) {
-      console.log('holaaaaaaaaa', user.language);
       return next(boom.badData(getTranslation('clientNonExist', user.language)));
     }
   } catch (error) {

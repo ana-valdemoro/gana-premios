@@ -134,8 +134,7 @@ const register = async (req, res, next) => {
   }
 
   try {
-    const activateUser = await userService.activateAccount(user._id, language);
-    console.log(activateUser);
+    await userService.activateAccount(user, language);
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));

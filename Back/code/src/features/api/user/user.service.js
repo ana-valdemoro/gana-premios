@@ -40,6 +40,7 @@ const createUser = async (data) => {
     token: jwt.generateJWT({ uuid: '', type: 'user' }),
     uuid: uuidv4(),
   };
+  console.log(dataToCreate);
   return User.create(dataToCreate);
 };
 
@@ -48,13 +49,8 @@ const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { n
 // Activación de cuenta
 
 const activateAccount = async (user, language) => {
-  const token = jwt.generateJWT({
-    uuid: '',
-    type: 'user',
-  });
-  console.log(token);
   try {
-    await mailService.sendActiveAccountEmail(user.email, token, language);
+    await mailService.sendActiveAccountEmail(user.email, user.token, language);
   } catch (error) {
     logger.info(`${error}`);
     return Promise.reject(new Error('Ha fallado el envio de email'));

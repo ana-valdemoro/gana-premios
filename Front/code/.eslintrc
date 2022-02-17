@@ -15,9 +15,9 @@
     "react",
     "react-hooks"
   ],
-  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 8,
+    "parser": "@babel/eslint-parser",
+    "ecmaVersion": 12,
     "requireConfigFile": false,
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,

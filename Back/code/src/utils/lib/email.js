@@ -36,7 +36,7 @@ const sendActiveAccountEmail = async (email, token, language) => {
 
   const activeAccountMailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
-    to: 'angela.chicano@agiliacenter.com', // list of receivers
+    to: email, // list of receivers
     subject: getTranslation('activeSubject', language), // Subject line
     html: htmlToSend, // plain html body
   };
