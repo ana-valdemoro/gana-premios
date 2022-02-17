@@ -40,7 +40,6 @@ const createUser = async (data) => {
     token: jwt.generateJWT({ uuid: '', type: 'user' }),
     uuid: uuidv4(),
   };
-  console.log(dataToCreate);
   return User.create(dataToCreate);
 };
 
@@ -88,20 +87,10 @@ const forgotPassword = async (user) => {
 
 const recoveryPassword = async (token, password) => {
   const payload = jwt.verifyJWT(token);
-  const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  const user = await User.findOneAndUpdate({ uuid: payload.uuid }, { password: hashedPassword });
-  console.log(user);
+  // const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  const user = await User.findOneAndUpdate({ uuid: payload.uuid }, { password });
   return user;
 };
-
-// const recoveryPassword = async (token, data) => {
-//   // TODO: Send email with token for recovery pass
-//   const payload = jwt.verifyJWT(token);
-//   const user = await User.findOne({ where: { uuid: payload.uuid } });
-//   return user.update(data);
-// };
-
-// Bloqueo de cuenta
 
 const incrementLoginAttempts = async (id) =>
   User.findOneAndUpdate({ _id: id }, { $inc: { failed_logins: 1 } }, { new: true });
