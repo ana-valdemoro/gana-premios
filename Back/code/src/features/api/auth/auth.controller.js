@@ -174,9 +174,43 @@ const activateAccount = async (req, res, next) => {
   }
 };
 
+
+const updateProfile = async (req, res, next) => {
+  const { user } = req;
+  const { lopdUuid, name, email, password } = req.body;
+  const userUuid = user.uuid;
+  let response;
+
+  const isValidPassword = validatePasswordPattern(email, password);
+
+  if (!isValidPassword.status) {
+    const errorResponse = {
+      statusCode: 422,
+      message: res.__('invalidPassword2'),
+      errors: isValidPassword.errors,
+    };
+    return res.status(422).json(errorResponse);
+  }
+
+  try {
+    const userData = { lopd_uuid: lopdUuid, name, email, password };
+    response = await userService.putUser(user._id, userData);
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
+    }
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
+  }
+
+  res.json(userService.toPublic(response));
+};
+
 module.exports = {
   login,
   register,
   unBlockAccount,
   activateAccount,
+  updateProfile,
 };

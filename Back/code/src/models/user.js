@@ -99,9 +99,12 @@ schema.pre('save', function (next) {
 });
 
 schema.pre('findOneAndUpdate', function (next) {
-  const user = this;
-  // user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
-  console.log('holaaaaaaaaaaaaaaaaaaa', user);
+  const updatedParams = this._update;
+
+  if (updatedParams.password) {
+    updatedParams.password = bcrypt.hashSync(updatedParams.password, bcrypt.genSaltSync(10));
+  }
+
   return next();
 });
 

@@ -36,9 +36,10 @@ const putUser = validate(
   {
     body: joi.object({
       // eslint-disable-next-line newline-per-chained-call
-      name: joi.string().alphanum().min(3).max(30),
+      name: joi.string().min(3).max(30),
       email: joi.string().email(),
       password: joi.string(),
+      lopdUuid: joi.string().uuid(),
     }),
   },
   {
