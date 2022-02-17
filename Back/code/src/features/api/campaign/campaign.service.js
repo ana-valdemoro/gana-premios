@@ -19,9 +19,8 @@ const getPaginatedCampaigns = async (filters, options) => {
     .limit(options.limit);
 };
 
-const countManagerDocuments = async (managerUuid) => {
-  return Campaign.countDocuments({ manager_uuid: managerUuid })
-};
+const countManagerDocuments = async (managerUuid) =>
+  Campaign.countDocuments({ manager_uuid: managerUuid });
 
 const countAllDocuments = async () => Campaign.countDocuments();
 
@@ -37,5 +36,5 @@ module.exports = {
   getCampaign,
   putCampaign,
   countManagerDocuments,
-  countAllDocuments
+  countAllDocuments,
 };

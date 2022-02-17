@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const Handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
+const { getTranslation } = require('../getTranslation');
 
 const sendEmail = async (mailOptions) => {
   const transporter = nodemailer.createTransport({
@@ -18,15 +19,21 @@ const sendEmail = async (mailOptions) => {
 
 // Mail para activar cuenta
 
-const sendActiveAccountEmail = async (email, token) => {
+const sendActiveAccountEmail = async (email, token, language) => {
   const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/active.hbs'), 'utf8');
   const template = Handlebars.compile(emailTemplateSource);
-  const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/account/${token}/activate` });
+  const title = getTranslation('activeMailTitle', language);
+  const message = getTranslation('activeMailMessage', language);
+  const htmlToSend = template({
+    url: `${process.env.FRONT_BASE_URL}/account/${token}/activate`,
+    title,
+    message,
+  });
 
   const activeAccountMailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
     to: 'angela.chicano@agiliacenter.com', // list of receivers
-    subject: 'Activar cuenta', // Subject line
+    subject: getTranslation('activeSubject'), // Subject line
     html: htmlToSend, // plain html body
   };
 

@@ -18,30 +18,24 @@ const login = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
-  if (user.active !== true) {
+  /* if (user.active !== true) {
     return next(
       boom.unauthorized('Tu usuario no está activo. Por favor, revisa tu correo electrónico'),
     );
-  }
+  } */
 
   if (!user) {
-    return next(boom.unauthorized('El email y la contraseña introducidos no son válidos'));
+    return next(boom.unauthorized(res.__('errorMailPassword')));
   }
 
   if (user.blocked) {
-    return next(
-      boom.unauthorized('Esta cuenta esta bloqueada. Revisa la bandeja de entrada de tu correo'),
-    );
+    return next(boom.unauthorized(res.__('unlockedAccountcheckMail')));
   }
 
   try {
     if (user.failed_logins >= 5) {
       await userService.blockAccount(user);
-      return next(
-        boom.unauthorized(
-          'La cuenta ha sido bloqueada y se ha enviado un correo para desbloquearla',
-        ),
-      );
+      return next(boom.unauthorized(res.__('lockedAccount')));
     }
   } catch (error) {
     console.log(error);
@@ -52,7 +46,7 @@ const login = async (req, res, next) => {
 
     if (!userHasValidPassword) {
       await userService.incrementLoginAttempts(user._id);
-      return next(boom.unauthorized('La contraseña es errónea'));
+      return next(boom.unauthorized(res.__('invalidPassword')));
     }
 
     if (user.failed_logins > 0) {
@@ -86,7 +80,7 @@ const unBlockAccount = async (req, res, next) => {
     }
 
     if (!user) {
-      return next(boom.unauthorized('Usuario no válido'));
+      return next(boom.unauthorized(res.__('invalidUser')));
     }
   } catch (error) {
     logger.error(`${error}`);
@@ -115,7 +109,7 @@ const register = async (req, res, next) => {
   if (!isValidPassword.status) {
     const errorResponse = {
       statusCode: 422,
-      message: 'Contraseña inválida',
+      message: res.__('invalidPassword2'),
       errors: isValidPassword.errors,
     };
     return res.status(422).json(errorResponse);
@@ -159,7 +153,7 @@ const activateAccount = async (req, res, next) => {
     }
 
     if (!user) {
-      return next(boom.unauthorized('Usuario no encontrado'));
+      return next(boom.unauthorized(res.__('userNotFound')));
     }
   } catch (error) {
     logger.error(`${error}`);

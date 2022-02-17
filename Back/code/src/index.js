@@ -7,14 +7,26 @@ const passport = require('passport');
 const boom = require('@hapi/boom');
 const helmet = require('helmet');
 const get = require('lodash/get');
+const i18n = require('i18n');
+const path = require('path');
 
 const config = require('./config');
 const logger = require('./config/winston');
 const { name } = require('../package.json');
+
+i18n.configure({
+  locales: ['en', 'es'],
+  defaultLocale: 'en',
+  register: global,
+  directory: path.join(__dirname, '/locales'),
+});
+
 const { handleValidationError, handleCustomErrors } = require('./utils/handleErrors');
 const db = require('./config/db');
 
 const app = express();
+
+app.use(i18n.init);
 
 // Monit server /status https://www.npmjs.com/package/express-status-monitor
 // eslint-disable-next-line import/order

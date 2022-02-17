@@ -63,6 +63,10 @@ const schema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    language: {
+      type: String,
+      default: 'en',
+    },
   },
   {
     timestamps: true,
