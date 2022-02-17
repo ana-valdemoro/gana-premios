@@ -7,7 +7,7 @@ const userEmailsIsIncluded = (email, password) => {
 // Public functions
 const validatePasswordPattern = (email, password) => {
   const errors = [];
-  if (userEmailsIsIncluded(email, password)) {
+  if (email && userEmailsIsIncluded(email, password)) {
     errors.push('La contraseña no puede contener ninguna parte del email');
   }
 

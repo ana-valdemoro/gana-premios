@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
 const { User, UserGroup } = require('../../../models/index');
 const jwt = require('../../../utils/middleware/jwt');
 const logger = require('../../../config/winston');
@@ -70,6 +71,40 @@ const activeAccount = async (id) => {
   return putUser(id, data);
 };
 
+// Olvidar contraseña
+
+const forgotPassword = async (user) => {
+  const token = jwt.generateJWT({
+    uuid: user.uuid,
+    type: 'user',
+  });
+
+  try {
+    await mailService.sendRecoveryPasswordEmail(user, token);
+  } catch (error) {
+    logger.info(`${error}`);
+  }
+
+  return true;
+};
+
+// Recuperación de contraseña
+
+const recoveryPassword = async (token, password) => {
+  const payload = jwt.verifyJWT(token);
+  const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  const user = await User.findOneAndUpdate({ uuid: payload.uuid }, { password: hashedPassword });
+  console.log(user);
+  return user;
+};
+
+// const recoveryPassword = async (token, data) => {
+//   // TODO: Send email with token for recovery pass
+//   const payload = jwt.verifyJWT(token);
+//   const user = await User.findOne({ where: { uuid: payload.uuid } });
+//   return user.update(data);
+// };
+
 // Bloqueo de cuenta
 
 const incrementLoginAttempts = async (id) =>
@@ -128,6 +163,8 @@ module.exports = {
   // activate,
   activateAccount,
   activeAccount,
+  forgotPassword,
+  recoveryPassword,
   incrementLoginAttempts,
   resetLoginAttempts,
   blockAccount,

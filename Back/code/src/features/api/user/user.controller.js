@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const queryOptions = require('../../../utils/queryOptions');
 const userFilters = require('./user.filters');
 const logger = require('../../../config/winston');
+const jwt = require('../../../utils/middleware/jwt');
 const mediaService = require('../media/media.service');
 const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGERS_RESOURCES } = require('./user.service');
@@ -40,7 +41,7 @@ const activateAccount = async (req, res, next) => {
   }
 };
 
-const forgot = async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -59,20 +60,31 @@ const forgot = async (req, res) => {
   });
 };
 
-const recovery = async (req, res) => {
-  const { token, password, confirmPassword } = req.body;
+const recovery = async (req, res, next) => {
+  const { password, token } = req.body;
 
   try {
-    if (password === confirmPassword) {
-      await userService.recoveryPassword(token, { password });
+    const { status, errors } = validatePasswordPattern(undefined, password);
+    if (!status) {
+      const errorResponse = {
+        statusCode: 422,
+        message: 'Contraseña inválida',
+        errors,
+      };
+      return res.status(422).json(errorResponse);
     }
+    const payload = jwt.verifyJWT(token);
+    if (status && payload) {
+      await userService.recoveryPassword(token, password);
+      return res.json({
+        status: 'OK',
+      });
+    }
+    throw new Error('no se ha podido actualizar la contraseña');
   } catch (error) {
     logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
   }
-
-  return res.json({
-    status: 'OK',
-  });
 };
 
 const listUsers = async (req, res, next) => {
@@ -226,7 +238,7 @@ const getLopd = async (req, res, next) => {
 
 module.exports = {
   activateAccount,
-  forgot,
+  forgotPassword,
   recovery,
   listUsers,
   getUser,

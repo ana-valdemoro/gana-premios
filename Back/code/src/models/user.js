@@ -98,4 +98,11 @@ schema.pre('save', function (next) {
   return next();
 });
 
+schema.pre('findOneAndUpdate', function (next) {
+  const user = this;
+  // user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+  console.log('holaaaaaaaaaaaaaaaaaaa', user);
+  return next();
+});
+
 module.exports = schema;

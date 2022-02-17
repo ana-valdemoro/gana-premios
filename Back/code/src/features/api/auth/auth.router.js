@@ -12,13 +12,13 @@ router.post('/activate/:token', userValidator.activateUser, authController.activ
 // Login del usuario
 router.post('/login', userValidator.loginUser, authController.login);
 
-// Register user
+// Registrar usuario
 router.post('/register', userValidator.createUser, authController.register);
 
-// Send email for recovery pass (User)
-router.post('/forgot', userValidator.emailRecoveryUser, userController.forgot);
+// Enviar mail para recuperar contraseña
+router.post('/forgot', userValidator.emailRecoveryUser, userController.forgotPassword);
 
-// Restablecer contraseña (User)
+// Restablecer contraseña
 router.post('/recovery', userValidator.recoveryUser, userController.recovery);
 
 // Desbloquear cuenta

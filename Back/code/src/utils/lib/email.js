@@ -57,7 +57,25 @@ const sendBlockedAccountEmail = async (email, token) => {
   return sendEmail(blockedMailOptions);
 };
 
+// Mail para recuperar tu contraseña
+
+const sendRecoveryPasswordEmail = async (email, token) => {
+  const emailTemplateSource = fs.readFileSync(path.join(__dirname, '/recoverPassword.hbs'), 'utf8');
+  const template = Handlebars.compile(emailTemplateSource);
+  const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/recover-password/${token}` });
+
+  const recoveryPasswordMailOptions = {
+    from: 'angela.chicano@agiliacenter.com', // sender address
+    to: email, // list of receivers
+    subject: 'Recupera tu contraseña', // Subject line
+    html: htmlToSend, // plain html body
+  };
+
+  return sendEmail(recoveryPasswordMailOptions);
+};
+
 module.exports = {
   sendActiveAccountEmail,
   sendBlockedAccountEmail,
+  sendRecoveryPasswordEmail
 };
