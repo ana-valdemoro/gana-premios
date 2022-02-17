@@ -101,6 +101,7 @@ const unBlockAccount = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
+  const language = req.headers['accept-language'];
   const userData = req.body;
   let user;
 
@@ -131,8 +132,9 @@ const register = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
+
   try {
-    const activateUser = await userService.activateAccount(user._id);
+    const activateUser = await userService.activateAccount(user._id, language);
     console.log(activateUser);
   } catch (error) {
     logger.error(`${error}`);

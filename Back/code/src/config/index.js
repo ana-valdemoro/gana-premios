@@ -25,4 +25,5 @@ module.exports = {
     maxPageSize: 100,
   },
   mediaStorageFolder: '../../media',
+  emailsFolder: 'src/views/emails',
 };

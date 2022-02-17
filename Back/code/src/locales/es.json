@@ -16,5 +16,6 @@
   "campaignIdRequired": "El identificador de campaña es obligatorio",
   "campaignNotFound": "Campaña no encontrada",
   "clientExist": "Ya existe este cliente",
-  "userNotFound": "Usuario no encontrado"
+  "userNotFound": "Usuario no encontrado",
+  "activeButtonText": "Activa tu cuenta"
 }
