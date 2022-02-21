@@ -5,6 +5,6 @@ import messageReducer from './reducers/messageSlice';
 export default configureStore({
   reducer: {
     auth: authReducer,
-    message: messageReducer
+    notification: messageReducer
   }
 });

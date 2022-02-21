@@ -3,6 +3,7 @@ import { Link as RouterLink, Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 // components
 import Logo from '../components/Logo';
+import Notification from '../components/alerts/Notification';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ const HeaderStyle = styled('header')(({ theme }) => ({
 export default function LogoOnlyLayout() {
   return (
     <>
+      <Notification />
       <HeaderStyle>
         <RouterLink to="/">
           <Logo />

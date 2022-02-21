@@ -7,24 +7,22 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import debounce from 'lodash/debounce';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import validatePassword from '../../../utils/passwordValidator';
-// import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
+import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
-import Notification from '../../alerts/Notification';
 
 // ----------------------------------------------------------------------
 
 export default function RegisterForm(props) {
   const { errMessage, setErrorMessage } = props;
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'success' });
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string().min(3, 'Too Short!').max(30, 'Too Long!').required('Full name is required'),
@@ -52,14 +50,27 @@ export default function RegisterForm(props) {
       const response = await authService.register(values);
       console.log(response);
       if (response.statusCode === 422) {
-        setErrorMessage(response.message);
-        setNotify({ isOpen: true, message: 'Sign up fails', type: 'error' });
+        if (response.errors) {
+          let message = '';
+          response.errors.forEach((error) => {
+            if (typeof error === 'object') {
+              message += Object.values(error).join(', ').trim();
+            }
+          });
+          setErrorMessage(message);
+        } else {
+          setErrorMessage(response.message);
+        }
+        const failAlert = { isOpen: true, content: 'Sign up fails', type: 'error' };
+        dispatch(setMessage(failAlert));
       } else {
         setSubmitting(false);
-        setNotify({ isOpen: true, message: 'Sign up Successfully', type: 'success' });
-        setTimeout(() => {
-          navigate('/login', { replace: true });
-        }, 3000);
+        const succesAlert = { isOpen: true, content: 'Sign up Successfully', type: 'success' };
+        dispatch(setMessage(succesAlert));
+        navigate('/login', { replace: true });
+        // setTimeout(() => {
+
+        // }, 3000);
       }
     }
   });
@@ -77,7 +88,6 @@ export default function RegisterForm(props) {
 
   return (
     <>
-      <Notification notify={notify} setNotify={setNotify} />
       <FormikProvider value={formik}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <Stack spacing={3}>
