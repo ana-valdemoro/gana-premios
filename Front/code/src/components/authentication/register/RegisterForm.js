@@ -1,29 +1,30 @@
 /* eslint-disable react/no-this-in-sfc */
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import { useState, useMemo, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import debounce from 'lodash/debounce';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import validatePassword from '../../../utils/passwordValidator';
-import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
+// import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
 import Notification from '../../alerts/Notification';
 
 // ----------------------------------------------------------------------
 
-export default function RegisterForm() {
+export default function RegisterForm(props) {
+  const { errMessage, setErrorMessage } = props;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'success' });
-  const { message } = useSelector((state) => state.message);
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string().min(3, 'Too Short!').max(30, 'Too Long!').required('Full name is required'),
@@ -45,13 +46,13 @@ export default function RegisterForm() {
     validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
       console.log(values);
-      if (message !== '') {
-        dispatch(clearMessage());
+      if (errMessage !== '') {
+        setErrorMessage('');
       }
       const response = await authService.register(values);
       console.log(response);
       if (response.statusCode === 422) {
-        dispatch(setMessage(response));
+        setErrorMessage(response.message);
         setNotify({ isOpen: true, message: 'Sign up fails', type: 'error' });
       } else {
         setSubmitting(false);
@@ -69,7 +70,6 @@ export default function RegisterForm() {
   );
 
   useEffect(() => {
-    console.log('calling deboucedValidate');
     debouncedValidate(formik.values);
   }, [formik.values, debouncedValidate]);
 
@@ -133,3 +133,8 @@ export default function RegisterForm() {
     </>
   );
 }
+
+RegisterForm.propTypes = {
+  errMessage: PropTypes.string,
+  setErrorMessage: PropTypes.func
+};
