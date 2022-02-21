@@ -11,8 +11,9 @@ export default function Notification(props) {
   return (
     <Snackbar
       open={notify.isOpen}
-      autoHideDuration={3000}
+      autoHideDuration={3500}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      onClose={() => setNotify({ isOpen: false, message: notify.message, type: notify.type })}
     >
       <Alert
         onClose={() => setNotify({ isOpen: false, message: notify.message, type: notify.type })}
