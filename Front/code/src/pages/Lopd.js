@@ -1,9 +1,8 @@
-import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 // material
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Link, Container, Typography } from '@mui/material';
+import { Card, Stack, Container, Typography } from '@mui/material';
 // layouts
 import AuthLayout from '../layouts/AuthLayout';
 // components
