@@ -14,7 +14,7 @@ function validatePassword(password, context) {
     });
   }
 
-  if (userEmailsIsIncluded(email, password)) {
+  if (email && userEmailsIsIncluded(email, password)) {
     errors.push('Email cannot be included in password');
   }
 
