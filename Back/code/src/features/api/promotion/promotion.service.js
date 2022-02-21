@@ -10,7 +10,7 @@ const toPublic = (promotion) => promotion.toJSON();
 
 const getPromotions = async (filters) => Promotion.find({ ...filters });
 
-const getPaginatedPromotions =  async (filters, options) => {
+const getPaginatedPromotions = async (filters, options) => {
   const offset = options.page * options.limit - options.limit;
 
   return Promotion.find({ ...filters })
@@ -20,9 +20,8 @@ const getPaginatedPromotions =  async (filters, options) => {
 
 const countAllPromotions = async () => Promotion.countDocuments();
 
-const countPromotionsInsideCampaign = async (campaignUuid) => {
-  return Promotion.countDocuments({ campaign_uuid: campaignUuid })
-};
+const countPromotionsInsideCampaign = async (campaignUuid) =>
+  Promotion.countDocuments({ campaign_uuid: campaignUuid });
 
 const getPromotion = async (uuid) => Promotion.findOne({ uuid });
 

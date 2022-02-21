@@ -6,16 +6,16 @@ async function loadUser(req, res, next) {
   let user;
 
   if (!userUuid) {
-    return next(boom.badData('El identificador es obligatorio'));
+    return next(boom.badData(res.__('uuidRequired')));
   }
 
   try {
     user = await service.getUser(userUuid);
   } catch (error) {
-    return next(boom.notFound('User no encontrado'));
+    return next(boom.notFound(res.__('userNotFound')));
   }
 
-  if (!user) return next(boom.notFound('User no encontrado'));
+  if (!user) return next(boom.notFound(res.__('userNotFound')));
   res.locals.user = user;
 
   next();

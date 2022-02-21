@@ -6,7 +6,7 @@ async function loadClient(req, res, next) {
   let client;
 
   if (!clientUuid) {
-    return next(boom.badData('El identificador es obligatorio'));
+    return next(boom.badData('uuidRequired'));
   }
 
   try {

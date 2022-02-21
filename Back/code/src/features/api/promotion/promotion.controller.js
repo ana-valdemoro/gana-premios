@@ -15,7 +15,9 @@ const listPromotions = async (req, res, next) => {
 
   try {
     promotions = await promotionService.getPaginatedPromotions(filters, options);
-    totalDocuments =  filters.campaign_uuid ? await promotionService.countPromotionsInsideCampaign(filters.campaign_uuid) : await promotionService.countAllPromotions();
+    totalDocuments = filters.campaign_uuid
+      ? await promotionService.countPromotionsInsideCampaign(filters.campaign_uuid)
+      : await promotionService.countAllPromotions();
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
