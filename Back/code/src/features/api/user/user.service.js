@@ -70,9 +70,16 @@ const activeAccount = async (id) => {
 
 const forgotPassword = async (user) => {
   const token = jwt.generateJWT({
-    uuid: user.uuid,
+    uuid: '',
     type: 'user',
   });
+
+  try {
+    await putUser(user._id, { token });
+  } catch (error) {
+    logger.info(`${error}`);
+    return false;
+  }
 
   try {
     await mailService.sendRecoveryPasswordEmail(user.email, token);
@@ -85,12 +92,7 @@ const forgotPassword = async (user) => {
 
 // Recuperación de contraseña
 
-const recoveryPassword = async (token, password) => {
-  const payload = jwt.verifyJWT(token);
-  // const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  const user = await User.findOneAndUpdate({ uuid: payload.uuid }, { password });
-  return user;
-};
+const recoveryPassword = async (user, password) => User.findOneAndUpdate({ _id: user._id }, { token: '', password });
 
 const incrementLoginAttempts = async (id) =>
   User.findOneAndUpdate({ _id: id }, { $inc: { failed_logins: 1 } }, { new: true });

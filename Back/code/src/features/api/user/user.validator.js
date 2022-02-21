@@ -112,7 +112,6 @@ const emailRecoveryUser = validate(
 const recoveryUser = validate(
   {
     body: joi.object({
-      token: joi.string().required(),
       password: joi.string().required(),
     }),
   },

@@ -10,13 +10,13 @@ const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGER_RESOURCES } = require('./user.service');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 /*Private functions */
-  const undoCreateLopd = async(media) => {
-    try {
-      await mediaService.deleteMedia(media.uuid);
-    } catch (error) {
-      logger.error(`${error}`);
-    }
-  };
+const undoCreateLopd = async (media) => {
+  try {
+    await mediaService.deleteMedia(media.uuid);
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+};
 
 /*Public funcitons*/
 const activateAccount = async (req, res, next) => {
@@ -69,10 +69,25 @@ const forgotPassword = async (req, res) => {
 };
 
 const recovery = async (req, res, next) => {
-  const { password, token } = req.body;
+  const { password } = req.body;
+  const { token } = req.params;
+  let user;
 
   try {
-    const { status, errors } = validatePasswordPattern(undefined, password);
+    if (token !== '') {
+      user = await userService.getUserByToken(token);
+    }
+    console.log(user);
+    if (!user) {
+      return next(boom.unauthorized(res.__('userNotFound')));
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    const { status, errors } = validatePasswordPattern(user.email, password);
     if (!status) {
       const errorResponse = {
         statusCode: 422,
@@ -81,17 +96,14 @@ const recovery = async (req, res, next) => {
       };
       return res.status(422).json(errorResponse);
     }
-    const payload = jwt.verifyJWT(token);
-    if (status && payload) {
-      await userService.recoveryPassword(token, password);
-      return res.json({
-        status: 'OK',
-      });
-    }
-    throw new Error('no se ha podido actualizar la contraseña');
+
+    await userService.recoveryPassword(user, password);
+    return res.json({
+      status: 'OK',
+    });
   } catch (error) {
     logger.error(`${error}`);
-    return next(boom.badImplementation(error.message));
+    return next(boom.badImplementation('No se ha podido actualizar la contraseña'));
   }
 };
 
