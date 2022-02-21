@@ -9,7 +9,16 @@ const mediaService = require('../media/media.service');
 const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGER_RESOURCES } = require('./user.service');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
+/*Private functions */
+  const undoCreateLopd = async(media) => {
+    try {
+      await mediaService.deleteMedia(media.uuid);
+    } catch (error) {
+      logger.error(`${error}`);
+    }
+  };
 
+/*Public funcitons*/
 const activateAccount = async (req, res, next) => {
   const { token } = req.params;
   let activeUser;
@@ -30,7 +39,6 @@ const activateAccount = async (req, res, next) => {
 
   try {
     activeUser = await userService.activeAccount(user._id);
-    console.log(activeUser);
 
     if (activeUser) {
       return res.status(204).json();
@@ -199,10 +207,20 @@ const deleteUser = async (req, res, next) => {
 const createLopd = async (req, res, next) => {
   const { fileName, mediaType, uri } = req.body;
   let media;
+  const { user } = req;
+  let newUser;
 
   try {
     media = await mediaService.createMedia(fileName, mediaType, uri);
   } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+
+  try {
+    newUser = await userService.putUser(user._id, { lopd_uuid: media.uuid });
+  } catch (error) {
+    await undoCreateLopd(media);
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }

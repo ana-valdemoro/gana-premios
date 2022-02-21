@@ -41,10 +41,13 @@ const getMediaUri = async (media) => fileUploader.getFile(media.uuid, media.exte
 const getMediaPath = async (media) =>
   path.join(__dirname, '../..', config.mediaStorageFolder, `${media.uuid}.${media.extension}`);
 
+const deleteMedia = async (uuid) => Media.deleteOne({ uuid });
+
 module.exports = {
   toPublic,
   createMedia,
   getMedia,
   getMediaUri,
   getMediaPath,
+  deleteMedia,
 };
