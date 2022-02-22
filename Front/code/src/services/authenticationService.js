@@ -9,11 +9,12 @@ const login = async (userCredentials) =>
     body: JSON.stringify(userCredentials)
   }).then((res) => res.json());
 
-const register = async (user) =>
+const register = async (user, language) =>
   fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/register`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept-Language': language
     },
     body: JSON.stringify(user)
   }).then((res) => res.json());

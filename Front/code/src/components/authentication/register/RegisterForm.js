@@ -15,6 +15,8 @@ import { LoadingButton } from '@mui/lab';
 import validatePassword from '../../../utils/passwordValidator';
 import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
+// hooks
+import useQuery from '../../../hooks/useQuery';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +25,7 @@ export default function RegisterForm(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const query = useQuery();
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string().min(3, 'Too Short!').max(30, 'Too Long!').required('Full name is required'),
@@ -47,7 +50,7 @@ export default function RegisterForm(props) {
       if (errMessage !== '') {
         setErrorMessage('');
       }
-      const response = await authService.register(values);
+      const response = await authService.register(values, query.get('lang'));
       console.log(response);
       if (response.statusCode === 422) {
         if (response.errors) {
