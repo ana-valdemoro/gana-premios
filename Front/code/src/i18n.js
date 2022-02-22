@@ -1,0 +1,86 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+i18n
+  // detect user language
+  .use(LanguageDetector)
+  // pass the i18n instance to react-i18next.
+  .use(initReactI18next)
+  // init i18next
+  // for all options read: https://www.i18next.com/overview/configuration-options
+  .init({
+    debug: true,
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false // not needed for react as it escapes by default
+    },
+    resources: {
+      en: {
+        translation: {
+          // here we will place our translations...
+          signUpSideMessage: 'Subscribe for the best promotions with WinPriz',
+          signUpMainTitle: 'Get started absolutely free.',
+          signUpSecondaryTitle: 'Free forever. No credit card needed.',
+          registerForm: {
+            name: {
+              label: 'Full name',
+              short: 'Too short!',
+              long: 'Too long!',
+              required: 'Full name is required'
+            },
+            email: {
+              label: 'Email address',
+              validFormat: 'Email must be a valid email address',
+              required: 'Email is required'
+            },
+            password: {
+              label: 'Password',
+              emailIncluded: 'Email cannot be included in password',
+              minLenght: 'Must contain at least 9 characters',
+              lowercase: 'One lowercase',
+              uppercase: 'One uppercase',
+              number: 'One number',
+              specialCharacter: 'One Special Case Character of -;!$%^&*()_+|~=`{}[]:"\'<>?,./',
+              required: 'Password is required'
+            }
+          },
+          registerButton: 'Sign up'
+        }
+      },
+      es: {
+        translation: {
+          authLayout: '¿Tienes una cuenta? <1>Inicia sesión</1>.',
+          signUpSideMessage: 'Apuntante a las mejores promociones con WinPrize',
+          signUpMainTitle: 'Empieza absolutamente gratis',
+          signUpSecondaryTitle: 'Gratis para siempre. Sin necesidad de tarjetas',
+          registerForm: {
+            name: {
+              label: 'Nombre completo',
+              short: '¡Muy corto!',
+              long: '¡Muy largo!',
+              required: 'El nombre completo es requerido'
+            },
+            email: {
+              label: 'Email',
+              validFormat: 'El email debe ser una dirección de email válido',
+              required: 'El email es requerido'
+            },
+            password: {
+              label: 'Contraseña',
+              emailIncluded: 'El email no puede estar contenido',
+              minLenght: 'Debe contener al menos 9 caracteres',
+              lowercase: 'Una minúscula',
+              uppercase: 'Una mayúscula',
+              number: 'Un número',
+              specialCharacter: 'Un carácter especial de entre -;!$%^&*()_+|~=`{}[]:"\'<>?,./',
+              required: 'La contraseña es requerido'
+            }
+          },
+          registerButton: 'Regístrate'
+        }
+      }
+    }
+  });
+
+export default i18n;

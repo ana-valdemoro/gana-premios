@@ -1,4 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 // material
@@ -42,27 +43,24 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  // const { message } = useSelector((state) => state.message);
+  const { t } = useTranslation();
   const [errMessage, setErrorMessage] = useState('');
-  //  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(clearMessage());
-  // }, [dispatch]);
 
   return (
     <RootStyle title="Register | Minimal-UI">
       <AuthLayout>
-        Already have an account? &nbsp;
-        <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
-          Login
-        </Link>
+        <Trans i18nKey="authLayout">
+          Already have an account? &nbsp;
+          <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
+            Login
+          </Link>
+        </Trans>
       </AuthLayout>
 
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Manage the job more effectively with Minimal
+            {t('signUpSideMessage')}
           </Typography>
           <img alt="register" src="/static/illustrations/illustration_register.png" />
         </SectionStyle>
@@ -72,11 +70,9 @@ export default function Register() {
         <ContentStyle>
           <Box sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Get started absolutely free.
+              {t('signUpMainTitle')}
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              Free forever. No credit card needed.
-            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>{t('signUpSecondaryTitle')}</Typography>
             {errMessage ? <Typography sx={{ color: 'text.error' }}>{errMessage}</Typography> : null}
           </Box>
 

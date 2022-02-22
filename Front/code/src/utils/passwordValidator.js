@@ -19,7 +19,7 @@ function validatePassword(password, context) {
   }
 
   if (password.length < 9) {
-    errors.push('Must contain 9 characters');
+    errors.push('Must contain at least 9 characters');
   }
 
   const lowercase = new RegExp(/^(?=.*[a-z]).{1,}$/);
@@ -40,8 +40,7 @@ function validatePassword(password, context) {
   // eslint-disable-next-line no-useless-escape
   const symbols = new RegExp(/^(?=.*[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).{1,}$/);
   if (!symbols.test(password)) {
-    const chars = '-;!$%^&*()_+|~=`{}[]:"\'<>?,./';
-    errors.push(`One Special Case Character of ${chars}`);
+    errors.push('One Special Case Character of -;!$%^&*()_+|~=`{}[]:"\'<>?,./');
   }
 
   return errors.length > 0

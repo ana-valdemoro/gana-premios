@@ -9,6 +9,7 @@ import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import debounce from 'lodash/debounce';
+import { useTranslation } from 'react-i18next';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -26,10 +27,16 @@ export default function RegisterForm(props) {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const query = useQuery();
+  const { t } = useTranslation();
 
   const RegisterSchema = Yup.object().shape({
-    name: Yup.string().min(3, 'Too Short!').max(30, 'Too Long!').required('Full name is required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    name: Yup.string()
+      .min(3, t('registerForm.name.short'))
+      .max(30, t('registerForm.name.long'))
+      .required(t('registerForm.name.required')),
+    email: Yup.string()
+      .email(t('registerForm.email.validFormat'))
+      .required(t('registerForm.email.required')),
     password: Yup.string().test({
       password: 'validator-custom-password',
       // eslint-disable-next-line object-shorthand
@@ -71,9 +78,6 @@ export default function RegisterForm(props) {
         const succesAlert = { isOpen: true, content: 'Sign up Successfully', type: 'success' };
         dispatch(setMessage(succesAlert));
         navigate('/login', { replace: true });
-        // setTimeout(() => {
-
-        // }, 3000);
       }
     }
   });
@@ -96,7 +100,7 @@ export default function RegisterForm(props) {
           <Stack spacing={3}>
             <TextField
               fullWidth
-              label="Full name"
+              label={t('registerForm.name.label')}
               {...getFieldProps('name')}
               error={Boolean(touched.name && errors.name)}
               helperText={touched.name && errors.name}
@@ -106,7 +110,7 @@ export default function RegisterForm(props) {
               fullWidth
               autoComplete="username"
               type="email"
-              label="Email address"
+              label={t('registerForm.email.label')}
               {...getFieldProps('email')}
               error={Boolean(touched.email && errors.email)}
               helperText={touched.email && errors.email}
@@ -116,7 +120,7 @@ export default function RegisterForm(props) {
               fullWidth
               autoComplete="current-password"
               type={showPassword ? 'text' : 'password'}
-              label="Password"
+              label={t('registerForm.password.label')}
               {...getFieldProps('password')}
               InputProps={{
                 endAdornment: (
@@ -138,7 +142,7 @@ export default function RegisterForm(props) {
               variant="contained"
               loading={isSubmitting}
             >
-              Sign up
+              {t('registerButton')}
             </LoadingButton>
           </Stack>
         </Form>
