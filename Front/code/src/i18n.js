@@ -2,14 +2,18 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+const DETECTION_OPTIONS = {
+  order: ['querystring', 'navigator']
+};
+
 i18n
   // detect user language
   .use(LanguageDetector)
   // pass the i18n instance to react-i18next.
   .use(initReactI18next)
   // init i18next
-  // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
+    detection: DETECTION_OPTIONS,
     debug: true,
     fallbackLng: 'en',
     interpolation: {
@@ -18,7 +22,6 @@ i18n
     resources: {
       en: {
         translation: {
-          // here we will place our translations...
           signUpSideMessage: 'Subscribe for the best promotions with WinPriz',
           signUpMainTitle: 'Get started absolutely free.',
           signUpSecondaryTitle: 'Free forever. No credit card needed.',
@@ -37,7 +40,7 @@ i18n
             password: {
               label: 'Password',
               emailIncluded: 'Email cannot be included in password',
-              minLenght: 'Must contain at least 9 characters',
+              minLength: 'Must contain at least 9 characters',
               lowercase: 'One lowercase',
               uppercase: 'One uppercase',
               number: 'One number',
@@ -69,7 +72,7 @@ i18n
             password: {
               label: 'Contraseña',
               emailIncluded: 'El email no puede estar contenido',
-              minLenght: 'Debe contener al menos 9 caracteres',
+              minLength: 'Debe contener al menos 9 caracteres',
               lowercase: 'Una minúscula',
               uppercase: 'Una mayúscula',
               number: 'Un número',
