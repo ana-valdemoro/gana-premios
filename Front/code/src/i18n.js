@@ -65,6 +65,16 @@ i18n
               label: 'Password',
               required: 'Passworrd is required'
             }
+          },
+          alert: {
+            success: {
+              label: 'Success',
+              content: 'Sign up Successfully'
+            },
+            failure: {
+              label: 'Error',
+              content: 'Sign up fails'
+            }
           }
         }
       },
@@ -114,6 +124,16 @@ i18n
             password: {
               label: 'Contraseña',
               required: 'La contraseña es requerido'
+            }
+          },
+          alert: {
+            success: {
+              label: '¡Hurra!',
+              content: 'Registro exitoso'
+            },
+            failure: {
+              label: 'Error',
+              content: 'Fallo en el registro'
             }
           }
         }
