@@ -1,6 +1,7 @@
 /* eslint-disable react/no-this-in-sfc */
 import PropTypes from 'prop-types';
-import { useState, useMemo, useEffect } from 'react';
+import Recaptcha from 'react-recaptcha';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -24,21 +25,37 @@ export default function RegisterForm(props) {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
+  const captchaRef = useRef();
+
+  const handleResetRecaptcha = () => {
+    setFieldValue('recaptcha', '');
+    captchaRef.current.reset();
+  };
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, []);
 
   const formik = useFormik({
     initialValues: {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      recaptcha: ''
     },
     validationSchema: registerSchema,
     validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
+      const { name, email, password } = values;
       console.log(values);
       if (errMessage !== '') {
         setErrorMessage('');
       }
-      const response = await authService.register(values);
+      const response = await authService.register({ name, email, password });
       console.log(response);
       if (response.statusCode === 422) {
         if (response.errors) {
@@ -52,11 +69,22 @@ export default function RegisterForm(props) {
         } else {
           setErrorMessage(response.message);
         }
-        const failAlert = { isOpen: true, content: 'Sign up fails', type: 'error' };
+        handleResetRecaptcha();
+        const failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: t('alert.failure.content'),
+          type: 'error'
+        };
         dispatch(setMessage(failAlert));
       } else {
         setSubmitting(false);
-        const succesAlert = { isOpen: true, content: 'Sign up Successfully', type: 'success' };
+        const succesAlert = {
+          isOpen: true,
+          header: t('alert.success.label'),
+          content: t('alert.success.content'),
+          type: 'success'
+        };
         dispatch(setMessage(succesAlert));
         navigate('/login', { replace: true });
       }
@@ -73,7 +101,7 @@ export default function RegisterForm(props) {
     return () => debouncedValidate.cancel();
   }, [formik.values, debouncedValidate]);
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, setFieldValue } = formik;
 
   return (
     <>
@@ -115,6 +143,20 @@ export default function RegisterForm(props) {
               }}
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
+            />
+
+            <Recaptcha
+              ref={captchaRef}
+              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+              render="explicit"
+              theme="light"
+              verifyCallback={(response) => {
+                console.log('Obtenemos captch');
+                setFieldValue('recaptcha', response);
+              }}
+              onloadCallback={() => {
+                console.log('done loading!');
+              }}
             />
 
             <LoadingButton
