@@ -48,12 +48,29 @@ i18n
               required: 'Password is required'
             }
           },
-          registerButton: 'Sign up'
+          registerButton: 'Sign up',
+          signInSideMessage: 'Hi, Welcome back',
+          signInMainTitle: 'Sign in to WinPrize',
+          signInSecondaryTitle: 'Enter your details below.',
+          rememberMe: 'Remember me',
+          forgotPassword: 'Forgot password?',
+          signInButton: 'Login',
+          signInForm: {
+            email: {
+              label: 'Email address',
+              validFormat: 'Email must be a valid email address',
+              required: 'Email is required'
+            },
+            password: {
+              label: 'Password',
+              required: 'Passworrd is required'
+            }
+          }
         }
       },
       es: {
         translation: {
-          authLayout: '¿Tienes una cuenta? <1>Inicia sesión</1>.',
+          signUpAuthLayout: '¿Tienes una cuenta? <1>Inicia sesión</1>',
           signUpSideMessage: 'Apuntante a las mejores promociones con WinPrize',
           signUpMainTitle: 'Empieza absolutamente gratis',
           signUpSecondaryTitle: 'Gratis para siempre. Sin necesidad de tarjetas',
@@ -80,7 +97,25 @@ i18n
               required: 'La contraseña es requerido'
             }
           },
-          registerButton: 'Regístrate'
+          registerButton: 'Regístrate',
+          signInAuthLayout: '¿No tienes una cuenta? <1>Regístrate</1>',
+          signInSideMessage: 'Hola, Bienvenido de nuevo',
+          signInMainTitle: 'Inicia sesión en WinPrize.',
+          signInSecondaryTitle: 'Introduce tus credenciales',
+          rememberMe: 'Recordar cuenta',
+          forgotPassword: '¿Olvidaste tu contraseña?',
+          signInButton: 'Iniciar sesión',
+          signInForm: {
+            email: {
+              label: 'Email',
+              validFormat: 'El email debe ser una dirección de email válido',
+              required: 'El email es requerido'
+            },
+            password: {
+              label: 'Contraseña',
+              required: 'La contraseña es requerido'
+            }
+          }
         }
       }
     }

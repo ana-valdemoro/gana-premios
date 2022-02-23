@@ -1,5 +1,4 @@
 /* eslint-disable react/no-this-in-sfc */
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useState, useMemo, useEffect } from 'react';
 import { Icon } from '@iconify/react';
@@ -13,11 +12,9 @@ import { useTranslation } from 'react-i18next';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import registerSchema from '../../../utils/registerFormValidator';
+import registerSchema from '../../../utils/Validators/registerSchema';
 import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
-// hooks
-import useQuery from '../../../hooks/useQuery';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +23,6 @@ export default function RegisterForm(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const query = useQuery();
   const { t } = useTranslation();
 
   const formik = useFormik({
@@ -42,7 +38,7 @@ export default function RegisterForm(props) {
       if (errMessage !== '') {
         setErrorMessage('');
       }
-      const response = await authService.register(values, query.get('lang'));
+      const response = await authService.register(values);
       console.log(response);
       if (response.statusCode === 422) {
         if (response.errors) {

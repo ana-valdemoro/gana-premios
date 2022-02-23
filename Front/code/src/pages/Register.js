@@ -49,7 +49,7 @@ export default function Register() {
   return (
     <RootStyle title="Register | Minimal-UI">
       <AuthLayout>
-        <Trans i18nKey="authLayout">
+        <Trans i18nKey="signUpAuthLayout">
           Already have an account? &nbsp;
           <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
             Login

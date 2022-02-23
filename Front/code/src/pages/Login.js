@@ -1,4 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 // material
@@ -42,6 +43,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   const { error } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (error) {
@@ -52,16 +54,18 @@ export default function Login() {
   return (
     <RootStyle title="Login | Minimal-UI">
       <AuthLayout>
-        Don’t have an account? &nbsp;
-        <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
-          Get started
-        </Link>
+        <Trans i18nKey="signInAuthLayout">
+          Don’t have an account? &nbsp;
+          <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
+            Get started
+          </Link>
+        </Trans>
       </AuthLayout>
 
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Hi, Welcome Back
+            {t('signInSideMessage')}
           </Typography>
           <img src="/static/illustrations/illustration_login.png" alt="login" />
         </SectionStyle>
@@ -71,12 +75,12 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+              {t('signInMainTitle')}
             </Typography>
             {error ? (
               <Typography sx={{ color: 'text.error' }}>{error}</Typography>
             ) : (
-              <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{t('signInSecondaryTitle')}</Typography>
             )}
           </Stack>
 
