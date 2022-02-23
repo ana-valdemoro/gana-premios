@@ -47,12 +47,12 @@ const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { n
 
 // Activación de cuenta
 
-const activateAccount = async (user, language) => {
+const activateAccount = async (res, user, language) => {
   try {
     await mailService.sendActiveAccountEmail(user.email, user.token, language);
   } catch (error) {
     logger.info(`${error}`);
-    return Promise.reject(new Error('Ha fallado el envio de email'));
+    return Promise.reject(new Error(res.__('mailNotSent')));
   }
 
   return true;
@@ -99,7 +99,7 @@ const incrementLoginAttempts = async (id) =>
 
 const resetLoginAttempts = async (id) => User.findOneAndUpdate({ _id: id }, { failed_logins: 0 });
 
-const blockAccount = async (user) => {
+const blockAccount = async (res, user, language) => {
   const token = jwt.generateJWT({
     uuid: '',
     type: 'user',
@@ -111,18 +111,18 @@ const blockAccount = async (user) => {
       token,
     });
     if (!updatedUser) {
-      return Promise.reject(new Error('No se ha actualizado el usuario'));
+      return Promise.reject(new Error(res.__('userNoUpdate')));
     }
   } catch (error) {
     logger.error(`${error}`);
-    return Promise.reject(new Error('Ha fallado la BBDD'));
+    return Promise.reject(new Error(res.__('dbFailed"')));
   }
 
   try {
-    await mailService.sendBlockedAccountEmail(user.email, token);
+    await mailService.sendBlockedAccountEmail(user.email, token, language);
   } catch (error) {
     logger.info(`${error}`);
-    return Promise.reject(new Error('Ha fallado el envio de email'));
+    return Promise.reject(new Error(res.__('mailNotSent')));
   }
 
   return true;

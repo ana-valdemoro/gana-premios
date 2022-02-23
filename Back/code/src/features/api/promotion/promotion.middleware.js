@@ -8,7 +8,7 @@ async function loadPromotion(req, res, next) {
   let promotion;
 
   if (!promotionUuid) {
-    return next(boom.badData('El identificador es obligatorio'));
+    return next(boom.badData(res.__('uuidRequired')));
   }
 
   try {
@@ -17,7 +17,7 @@ async function loadPromotion(req, res, next) {
     return next(boom.badImplementation(error.message));
   }
 
-  if (!promotion) return next(boom.notFound('Promoción no encontrada'));
+  if (!promotion) return next(boom.notFound(res.__('promotionNotFound')));
   res.locals.promotion = promotion;
 
   next();
@@ -35,25 +35,23 @@ async function checkCampaignRequirements(req, res, next) {
   }
 
   if (!campaign) {
-    return next(boom.badData('La campaña no existe'));
+    return next(boom.badData(res.__('campaignNonExist')));
   }
 
   if (user.priority === MANAGER_RESOURCES && user.uuid !== campaign.manager_uuid) {
-    return next(boom.badData('No puedes crear promociones a una campaña de la que no eres gestor'));
+    return next(boom.badData(res.__('noCreatePromotions')));
   }
 
   if (campaign.active === false) {
-    return next(boom.badData('La campaña no está activa'));
+    return next(boom.badData(res.__('campaignNotActive')));
   }
 
   if (new Date(startDate) < new Date(campaign.start_date)) {
-    return next(boom.badData('La fecha de inicio de la promo debe ser mayor que la de la campaña'));
+    return next(boom.badData(res.__('startDatePromotion')));
   }
 
   if (new Date(endDate) > new Date(campaign.end_date)) {
-    return next(
-      boom.badData('La fecha de finalización de la promo debe ser menor que la de la campaña'),
-    );
+    return next(boom.badData(res.__('endDatePromotion')));
   }
 
   next();

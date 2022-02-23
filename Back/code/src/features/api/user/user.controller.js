@@ -64,7 +64,7 @@ const forgotPassword = async (req, res) => {
 
   return res.json({
     status: 'OK',
-    msg: 'Si el email existe, se habrá mandado un email con instrucciones para restablecer su contraseña',
+    msg: res.__('forgotPassword'),
   });
 };
 
@@ -91,7 +91,7 @@ const recovery = async (req, res, next) => {
     if (!status) {
       const errorResponse = {
         statusCode: 422,
-        message: 'Contraseña inválida',
+        message: res.__('invalidPassword2'),
         errors,
       };
       return res.status(422).json(errorResponse);
@@ -131,7 +131,7 @@ const createManagerUser = async (req, res, next) => {
   if (!isValidPassword.status) {
     const errorResponse = {
       statusCode: 422,
-      message: 'Contraseña inválida',
+      message: res.__('invalidPassword2'),
       errors: isValidPassword.errors,
     };
     return res.status(422).json(errorResponse);
@@ -246,7 +246,7 @@ const getLopd = async (req, res, next) => {
   let path;
 
   if (user.lopd_uuid === '') {
-    return next(boom.badData('El usuario no ha subido la LOPD'));
+    return next(boom.badData(res.__('noLOPD')));
   }
 
   try {

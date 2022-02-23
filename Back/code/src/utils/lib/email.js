@@ -46,17 +46,26 @@ const sendActiveAccountEmail = async (email, token, language) => {
 
 // Mail para desbloquear cuenta
 
-const sendBlockedAccountEmail = async (email, token) => {
+const sendBlockedAccountEmail = async (email, token, language) => {
   const route = path.join(emailsFolder, '/blocked.hbs');
   console.log('ruta block', route);
   const emailTemplateSource = fs.readFileSync(route, 'utf8');
   const template = Handlebars.compile(emailTemplateSource);
-  const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/active-account/${token}` });
+  const title = getTranslation('unlockMailTitle', language);
+  const message = getTranslation('unlockMailMessage', language);
+  const buttonText = getTranslation('unlockButtonText', language);
+
+  const htmlToSend = template({
+    url: `${process.env.FRONT_BASE_URL}/active-account/${token}`,
+    title,
+    message,
+    buttonText,
+  });
 
   const blockedMailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
     to: email, // list of receivers
-    subject: 'Desbloquear cuenta', // Subject line
+    subject: getTranslation('unlockSubject', language), // Subject line
     html: htmlToSend, // plain html body
   };
 
@@ -65,16 +74,24 @@ const sendBlockedAccountEmail = async (email, token) => {
 
 // Mail para recuperar tu contraseña
 
-const sendRecoveryPasswordEmail = async (email, token) => {
+const sendRecoveryPasswordEmail = async (email, token, language) => {
   const route = path.join(emailsFolder, '/recoverPassword.hbs');
   const emailTemplateSource = fs.readFileSync(route, 'utf8');
   const template = Handlebars.compile(emailTemplateSource);
-  const htmlToSend = template({ url: `${process.env.FRONT_BASE_URL}/recover-password/${token}` });
+  const title = getTranslation('recoverMailTitle', language);
+  const message = getTranslation('recoverMailMessage', language);
+  const buttonText = getTranslation('recoverButtonText', language);
+  const htmlToSend = template({
+    url: `${process.env.FRONT_BASE_URL}/recover-password/${token}`,
+    title,
+    message,
+    buttonText,
+  });
 
   const recoveryPasswordMailOptions = {
     from: 'angela.chicano@agiliacenter.com', // sender address
     to: email, // list of receivers
-    subject: 'Recupera tu contraseña', // Subject line
+    subject: getTranslation('recoverSubject', language), // Subject line
     html: htmlToSend, // plain html body
   };
 
