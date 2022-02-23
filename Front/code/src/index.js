@@ -11,6 +11,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import store from './store/index';
+import './i18n';
 
 // ----------------------------------------------------------------------
 

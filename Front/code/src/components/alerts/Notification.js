@@ -1,31 +1,33 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { useDispatch, useSelector } from 'react-redux';
 // import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
+import { hideMessage } from '../../store/reducers/messageSlice';
 
-export default function Notification(props) {
-  const { notify, setNotify } = props;
+export default function Notification() {
+  const { notification } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   return (
     <Snackbar
-      open={notify.isOpen}
-      autoHideDuration={3000}
+      open={notification.isOpen}
+      autoHideDuration={3500}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      onClose={() => {
+        dispatch(hideMessage());
+      }}
     >
       <Alert
-        onClose={() => setNotify({ isOpen: false, message: notify.message, type: notify.type })}
+        onClose={() => dispatch(hideMessage())}
         sx={{ width: '100%' }}
-        severity={notify.type}
+        severity={notification.type}
       >
-        <AlertTitle>{notify.type.toUpperCase()}</AlertTitle>
-        {notify.message}
+        <AlertTitle>{notification.type.toUpperCase()}</AlertTitle>
+        {notification.content}
       </Alert>
     </Snackbar>
   );
 }
-Notification.propTypes = {
-  notify: PropTypes.object,
-  setNotify: PropTypes.func
-};

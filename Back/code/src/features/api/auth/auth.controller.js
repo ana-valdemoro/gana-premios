@@ -127,7 +127,7 @@ const register = async (req, res, next) => {
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
       const dupField = Object.keys(error.keyValue)[0];
-      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
+      return next(boom.badData(res.__('duplicateField', dupField)));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));

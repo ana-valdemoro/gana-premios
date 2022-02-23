@@ -1,38 +1,29 @@
 /* eslint-disable react/no-this-in-sfc */
-import * as Yup from 'yup';
-import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useState, useMemo, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import debounce from 'lodash/debounce';
+import { useTranslation } from 'react-i18next';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import validatePassword from '../../../utils/passwordValidator';
-import { setMessage, clearMessage } from '../../../store/reducers/messageSlice';
+import registerSchema from '../../../utils/Validators/registerSchema';
+import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
-import Notification from '../../alerts/Notification';
 
 // ----------------------------------------------------------------------
 
-export default function RegisterForm() {
+export default function RegisterForm(props) {
+  const { errMessage, setErrorMessage } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'success' });
-  const { message } = useSelector((state) => state.message);
-
-  const RegisterSchema = Yup.object().shape({
-    name: Yup.string().min(3, 'Too Short!').max(30, 'Too Long!').required('Full name is required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().test({
-      password: 'validator-custom-password',
-      // eslint-disable-next-line object-shorthand
-      test: validatePassword
-    })
-  });
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -40,38 +31,57 @@ export default function RegisterForm() {
       email: '',
       password: ''
     },
-    validationSchema: RegisterSchema,
+    validationSchema: registerSchema,
+    validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
       console.log(values);
-      if (message !== '') {
-        dispatch(clearMessage());
+      if (errMessage !== '') {
+        setErrorMessage('');
       }
       const response = await authService.register(values);
       console.log(response);
       if (response.statusCode === 422) {
-        dispatch(setMessage(response));
-        setNotify({ isOpen: true, message: 'Sign up fails', type: 'error' });
+        if (response.errors) {
+          let message = '';
+          response.errors.forEach((error) => {
+            if (typeof error === 'object') {
+              message += Object.values(error).join(', ').trim();
+            }
+          });
+          setErrorMessage(message);
+        } else {
+          setErrorMessage(response.message);
+        }
+        const failAlert = { isOpen: true, content: 'Sign up fails', type: 'error' };
+        dispatch(setMessage(failAlert));
       } else {
         setSubmitting(false);
-        setNotify({ isOpen: true, message: 'Sign up Successfully', type: 'success' });
-        setTimeout(() => {
-          navigate('/login', { replace: true });
-        }, 3000);
+        const succesAlert = { isOpen: true, content: 'Sign up Successfully', type: 'success' };
+        dispatch(setMessage(succesAlert));
+        navigate('/login', { replace: true });
       }
     }
   });
+
+  const debouncedValidate = useMemo(
+    () => debounce(formik.validateForm, 500),
+    [formik.validateForm]
+  );
+
+  useEffect(() => {
+    debouncedValidate(formik.values);
+  }, [formik.values, debouncedValidate]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <>
-      <Notification notify={notify} setNotify={setNotify} />
       <FormikProvider value={formik}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <Stack spacing={3}>
             <TextField
               fullWidth
-              label="Full name"
+              label={t('registerForm.name.label')}
               {...getFieldProps('name')}
               error={Boolean(touched.name && errors.name)}
               helperText={touched.name && errors.name}
@@ -81,7 +91,7 @@ export default function RegisterForm() {
               fullWidth
               autoComplete="username"
               type="email"
-              label="Email address"
+              label={t('registerForm.email.label')}
               {...getFieldProps('email')}
               error={Boolean(touched.email && errors.email)}
               helperText={touched.email && errors.email}
@@ -91,7 +101,7 @@ export default function RegisterForm() {
               fullWidth
               autoComplete="current-password"
               type={showPassword ? 'text' : 'password'}
-              label="Password"
+              label={t('registerForm.password.label')}
               {...getFieldProps('password')}
               InputProps={{
                 endAdornment: (
@@ -113,7 +123,7 @@ export default function RegisterForm() {
               variant="contained"
               loading={isSubmitting}
             >
-              Sign up
+              {t('registerButton')}
             </LoadingButton>
           </Stack>
         </Form>
@@ -121,3 +131,8 @@ export default function RegisterForm() {
     </>
   );
 }
+
+RegisterForm.propTypes = {
+  errMessage: PropTypes.string,
+  setErrorMessage: PropTypes.func
+};

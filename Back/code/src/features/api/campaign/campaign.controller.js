@@ -94,7 +94,7 @@ const listCampaings = async (req, res, next) => {
     data: listCampaigns,
     page: options.page || 1,
     perPage: options.limit || -1,
-    totalItems: listCampaigns.length,
+    totalItems: totalDocuments,
     totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
   };
 

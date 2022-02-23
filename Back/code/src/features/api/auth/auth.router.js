@@ -21,7 +21,7 @@ router.put('/profile', authorize, userValidator.putUser, authController.updatePr
 router.post('/forgot', userValidator.emailRecoveryUser, userController.forgotPassword);
 
 // Restablecer contraseña
-router.post('/recovery', userValidator.recoveryUser, userController.recovery);
+router.post('/recovery/:token', userValidator.recoveryUser, userController.recovery);
 
 // Desbloquear cuenta
 router.post('/unlock/:token', userValidator.unlockUser, authController.unBlockAccount);

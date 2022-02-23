@@ -17,5 +17,6 @@
   "campaignNotFound": "Campaña no encontrada",
   "clientExist": "Ya existe este cliente",
   "userNotFound": "Usuario no encontrado",
-  "activeButtonText": "Activa tu cuenta"
+  "activeButtonText": "Activa tu cuenta",
+  "duplicateField": "Ya existe un usuario con ese %s"
 }

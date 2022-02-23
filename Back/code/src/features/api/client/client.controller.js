@@ -27,7 +27,7 @@ const listClients = async (req, res, next) => {
     data: clients,
     page: options.page || 1,
     perPage: options.limit || -1,
-    totalItems: clients.length,
+    totalItems: totalDocuments,
     totalPages: options.limit ? Math.ceil(totalDocuments / options.limit) : 1,
   };
   return res.json(response);
