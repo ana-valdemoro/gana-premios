@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import validatePassword from '../../../utils/passwordValidator';
+import registerSchema from '../../../utils/registerFormValidator';
 import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
 // hooks
@@ -29,28 +29,13 @@ export default function RegisterForm(props) {
   const query = useQuery();
   const { t } = useTranslation();
 
-  const RegisterSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(3, t('registerForm.name.short'))
-      .max(30, t('registerForm.name.long'))
-      .required(t('registerForm.name.required')),
-    email: Yup.string()
-      .email(t('registerForm.email.validFormat'))
-      .required(t('registerForm.email.required')),
-    password: Yup.string().test({
-      password: 'validator-custom-password',
-      // eslint-disable-next-line object-shorthand
-      test: validatePassword
-    })
-  });
-
   const formik = useFormik({
     initialValues: {
       name: '',
       email: '',
       password: ''
     },
-    validationSchema: RegisterSchema,
+    validationSchema: registerSchema,
     validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
       console.log(values);
