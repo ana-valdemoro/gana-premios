@@ -70,6 +70,7 @@ export default function RegisterForm(props) {
 
   useEffect(() => {
     debouncedValidate(formik.values);
+    return () => debouncedValidate.cancel();
   }, [formik.values, debouncedValidate]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
