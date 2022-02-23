@@ -263,7 +263,10 @@ const getLopd = async (req, res, next) => {
     return next(boom.badImplementation(error.message));
   }
 
+  res.set('Content-Type', media.media_type);
+
   return res.download(path, media.original_file_name);
+  ;
 };
 
 module.exports = {
