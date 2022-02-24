@@ -1,7 +1,6 @@
 /* eslint-disable react/no-this-in-sfc */
 import PropTypes from 'prop-types';
-import Recaptcha from 'react-recaptcha';
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -16,6 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import registerSchema from '../../../utils/Validators/registerSchema';
 import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
+import Captcha from '../../Captcha';
 
 // ----------------------------------------------------------------------
 
@@ -25,20 +25,7 @@ export default function RegisterForm(props) {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
-  const captchaRef = useRef();
-
-  const handleResetRecaptcha = () => {
-    setFieldValue('recaptcha', '');
-    captchaRef.current.reset();
-  };
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-  }, []);
+  const [resetCaptcha, setResetCaptch] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -57,7 +44,8 @@ export default function RegisterForm(props) {
       }
       const response = await authService.register({ name, email, password });
       console.log(response);
-      if (response.statusCode === 422) {
+      if (response.statusCode === 422 || response.statusCode === 500) {
+        setResetCaptch(true);
         if (response.errors) {
           let message = '';
           response.errors.forEach((error) => {
@@ -69,7 +57,6 @@ export default function RegisterForm(props) {
         } else {
           setErrorMessage(response.message);
         }
-        handleResetRecaptcha();
         const failAlert = {
           isOpen: true,
           header: t('alert.failure.label'),
@@ -77,6 +64,7 @@ export default function RegisterForm(props) {
           type: 'error'
         };
         dispatch(setMessage(failAlert));
+        setResetCaptch(false);
       } else {
         setSubmitting(false);
         const succesAlert = {
@@ -145,19 +133,7 @@ export default function RegisterForm(props) {
               helperText={touched.password && errors.password}
             />
 
-            <Recaptcha
-              ref={captchaRef}
-              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-              render="explicit"
-              theme="light"
-              verifyCallback={(response) => {
-                console.log('Obtenemos captch');
-                setFieldValue('recaptcha', response);
-              }}
-              onloadCallback={() => {
-                console.log('done loading!');
-              }}
-            />
+            <Captcha setFieldValue={setFieldValue} mustReset={resetCaptcha} />
 
             <LoadingButton
               fullWidth
