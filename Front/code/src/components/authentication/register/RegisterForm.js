@@ -38,12 +38,11 @@ export default function RegisterForm(props) {
     validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
       const { name, email, password } = values;
-      console.log(values);
+
       if (errMessage !== '') {
         setErrorMessage('');
       }
       const response = await authService.register({ name, email, password });
-      console.log(response);
       if (response.statusCode === 422 || response.statusCode === 500) {
         setResetCaptch(true);
         if (response.errors) {
@@ -57,6 +56,7 @@ export default function RegisterForm(props) {
         } else {
           setErrorMessage(response.message);
         }
+
         const failAlert = {
           isOpen: true,
           header: t('alert.failure.label'),

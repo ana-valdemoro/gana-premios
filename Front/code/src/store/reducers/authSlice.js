@@ -18,6 +18,9 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       state.error = null;
+    },
+    clearErrorMessage: (state) => {
+      state.error = null;
     }
   },
   extraReducers(builder) {
@@ -51,7 +54,7 @@ export const login = createAsyncThunk('auth/login', async (values) => {
   return Promise.reject(response);
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearErrorMessage } = authSlice.actions;
 
 export default authSlice.reducer;
 

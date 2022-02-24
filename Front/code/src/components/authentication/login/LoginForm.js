@@ -20,7 +20,8 @@ import { LoadingButton } from '@mui/lab';
 
 // store
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../../store/reducers/authSlice';
+import Captcha from '../../Captcha';
+import { login, clearErrorMessage } from '../../../store/reducers/authSlice';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+  const [resetCaptcha, setResetCaptch] = useState(false);
+  const { error } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -41,24 +44,33 @@ export default function LoginForm() {
     email: Yup.string()
       .email(t('signInForm.email.validFormat'))
       .required(t('signInForm.email.required')),
-    password: Yup.string().required(t('signInForm.password.required'))
+    password: Yup.string().required(t('signInForm.password.required')),
+    recaptcha: Yup.string().required()
   });
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
-      remember: true
+      remember: true,
+      recaptcha: ''
     },
     validationSchema: LoginSchema,
     onSubmit: (values, { setSubmitting }) => {
+      if (error) {
+        dispatch(clearErrorMessage());
+      }
+
+      setResetCaptch(true);
+      setResetCaptch(false);
       dispatch(login(values)).then(() => {
         setSubmitting(false);
       });
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
+    formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -109,7 +121,10 @@ export default function LoginForm() {
           </Link>
         </Stack>
 
+        <Captcha setFieldValue={setFieldValue} mustReset={resetCaptcha} />
+
         <LoadingButton
+          sx={{ marginTop: '24px' }}
           fullWidth
           size="large"
           type="submit"
