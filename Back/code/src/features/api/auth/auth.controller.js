@@ -4,8 +4,6 @@ const logger = require('../../../config/winston');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
-// const { activateUser } = require('../user/user.validator');
-// const jwt = require('../../../utils/middleware/jwt');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -137,7 +135,7 @@ const register = async (req, res, next) => {
     await userService.activateAccount(user, language);
   } catch (error) {
     logger.error(`${error}`);
-    return next(boom.badImplementation(error.message));
+    return next(boom.badData(res.__('mailNotSent')));
   }
 
   return res.status(201).json(user.toJSON());
