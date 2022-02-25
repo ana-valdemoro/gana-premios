@@ -25,7 +25,7 @@ export default function Notification() {
         sx={{ width: '100%' }}
         severity={notification.type}
       >
-        <AlertTitle>{notification.type.toUpperCase()}</AlertTitle>
+        <AlertTitle>{notification.header}</AlertTitle>
         {notification.content}
       </Alert>
     </Snackbar>

@@ -64,7 +64,8 @@ const registerSchema = Yup.object().shape({
           })
         : true;
     }
-  })
+  }),
+  recaptcha: Yup.string().required()
 });
 
 export default registerSchema;

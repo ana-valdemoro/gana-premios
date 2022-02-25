@@ -15,6 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import registerSchema from '../../../utils/Validators/registerSchema';
 import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
+import Captcha from '../../Captcha';
 
 // ----------------------------------------------------------------------
 
@@ -24,23 +25,26 @@ export default function RegisterForm(props) {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
+  const [resetCaptcha, setResetCaptch] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      recaptcha: ''
     },
     validationSchema: registerSchema,
     validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(values);
+      const { name, email, password } = values;
+
       if (errMessage !== '') {
         setErrorMessage('');
       }
-      const response = await authService.register(values);
-      console.log(response);
-      if (response.statusCode === 422) {
+      const response = await authService.register({ name, email, password });
+      if (response.statusCode === 422 || response.statusCode === 500) {
+        setResetCaptch(true);
         if (response.errors) {
           let message = '';
           response.errors.forEach((error) => {
@@ -52,11 +56,23 @@ export default function RegisterForm(props) {
         } else {
           setErrorMessage(response.message);
         }
-        const failAlert = { isOpen: true, content: 'Sign up fails', type: 'error' };
+
+        const failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: t('alert.failure.content'),
+          type: 'error'
+        };
         dispatch(setMessage(failAlert));
+        setResetCaptch(false);
       } else {
         setSubmitting(false);
-        const succesAlert = { isOpen: true, content: 'Sign up Successfully', type: 'success' };
+        const succesAlert = {
+          isOpen: true,
+          header: t('alert.success.label'),
+          content: t('alert.success.content'),
+          type: 'success'
+        };
         dispatch(setMessage(succesAlert));
         navigate('/login', { replace: true });
       }
@@ -70,9 +86,10 @@ export default function RegisterForm(props) {
 
   useEffect(() => {
     debouncedValidate(formik.values);
+    return () => debouncedValidate.cancel();
   }, [formik.values, debouncedValidate]);
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, setFieldValue } = formik;
 
   return (
     <>
@@ -115,6 +132,8 @@ export default function RegisterForm(props) {
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
             />
+
+            <Captcha setFieldValue={setFieldValue} mustReset={resetCaptcha} />
 
             <LoadingButton
               fullWidth

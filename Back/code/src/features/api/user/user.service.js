@@ -47,15 +47,8 @@ const putUser = async (id, data) => User.findOneAndUpdate({ _id: id }, data, { n
 
 // Activación de cuenta
 
-const activateAccount = async (res, user, language) => {
-  try {
-    await mailService.sendActiveAccountEmail(user.email, user.token, language);
-  } catch (error) {
-    logger.info(`${error}`);
-    return Promise.reject(new Error(res.__('mailNotSent')));
-  }
-
-  return true;
+const activateAccount = async (user, language) => {
+  return await mailService.sendActiveAccountEmail(user.email, user.token, language);
 };
 
 const activeAccount = async (id) => {
@@ -92,7 +85,8 @@ const forgotPassword = async (user) => {
 
 // Recuperación de contraseña
 
-const recoveryPassword = async (user, password) => User.findOneAndUpdate({ _id: user._id }, { token: '', password });
+const recoveryPassword = async (user, password) =>
+  User.findOneAndUpdate({ _id: user._id }, { token: '', password });
 
 const incrementLoginAttempts = async (id) =>
   User.findOneAndUpdate({ _id: id }, { $inc: { failed_logins: 1 } }, { new: true });
