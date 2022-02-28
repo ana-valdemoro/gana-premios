@@ -130,12 +130,13 @@ i18n
           },
           alert: {
             success: {
-              signUpMessage: '¡Hurra!',
+              label: '¡Hurra!',
               content: 'Registro exitoso',
               lopdMessage: 'LOPD guarda correctamente'
             },
             failure: {
-              signUpMessage: 'Error',
+              label: 'Error',
+              signUpMessage: 'Error en el registro',
               lopdMessage: 'Fallo al guardar LOPD'
             }
           }

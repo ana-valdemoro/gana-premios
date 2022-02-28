@@ -1,6 +1,5 @@
 import config from './const';
 import i18n from '../i18n';
-// import authHeader from './authHeader';
 
 const login = async (userCredentials) =>
   fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/login`, {
@@ -22,17 +21,13 @@ const register = async (user) =>
     body: JSON.stringify(user)
   }).then((res) => res.json());
 
-const saveLopd = async (lopd) =>
-  // const auth = authHeader();
-
+const saveLopd = async (lopd, token) =>
   fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/lopd`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${token}`
     },
     body: JSON.stringify(lopd)
-  }).then((res) => {
-    console.log(res);
-    res.json();
-  });
+  }).then((res) => res.json());
 export default { login, register, saveLopd };

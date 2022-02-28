@@ -17,8 +17,8 @@ import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
 
 import { convertFileToBase64 } from '../utils/formatFile';
-import authService from '../services/authenticationService';
 import { setMessage } from '../store/reducers/messageSlice';
+import { saveLopd } from '../store/reducers/authSlice';
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +69,6 @@ export default function Lopd() {
   };
 
   const fileHandler = async (event) => {
-    console.log(event.target.files[0]);
     const file = event.target.files[0];
     const dataUri = await convertFileToBase64(file);
 
@@ -79,28 +78,48 @@ export default function Lopd() {
       uri: dataUri
     };
 
-    const response = await authService.saveLopd(lopd);
-    console.log(response);
-    if (response.statusCode === 500 || response.statusCode === 422) {
-      console.log('Algo ha ido mal');
+    dispatch(saveLopd(lopd)).then((res) => {
+      if (res.payload) {
+        const succesAlert = {
+          isOpen: true,
+          header: t('alert.success.label'),
+          content: t('alert.success.lopdMessage'),
+          type: 'success'
+        };
+        dispatch(setMessage(succesAlert));
+        setContinue(true);
+      } else {
+        console.log('Algo ha ido mal');
+        const failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: t('alert.failure.lopdMessage'),
+          type: 'error'
+        };
+        dispatch(setMessage(failAlert));
+      }
+    });
 
-      const failAlert = {
-        isOpen: true,
-        header: t('alert.failure.label'),
-        content: t('alert.failure.lopdMessage'),
-        type: 'error'
-      };
-      dispatch(setMessage(failAlert));
-      setContinue(true);
-    } else {
-      const succesAlert = {
-        isOpen: true,
-        header: t('alert.success.label'),
-        content: t('alert.success.lopdMessage'),
-        type: 'success'
-      };
-      dispatch(setMessage(succesAlert));
-    }
+    // if (response.statusCode === 500 || response.statusCode === 422) {
+    //   console.log('Algo ha ido mal');
+
+    //   const failAlert = {
+    //     isOpen: true,
+    //     header: t('alert.failure.label'),
+    //     content: t('alert.failure.lopdMessage'),
+    //     type: 'error'
+    //   };
+    //   dispatch(setMessage(failAlert));
+    //   setContinue(true);
+    // } else {
+    //   const succesAlert = {
+    //     isOpen: true,
+    //     header: t('alert.success.label'),
+    //     content: t('alert.success.lopdMessage'),
+    //     type: 'success'
+    //   };
+    //   dispatch(setMessage(succesAlert));
+    // }
   };
 
   return (
@@ -170,7 +189,7 @@ export default function Lopd() {
               color="inherit"
               endIcon={<Icon icon={arrowIosForwardFill} />}
             >
-              Go inside
+              Go in
             </Button>
           ) : null}
         </ContentStyle>

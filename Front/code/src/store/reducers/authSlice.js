@@ -33,16 +33,19 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isLoggedIn = false;
         state.error = action.error.message;
-      });
+      })
+      .addCase(saveLopd.fulfilled, (state, action) => {
+        state.user.lopd_uuid = action.payload.uuid;
+      })
+      .addCase(saveLopd.rejected, (state, action) => action.error);
   }
 });
 
 export const login = createAsyncThunk('auth/login', async (values) => {
   const { remember, email, password } = values;
   const userCredentials = { email, password };
-  console.log(userCredentials);
+
   const response = await authService.login(userCredentials);
-  console.log(response);
 
   // eslint-disable-next-line no-prototype-builtins
   if (response.hasOwnProperty('token')) {
@@ -52,6 +55,20 @@ export const login = createAsyncThunk('auth/login', async (values) => {
     return response;
   }
   return Promise.reject(response);
+});
+
+export const saveLopd = createAsyncThunk('auth/saveLopd', async (lopd, thunkApi) => {
+  const { auth } = thunkApi.getState();
+
+  const response = await authService.saveLopd(lopd, auth.user.token);
+  console.log(response);
+
+  if (response.statusCode === 500 || response.statusCode === 422) {
+    console.log('Algo ha ido mal');
+    return Promise.reject(response);
+  }
+
+  return response;
 });
 
 export const { logout, clearErrorMessage } = authSlice.actions;
