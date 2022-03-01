@@ -129,7 +129,7 @@ export default function Lopd() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Welcome to the App!
+            {t('welcomeToTheApp')}
           </Typography>
           <img src="/static/illustrations/illustration_register.png" alt="login" />
         </SectionStyle>
@@ -139,14 +139,12 @@ export default function Lopd() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Now it's time to upload LOPD
+              {t('lopd.mainTitle')}
             </Typography>
             {error ? (
               <Typography sx={{ color: 'text.error' }}>{error}</Typography>
             ) : (
-              <Typography sx={{ color: 'text.secondary' }}>
-                Download, sign and upload it!
-              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{t('lopd.secondaryTitle')}</Typography>
             )}
             <Grid container sx={{ marginTop: '2%' }} spacing={2}>
               <Grid item xs={6}>
@@ -158,7 +156,7 @@ export default function Lopd() {
                   startIcon={<Icon icon={downloadFill} />}
                   onClick={onDownload}
                 >
-                  Download
+                  {t('buttons.download')}
                 </Button>
               </Grid>
               <Grid item xs={6} alignItems="center">
@@ -176,7 +174,7 @@ export default function Lopd() {
                     sx={{ width: '100%' }}
                     startIcon={<Icon icon={uploadFill} />}
                   >
-                    Upload
+                    {t('buttons.upload')}
                   </Button>
                 </label>
               </Grid>
@@ -189,7 +187,7 @@ export default function Lopd() {
               color="inherit"
               endIcon={<Icon icon={arrowIosForwardFill} />}
             >
-              Go in
+              {t('buttons.goIn')}
             </Button>
           ) : null}
         </ContentStyle>

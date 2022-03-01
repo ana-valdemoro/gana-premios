@@ -75,8 +75,18 @@ i18n
             failure: {
               label: 'Error',
               signUpMessage: 'Sign up fails',
-              lopdMessage: 'Upload it fails'
+              lopdMessage: 'Failure to save'
             }
+          },
+          buttons: {
+            download: 'Download',
+            upload: 'Upload',
+            goIn: 'Go in'
+          },
+          welcomeToTheApp: 'Welcome to the App',
+          lopd: {
+            mainTitle: "Now it's the time to upload LOPD",
+            secondaryTitle: 'Download, sign and upload it!'
           }
         }
       },
@@ -139,6 +149,16 @@ i18n
               signUpMessage: 'Error en el registro',
               lopdMessage: 'Fallo al guardar LOPD'
             }
+          },
+          buttons: {
+            download: 'Descargar',
+            upload: 'Subir',
+            goIn: 'Entra'
+          },
+          welcomeToTheApp: 'Bienvenido a la aplicación',
+          lopd: {
+            mainTitle: 'Ahora es el momento de subir la LOPD',
+            secondaryTitle: 'Descárgalo, fírmalo y súbelo.'
           }
         }
       }
