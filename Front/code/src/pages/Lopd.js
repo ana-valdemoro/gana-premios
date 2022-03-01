@@ -11,6 +11,7 @@ import downloadFill from '@iconify/icons-eva/download-fill';
 import uploadFill from '@iconify/icons-eva/upload-fill';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 // layouts
+import { Link as routerLink } from 'react-router-dom';
 import AuthLayout from '../layouts/AuthLayout';
 // components
 import Page from '../components/Page';
@@ -54,12 +55,6 @@ export default function Lopd() {
   const dispatch = useDispatch();
   const [canContinue, setContinue] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // useEffect(() => {
-  //   if (error) {
-  //     console.log('No nos hemos podido loguear');
-  //   }
-  // }, [error]);
 
   const onDownload = () => {
     const link = document.createElement('a');
@@ -170,7 +165,8 @@ export default function Lopd() {
           </Stack>
           {canContinue ? (
             <Button
-              to="#"
+              component={routerLink}
+              to="/dashboard"
               size="small"
               color="inherit"
               endIcon={<Icon icon={arrowIosForwardFill} />}

@@ -36,7 +36,11 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/dashboard', { replace: true });
+      if (user.lopd_uuid === '') {
+        navigate('/lopd', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     }
   }, [user, isLoggedIn, navigate]);
 
