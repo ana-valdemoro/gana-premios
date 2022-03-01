@@ -86,7 +86,8 @@ i18n
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
             mainTitle: "Now it's the time to upload LOPD",
-            secondaryTitle: 'Download, sign and upload it!'
+            secondaryTitle: 'Download, sign and upload it!',
+            validateMessage: 'The signed document must be a pdf'
           }
         }
       },
@@ -158,7 +159,8 @@ i18n
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
             mainTitle: 'Ahora es el momento de subir la LOPD',
-            secondaryTitle: 'Descárgalo, fírmalo y súbelo.'
+            secondaryTitle: 'Descárgalo, fírmalo y súbelo.',
+            validateMessage: 'El documento firmado debe ser pdf'
           }
         }
       }

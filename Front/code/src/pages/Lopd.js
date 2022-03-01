@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-has-content */
-import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // material
 import { styled } from '@mui/material/styles';
@@ -50,16 +50,16 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Lopd() {
-  const { error } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [canContinue, setContinue] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    if (error) {
-      console.log('No nos hemos podido loguear');
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log('No nos hemos podido loguear');
+  //   }
+  // }, [error]);
 
   const onDownload = () => {
     const link = document.createElement('a');
@@ -69,7 +69,17 @@ export default function Lopd() {
   };
 
   const fileHandler = async (event) => {
+    if (errorMessage) {
+      setErrorMessage('');
+    }
+
     const file = event.target.files[0];
+
+    if (file.type !== 'application/pdf') {
+      setErrorMessage(t('lopd.validateMessage'));
+      return;
+    }
+
     const dataUri = await convertFileToBase64(file);
 
     const lopd = {
@@ -89,7 +99,6 @@ export default function Lopd() {
         dispatch(setMessage(succesAlert));
         setContinue(true);
       } else {
-        console.log('Algo ha ido mal');
         const failAlert = {
           isOpen: true,
           header: t('alert.failure.label'),
@@ -99,27 +108,6 @@ export default function Lopd() {
         dispatch(setMessage(failAlert));
       }
     });
-
-    // if (response.statusCode === 500 || response.statusCode === 422) {
-    //   console.log('Algo ha ido mal');
-
-    //   const failAlert = {
-    //     isOpen: true,
-    //     header: t('alert.failure.label'),
-    //     content: t('alert.failure.lopdMessage'),
-    //     type: 'error'
-    //   };
-    //   dispatch(setMessage(failAlert));
-    //   setContinue(true);
-    // } else {
-    //   const succesAlert = {
-    //     isOpen: true,
-    //     header: t('alert.success.label'),
-    //     content: t('alert.success.lopdMessage'),
-    //     type: 'success'
-    //   };
-    //   dispatch(setMessage(succesAlert));
-    // }
   };
 
   return (
@@ -141,8 +129,8 @@ export default function Lopd() {
             <Typography variant="h4" gutterBottom>
               {t('lopd.mainTitle')}
             </Typography>
-            {error ? (
-              <Typography sx={{ color: 'text.error' }}>{error}</Typography>
+            {errorMessage !== '' ? (
+              <Typography sx={{ color: 'text.error' }}>{errorMessage}</Typography>
             ) : (
               <Typography sx={{ color: 'text.secondary' }}>{t('lopd.secondaryTitle')}</Typography>
             )}
@@ -162,7 +150,7 @@ export default function Lopd() {
               <Grid item xs={6} alignItems="center">
                 <label htmlFor="contained-button-file">
                   <Input
-                    accept="image/*"
+                    accept="application/pdf"
                     id="contained-button-file"
                     sx={{ display: 'none' }}
                     type="file"
