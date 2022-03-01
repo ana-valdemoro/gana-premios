@@ -4,7 +4,7 @@ import peopleFill from '@iconify/icons-eva/people-fill';
 import shoppingBagFill from '@iconify/icons-eva/shopping-bag-fill';
 import fileTextFill from '@iconify/icons-eva/file-text-fill';
 import lockFill from '@iconify/icons-eva/lock-fill';
-import personAddFill from '@iconify/icons-eva/person-add-fill';
+import personFill from '@iconify/icons-eva/person-fill';
 import alertTriangleFill from '@iconify/icons-eva/alert-triangle-fill';
 
 // ----------------------------------------------------------------------
@@ -38,9 +38,9 @@ const sidebarConfig = [
     icon: getIcon(lockFill)
   },
   {
-    title: 'register',
-    path: '/register',
-    icon: getIcon(personAddFill)
+    title: 'account',
+    path: '/account',
+    icon: getIcon(personFill)
   },
   {
     title: 'Not found',
