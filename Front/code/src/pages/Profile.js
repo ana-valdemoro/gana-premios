@@ -8,16 +8,31 @@ import {
   TextField,
   Divider,
   Avatar,
-  CardActions
+  CardActions,
+  Link
 } from '@mui/material';
 
 // components
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/reducers/authSlice';
+import userService from '../services/userService';
 import Page from '../components/Page';
 import account from '../_mocks_/account';
 
 import MainCard from '../components/cards/MainCard';
 
 export default function Profile() {
+  const user = useSelector(selectUser);
+
+  const handleDownload = async () => {
+    const res = await userService.downloadLopd(user.token);
+    const fileURL = URL.createObjectURL(res.blob);
+    const link = document.createElement('a');
+    link.download = res.filename;
+    link.href = fileURL;
+    link.click();
+  };
+
   return (
     <Page title="User | Minimal-UI">
       <Container>
@@ -40,9 +55,13 @@ export default function Profile() {
               border={false}
             >
               <Avatar src={account.photoURL} alt="photoURL" />
-              <Typography variant="h4">Katarina Smith</Typography>
-              <Typography variant="subtitle2">Los Ángeles USA</Typography>
-              <Button to="/dashboard" sx={{ width: '100%', marginTop: '8px' }}>
+              <Typography variant="h4">{user.name}</Typography>
+              {/* <Typography variant="subtitle2">Los Ángeles USA</Typography> */}
+              <Button
+                component={Link}
+                onClick={handleDownload}
+                sx={{ width: '100%', marginTop: '8px' }}
+              >
                 Download signed LOPD
               </Button>
             </MainCard>
