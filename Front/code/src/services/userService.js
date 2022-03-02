@@ -25,4 +25,19 @@ const downloadLopd = async (token) => {
   return { blob, filename };
 };
 
-export default { saveLopd, downloadLopd };
+const updateProfile = async (dataToUpdate, token) => {
+  const response = await fetch(
+    `${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/profile`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${token}`
+      },
+      body: JSON.stringify(dataToUpdate)
+    }
+  );
+  return response.json();
+};
+
+export default { saveLopd, downloadLopd, updateProfile };
