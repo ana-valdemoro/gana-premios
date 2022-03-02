@@ -1,19 +1,10 @@
 // material
-import {
-  Typography,
-  Stack,
-  Container,
-  Button,
-  Grid,
-  TextField,
-  Divider,
-  Avatar,
-  CardActions,
-  Link
-} from '@mui/material';
+import { Typography, Stack, Container, Button, Grid, Avatar, Link } from '@mui/material';
+import { useState } from 'react';
 
 // components
 import { useSelector } from 'react-redux';
+import ProfileEditingForm from '../components/ProfileEditingForm';
 import { selectUser } from '../store/reducers/authSlice';
 import userService from '../services/userService';
 import Page from '../components/Page';
@@ -23,6 +14,7 @@ import MainCard from '../components/cards/MainCard';
 
 export default function Profile() {
   const user = useSelector(selectUser);
+  const [errMessage, setErrorMessage] = useState('');
 
   const handleDownload = async () => {
     const res = await userService.downloadLopd(user.token);
@@ -73,7 +65,11 @@ export default function Profile() {
               subheader="The information can be edited"
               sx={{ height: '100%' }}
             >
-              <Grid container spacing={2}>
+              {errMessage ? (
+                <Typography sx={{ color: 'text.error' }}>{errMessage}</Typography>
+              ) : null}
+
+              {/* <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -107,15 +103,20 @@ export default function Profile() {
                     // helperText={touched.email && errors.email}
                   />
                 </Grid>
-              </Grid>
-              <Button
+              </Grid> */}
+              <ProfileEditingForm
+                user={user}
+                errMessage={errMessage}
+                setErrorMessage={setErrorMessage}
+              />
+              {/* <Button
                 variant="contained"
                 to="#"
                 sx={{ width: '100%', marginTop: '16px' }}
                 onClick={() => console.log('click')}
               >
                 Save details
-              </Button>
+              </Button> */}
             </MainCard>
           </Grid>
         </Grid>
