@@ -7,7 +7,8 @@ import {
   Grid,
   TextField,
   Divider,
-  Avatar
+  Avatar,
+  CardActions
 } from '@mui/material';
 
 // components
@@ -17,12 +18,6 @@ import account from '../_mocks_/account';
 import MainCard from '../components/cards/MainCard';
 
 export default function Profile() {
-  const subheader = (
-    <>
-      <Typography variant="h3">Katarina Smith</Typography>
-      <Typography variant="subtitle1">Los Ángeles USA</Typography>
-    </>
-  );
   return (
     <Page title="User | Minimal-UI">
       <Container>
@@ -32,46 +27,62 @@ export default function Profile() {
           </Typography>
         </Stack>
         <Grid container spacing={2} direction="row">
-          <Grid item sx={{ paddingBottom: '8px' }} xs={12} sm={4}>
+          <Grid item xs={12} sm={5}>
             <MainCard
               sx={{ display: 'flex', justifyContent: 'center' }}
+              contentSX={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100%',
+                paddingBottom: '8px'
+              }}
               border={false}
-              title={subheader}
             >
               <Avatar src={account.photoURL} alt="photoURL" />
-              <Typography variant="h3">Katarina Smith</Typography>
-              <Typography variant="subtitle1">Los Ángeles USA</Typography>
-              <Divider />
+              <Typography variant="h4">Katarina Smith</Typography>
+              <Typography variant="subtitle2">Los Ángeles USA</Typography>
               <Button to="/dashboard" sx={{ width: '100%', marginTop: '8px' }}>
-                Upload picture
+                Download signed LOPD
               </Button>
             </MainCard>
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={7}>
             <MainCard
               border={false}
               title="Personal informattion"
               subheader="The information can be edited"
               sx={{ height: '100%' }}
             >
-              <Grid container direction="column" spacing={2}>
-                <Grid item xs={6}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     autoComplete="username"
                     type="email"
-                    label="Full name"
+                    label="Full name*"
                     // {...getFieldProps('email')}
                     // error={Boolean(touched.email && errors.email)}
                     // helperText={touched.email && errors.email}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     autoComplete="username"
                     type="email"
-                    label="Email address"
+                    label="Email address*"
+                    // {...getFieldProps('email')}
+                    // error={Boolean(touched.email && errors.email)}
+                    // helperText={touched.email && errors.email}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    autoComplete="password"
+                    type="password"
+                    label="Password*"
                     // {...getFieldProps('email')}
                     // error={Boolean(touched.email && errors.email)}
                     // helperText={touched.email && errors.email}
