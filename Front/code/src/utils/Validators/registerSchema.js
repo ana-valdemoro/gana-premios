@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import i18n from '../../i18n';
 
-const userEmailsIsIncluded = (email, password) => {
+export const userEmailsIsIncluded = (email, password) => {
   const [userName, domain] = email.split('@');
   return password.includes(userName) || password.includes(domain);
 };

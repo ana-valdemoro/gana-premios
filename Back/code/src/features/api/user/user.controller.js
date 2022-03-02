@@ -9,6 +9,8 @@ const mediaService = require('../media/media.service');
 const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGER_RESOURCES } = require('./user.service');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
+const { getTranslation } = require('../../../utils/getTranslation');
+
 /*Private functions */
 const undoCreateLopd = async (media) => {
   try {
@@ -246,7 +248,8 @@ const getLopd = async (req, res, next) => {
   let path;
 
   if (user.lopd_uuid === '') {
-    return next(boom.badData(res.__('noLOPD')));
+    return next(boom.badData(getTranslation('noLOPD', user.language)));
+      // res.__('noLOPD', user.language)));
   }
 
   try {
@@ -262,8 +265,8 @@ const getLopd = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
-
-  res.set('Content-Type', media.media_type);
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+  res.set('Content-Disposition', 'application/pdf');
 
   return res.download(path, media.original_file_name);
   ;

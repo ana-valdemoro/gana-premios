@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 //
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
+import Notification from '../../components/alerts/Notification';
 
 // ----------------------------------------------------------------------
 
@@ -36,12 +37,15 @@ export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
 
   return (
-    <RootStyle>
-      <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-      <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-      <MainStyle>
-        <Outlet />
-      </MainStyle>
-    </RootStyle>
+    <>
+      <Notification />
+      <RootStyle>
+        <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
+        <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+        <MainStyle>
+          <Outlet />
+        </MainStyle>
+      </RootStyle>
+    </>
   );
 }
