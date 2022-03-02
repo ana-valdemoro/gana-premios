@@ -1,11 +1,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from '../../services/authenticationService';
+import userService from '../../services/userService';
+
+const getUserInMemory = () => JSON.parse(localStorage.getItem('user'));
+
+const saveUserInMemory = (user) => {
+  localStorage.setItem('user', JSON.stringify(user));
+};
+
+const checkUserInMemory = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return !!user;
+};
 
 const user = JSON.parse(localStorage.getItem('user'));
+const token = JSON.parse(localStorage.getItem('token'));
 
 const initialState = {
   isLoggedIn: !!user,
   user: user ? { ...user } : null,
+  token: token || null,
   error: null
 };
 
@@ -15,8 +29,10 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
       state.isLoggedIn = false;
       state.user = null;
+      state.token = null;
       state.error = null;
     },
     clearErrorMessage: (state) => {
@@ -27,6 +43,7 @@ const authSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         state.isLoggedIn = true;
+        state.token = action.payload.token;
         state.error = null;
         state.user = action.payload;
       })
@@ -37,7 +54,10 @@ const authSlice = createSlice({
       .addCase(saveLopd.fulfilled, (state, action) => {
         state.user.lopd_uuid = action.payload.uuid;
       })
-      .addCase(saveLopd.rejected, (state, action) => action.error);
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user.name = action.payload.name;
+        state.user.email = action.payload.email;
+      });
   }
 });
 
@@ -50,6 +70,7 @@ export const login = createAsyncThunk('auth/login', async (values) => {
   // eslint-disable-next-line no-prototype-builtins
   if (response.hasOwnProperty('token')) {
     if (remember) {
+      localStorage.setItem('token', JSON.stringify(response.token));
       localStorage.setItem('user', JSON.stringify(response));
     }
     return response;
@@ -60,12 +81,36 @@ export const login = createAsyncThunk('auth/login', async (values) => {
 export const saveLopd = createAsyncThunk('auth/saveLopd', async (lopd, thunkApi) => {
   const { auth } = thunkApi.getState();
 
-  const response = await authService.saveLopd(lopd, auth.user.token);
+  const response = await userService.saveLopd(lopd, auth.token);
   console.log(response);
 
   if (response.statusCode === 500 || response.statusCode === 422) {
     console.log('Algo ha ido mal');
     return Promise.reject(response);
+  }
+
+  const user = getUserInMemory();
+  if (user) {
+    user.lopd_uuid = response.uuid;
+    saveUserInMemory(user);
+  }
+
+  return response;
+});
+
+export const updateProfile = createAsyncThunk('auth/updateProfile', async (userData, thunkApi) => {
+  const { auth } = thunkApi.getState();
+
+  const response = await userService.updateProfile(userData, auth.token);
+  console.log(response);
+
+  if (response.statusCode === 500 || response.statusCode === 422) {
+    console.log('Algo ha ido mal');
+    return Promise.reject(response);
+  }
+
+  if (checkUserInMemory()) {
+    saveUserInMemory(response);
   }
 
   return response;
