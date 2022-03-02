@@ -23,7 +23,7 @@ export default function Profile() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Account
+            Profile
           </Typography>
         </Stack>
         <Grid container spacing={2} direction="row">

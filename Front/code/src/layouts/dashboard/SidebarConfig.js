@@ -38,8 +38,8 @@ const sidebarConfig = [
     icon: getIcon(lockFill)
   },
   {
-    title: 'account',
-    path: '/account',
+    title: 'profile',
+    path: '/dashboard/profile',
     icon: getIcon(personFill)
   },
   {

@@ -19,7 +19,7 @@ const MainRoutes = {
     { path: 'user', element: <User /> },
     { path: 'products', element: <Products /> },
     { path: 'blog', element: <Blog /> },
-    { path: 'account', element: <Profile /> }
+    { path: 'profile', element: <Profile /> }
   ]
 };
 
