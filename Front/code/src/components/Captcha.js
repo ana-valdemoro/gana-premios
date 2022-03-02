@@ -28,11 +28,11 @@ export default function Captcha(props) {
       render="explicit"
       theme="light"
       verifyCallback={(response) => {
-        console.log('Obtenemos captch');
+        // console.log('Obtenemos captch');
         setFieldValue('recaptcha', response);
       }}
       onloadCallback={() => {
-        console.log('done loading!');
+        // console.log('done loading!');
       }}
     />
   );
