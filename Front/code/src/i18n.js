@@ -70,12 +70,14 @@ i18n
             success: {
               label: 'Success',
               signUpMessage: 'Sign up Successfully',
-              lopdMessage: 'Upload it successfully'
+              lopdMessage: 'Upload it successfully',
+              updateProfileMessage: 'Profile updated successfully'
             },
             failure: {
               label: 'Error',
               signUpMessage: 'Sign up fails',
-              lopdMessage: 'Failure to save'
+              lopdMessage: 'Failure to save',
+              updateProfileMessage: 'Failure to update profile'
             }
           },
           buttons: {
@@ -88,6 +90,32 @@ i18n
             mainTitle: "Now it's the time to upload LOPD",
             secondaryTitle: 'Download, sign and upload it!',
             validateMessage: 'The signed document must be a pdf'
+          },
+          profileEditingForm: {
+            // name: {
+            //   label: 'Nombre completo',
+            //   short: '¡Muy corto!',
+            //   long: '¡Muy largo!',
+            //   required: 'El nombre completo es requerido'
+            // },
+            // email: {
+            //   label: 'Email',
+            //   validFormat: 'El email debe ser una dirección de email válido',
+            //   required: 'El email es requerido'
+            // },
+            password: {
+              label: 'New password',
+              emailIncluded: 'El email no puede estar contenido',
+              minLength: 'Debe contener al menos 9 caracteres',
+              lowercase: 'Una minúscula',
+              uppercase: 'Una mayúscula',
+              number: 'Un número',
+              specialCharacter: 'Un carácter especial de entre -;!$%^&*()_+|~=`{}[]:"\'<>?,./',
+              required: 'La contraseña es requerida'
+            },
+            repitNewPassword: {
+              label: 'Repit the new password'
+            }
           }
         }
       },
@@ -142,13 +170,15 @@ i18n
           alert: {
             success: {
               label: '¡Hurra!',
-              content: 'Registro exitoso',
-              lopdMessage: 'LOPD guarda correctamente'
+              signUpMessage: 'Registro exitoso',
+              lopdMessage: 'LOPD guarda correctamente',
+              updateProfileMessage: 'Perfil actualizado correctamente'
             },
             failure: {
               label: 'Error',
               signUpMessage: 'Error en el registro',
-              lopdMessage: 'Fallo al guardar LOPD'
+              lopdMessage: 'Fallo al guardar LOPD',
+              updateProfileMessage: 'Fallo al actualizar los datos'
             }
           },
           buttons: {
@@ -161,6 +191,32 @@ i18n
             mainTitle: 'Ahora es el momento de subir la LOPD',
             secondaryTitle: 'Descárgalo, fírmalo y súbelo.',
             validateMessage: 'El documento firmado debe ser pdf'
+          },
+          profileEditingForm: {
+            // name: {
+            //   label: 'Nombre completo',
+            //   short: '¡Muy corto!',
+            //   long: '¡Muy largo!',
+            //   required: 'El nombre completo es requerido'
+            // },
+            // email: {
+            //   label: 'Email',
+            //   validFormat: 'El email debe ser una dirección de email válido',
+            //   required: 'El email es requerido'
+            // },
+            password: {
+              label: 'Nueva contraseña',
+              emailIncluded: 'El email no puede estar contenido',
+              minLength: 'Debe contener al menos 9 caracteres',
+              lowercase: 'Una minúscula',
+              uppercase: 'Una mayúscula',
+              number: 'Un número',
+              specialCharacter: 'Un carácter especial de entre -;!$%^&*()_+|~=`{}[]:"\'<>?,./'
+            },
+            repitNewPassword: {
+              label: 'Repite la nueva contraseña',
+              message: 'Debe coincidir con la escrita en el input anterior  '
+            }
           }
         }
       }
