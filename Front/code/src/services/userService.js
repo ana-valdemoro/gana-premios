@@ -18,9 +18,8 @@ const downloadLopd = async (token) => {
     }
   });
   const fileNameWithQuotes = response.headers.get('content-disposition').split('filename=')[1];
-  console.log(fileNameWithQuotes);
   const filename = fileNameWithQuotes.substring(1, fileNameWithQuotes.length - 1);
-  console.log(filename);
+
   const blob = await response.blob();
   return { blob, filename };
 };

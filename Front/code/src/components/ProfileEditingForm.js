@@ -16,6 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import { setMessage } from '../store/reducers/messageSlice';
 // import registerSchema from '../utils/Validators/registerSchema';
 import { updateProfile } from '../store/reducers/authSlice';
+import { userEmailsIsIncluded } from '../utils/Validators/registerSchema';
 
 // ----------------------------------------------------------------------
 
@@ -29,68 +30,90 @@ export default function ProfileEditingForm(props) {
 
   const { t } = useTranslation();
 
+  const resetFormFields = () => {
+    setFieldValue('newPassword', '');
+    setFieldValue('repitNewPassword', '');
+  };
+
   const userSchema = Yup.object().shape({
     name: Yup.string()
       .min(3, t('registerForm.name.short'))
       .max(30, t('registerForm.name.long'))
       .required(t('registerForm.name.required')),
-    // .test('isSame', 'cannot be the same', (name) => name === user.name),
     email: Yup.string()
       .email(t('registerForm.email.validFormat'))
       .required(t('registerForm.email.required')),
     newPassword: Yup.string().test({
       password: 'validator-custom-password',
       // eslint-disable-next-line object-shorthand
-      test: function validatePassword() {
-        return true;
-        // // const { email } = context.parent;
-        // const errors = [];
+      test: function validatePassword(password, context) {
+        const { email } = context.parent;
+        const errors = [];
 
-        // if (!password) {
-        //   return this.createError({
-        //     message: t('registerForm.password.required'),
-        //     path: `password`
-        //   });
-        // }
+        if (!password) {
+          return true;
+        }
 
-        // // if (email && userEmailsIsIncluded(email.toLowerCase(), password.toLowerCase())) {
-        // //   errors.push(t('registerForm.password.emailIncluded'));
-        // // }
+        if (email && userEmailsIsIncluded(email.toLowerCase(), password.toLowerCase())) {
+          errors.push(t('registerForm.password.emailIncluded'));
+        }
 
-        // if (password.length < 9) {
-        //   errors.push(t('registerForm.password.minLength'));
-        // }
+        if (password.length < 9) {
+          errors.push(t('registerForm.password.minLength'));
+        }
 
-        // const lowercase = new RegExp(/^(?=.*[a-z]).{1,}$/);
-        // if (!lowercase.test(password)) {
-        //   errors.push(t('registerForm.password.lowercase'));
-        // }
+        const lowercase = new RegExp(/^(?=.*[a-z]).{1,}$/);
+        if (!lowercase.test(password)) {
+          errors.push(t('registerForm.password.lowercase'));
+        }
 
-        // const uppercase = new RegExp(/^(?=.*[A-Z]).{1,}$/);
-        // if (!uppercase.test(password)) {
-        //   errors.push(t('registerForm.password.uppercase'));
-        // }
+        const uppercase = new RegExp(/^(?=.*[A-Z]).{1,}$/);
+        if (!uppercase.test(password)) {
+          errors.push(t('registerForm.password.uppercase'));
+        }
 
-        // const number = new RegExp(/^(?=.*[0-9]).{1,}$/);
-        // if (!number.test(password)) {
-        //   errors.push(t('registerForm.password.number'));
-        // }
+        const number = new RegExp(/^(?=.*[0-9]).{1,}$/);
+        if (!number.test(password)) {
+          errors.push(t('registerForm.password.number'));
+        }
 
-        // // eslint-disable-next-line no-useless-escape
-        // const symbols = new RegExp(/^(?=.*[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).{1,}$/);
-        // if (!symbols.test(password)) {
-        //   errors.push(t('registerForm.password.specialCharacter'));
-        // }
+        // eslint-disable-next-line no-useless-escape
+        const symbols = new RegExp(/^(?=.*[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).{1,}$/);
+        if (!symbols.test(password)) {
+          errors.push(t('registerForm.password.specialCharacter'));
+        }
 
-        // return errors.length > 0
-        //   ? this.createError({
-        //       message: `${errors.join(', ')}`,
-        //       path: `password`
-        //     })
-        //   : true;
+        return errors.length > 0
+          ? this.createError({
+              message: `${errors.join(', ')}`,
+              path: `newPassword`
+            })
+          : true;
       }
     }),
-    repitNewPassword: Yup.string() // .required('El repetir contraseña se debe de implementar')
+    repitNewPassword: Yup.string().when('newPassword', {
+      is: (newPassword) => newPassword,
+      then: Yup.string().test({
+        repitNewPassword: 'validate-repit-password',
+        test(repitNewPassword, context) {
+          const { newPassword } = context.parent;
+
+          if (!repitNewPassword) {
+            return this.createError({
+              message: 'Este campo es obligatorio para cambiar la contraseña',
+              path: `repitNewPassword`
+            });
+          }
+
+          return newPassword === repitNewPassword
+            ? true
+            : this.createError({
+                message: `No coinciden ambos campos`,
+                path: `repitNewPassword`
+              });
+        }
+      })
+    })
   });
 
   const formik = useFormik({
@@ -103,26 +126,33 @@ export default function ProfileEditingForm(props) {
     validationSchema: userSchema,
     validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(values);
       if (errMessage !== '') {
         setErrorMessage('');
       }
-      const { name, email, newPassword, repitNewPassword } = values;
+      const { name, email, newPassword } = values;
 
       // Actualizamos solo los campos de nombre o contraseña
-      let dataToUpdate;
-      if (
-        (name !== user.name || email !== user.email) &&
-        newPassword === '' &&
-        repitNewPassword === ''
-      ) {
-        dataToUpdate = { name, email };
+      const dataToUpdate = {};
+      if (name !== user.name || email !== user.email) {
+        dataToUpdate.name = name;
+        dataToUpdate.email = email;
+      }
+
+      if (newPassword) {
+        dataToUpdate.password = newPassword;
+      }
+
+      console.log(dataToUpdate);
+
+      if (Object.entries(dataToUpdate).length === 0) {
+        return;
       }
 
       dispatch(updateProfile(dataToUpdate)).then((res) => {
         setSubmitting(false);
-        console.log(res);
+
         if (res.payload) {
+          resetFormFields();
           const succesAlert = {
             isOpen: true,
             header: t('alert.success.label'),

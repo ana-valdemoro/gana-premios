@@ -82,10 +82,8 @@ export const saveLopd = createAsyncThunk('auth/saveLopd', async (lopd, thunkApi)
   const { auth } = thunkApi.getState();
 
   const response = await userService.saveLopd(lopd, auth.token);
-  console.log(response);
 
   if (response.statusCode === 500 || response.statusCode === 422) {
-    console.log('Algo ha ido mal');
     return Promise.reject(response);
   }
 
@@ -102,10 +100,8 @@ export const updateProfile = createAsyncThunk('auth/updateProfile', async (userD
   const { auth } = thunkApi.getState();
 
   const response = await userService.updateProfile(userData, auth.token);
-  console.log(response);
 
   if (response.statusCode === 500 || response.statusCode === 422) {
-    console.log('Algo ha ido mal');
     return Promise.reject(response);
   }
 
