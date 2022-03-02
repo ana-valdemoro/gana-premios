@@ -21,13 +21,4 @@ const register = async (user) =>
     body: JSON.stringify(user)
   }).then((res) => res.json());
 
-const saveLopd = async (lopd, token) =>
-  fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/lopd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${token}`
-    },
-    body: JSON.stringify(lopd)
-  }).then((res) => res.json());
-export default { login, register, saveLopd };
+export default { login, register };
