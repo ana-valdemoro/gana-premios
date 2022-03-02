@@ -176,18 +176,19 @@ const activateAccount = async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   const { user } = req;
   const { lopdUuid, name, email, password } = req.body;
-  const userUuid = user.uuid;
   let response;
 
-  const isValidPassword = validatePasswordPattern(email, password);
-
-  if (!isValidPassword.status) {
-    const errorResponse = {
-      statusCode: 422,
-      message: res.__('invalidPassword2'),
-      errors: isValidPassword.errors,
-    };
-    return res.status(422).json(errorResponse);
+  if(password){
+    const isValidPassword = validatePasswordPattern(email, password);
+  
+    if (!isValidPassword.status) {
+      const errorResponse = {
+        statusCode: 422,
+        message: res.__('invalidPassword2'),
+        errors: isValidPassword.errors,
+      };
+      return res.status(422).json(errorResponse);
+    }
   }
 
   try {
