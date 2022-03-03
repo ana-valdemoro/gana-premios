@@ -100,7 +100,7 @@ export default function ProfileEditingForm(props) {
 
           if (!repitNewPassword) {
             return this.createError({
-              message: 'Este campo es obligatorio para cambiar la contraseña',
+              message: t('profileEditingForm.repitNewPassword.required'),
               path: `repitNewPassword`
             });
           }
@@ -108,7 +108,7 @@ export default function ProfileEditingForm(props) {
           return newPassword === repitNewPassword
             ? true
             : this.createError({
-                message: `No coinciden ambos campos`,
+                message: t('profileEditingForm.repitNewPassword.notSame'),
                 path: `repitNewPassword`
               });
         }
@@ -252,7 +252,7 @@ export default function ProfileEditingForm(props) {
               variant="contained"
               loading={isSubmitting}
             >
-              Save details
+              {t('buttons.saveDetails')}
             </LoadingButton>
           </Stack>
         </Form>

@@ -77,7 +77,7 @@ export default function Profile() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Profile
+            {t('accountPopover.menuOptions.profile')}
           </Typography>
         </Stack>
         <Grid container spacing={2} direction="row">
@@ -102,7 +102,7 @@ export default function Profile() {
                   onClick={handleDownload}
                   sx={{ width: '100%', marginTop: '8px' }}
                 >
-                  Download signed LOPD
+                  {t('buttons.downloadSignedLopd')}
                 </Button>
               ) : (
                 <label htmlFor="contained-button-file">
@@ -128,8 +128,8 @@ export default function Profile() {
           <Grid item xs={12} sm={7}>
             <MainCard
               border={false}
-              title="Personal informattion"
-              subheader="The information can be edited"
+              title={t('profileEditingForm.mainTitle')}
+              subheader={t('profileEditingForm.secondaryTitle')}
               sx={{ height: '100%' }}
             >
               {errMessage ? (

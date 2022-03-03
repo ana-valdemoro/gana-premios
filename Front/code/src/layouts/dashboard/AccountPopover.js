@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+import i18n from '../../i18n';
 // components
 import MenuPopover from '../../components/MenuPopover';
 //
@@ -20,17 +21,17 @@ import { logout, selectUser } from '../../store/reducers/authSlice';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: i18n.t('accountPopover.menuOptions.home'),
     icon: homeFill,
     linkTo: '/'
   },
   {
-    label: 'Profile',
+    label: i18n.t('accountPopover.menuOptions.profile'),
     icon: personFill,
     linkTo: '/dashboard/profile'
   },
   {
-    label: 'Settings',
+    label: i18n.t('accountPopover.menuOptions.settings'),
     icon: settings2Fill,
     linkTo: '#'
   }
@@ -123,7 +124,7 @@ export default function AccountPopover() {
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
-            Logout
+            {i18n.t('buttons.logout')}
           </Button>
         </Box>
       </MenuPopover>
