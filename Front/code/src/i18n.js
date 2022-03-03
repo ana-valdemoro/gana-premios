@@ -83,7 +83,10 @@ i18n
           buttons: {
             download: 'Download',
             upload: 'Upload',
-            goIn: 'Go in'
+            goIn: 'Go in',
+            logout: 'Logout',
+            downloadSignedLopd: 'Download signed LOPD',
+            saveDetails: 'Save details'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -92,6 +95,8 @@ i18n
             validateMessage: 'The signed document must be a pdf'
           },
           profileEditingForm: {
+            mainTitle: 'Personal Information',
+            secondaryTitle: 'The information can be edited',
             // name: {
             //   label: 'Nombre completo',
             //   short: '¡Muy corto!',
@@ -114,8 +119,20 @@ i18n
               required: 'La contraseña es requerida'
             },
             repitNewPassword: {
-              label: 'Repit the new password'
+              label: 'Repit the new password',
+              notSame: 'Both fields are noth the same',
+              required: 'This field is required to change the password'
             }
+          },
+          accountPopover: {
+            menuOptions: {
+              home: 'Home',
+              profile: 'Profile',
+              settings: 'Settings'
+            }
+          },
+          sideBarNav: {
+            profile: 'profile'
           }
         }
       },
@@ -184,7 +201,10 @@ i18n
           buttons: {
             download: 'Descargar',
             upload: 'Subir',
-            goIn: 'Entra'
+            goIn: 'Entra',
+            logout: 'Cerrar sesión',
+            downloadSignedLopd: 'Descarga LOPD firmada',
+            saveDetails: 'Guardar datos'
           },
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
@@ -193,6 +213,8 @@ i18n
             validateMessage: 'El documento firmado debe ser pdf'
           },
           profileEditingForm: {
+            mainTitle: 'Información personal',
+            secondaryTitle: 'Esta información puede ser modificada',
             // name: {
             //   label: 'Nombre completo',
             //   short: '¡Muy corto!',
@@ -215,8 +237,19 @@ i18n
             },
             repitNewPassword: {
               label: 'Repite la nueva contraseña',
-              message: 'Debe coincidir con la escrita en el input anterior  '
+              notSame: 'No coinciden ambos campos',
+              required: 'Este campo es obligatorio para cambiar la contraseña'
             }
+          },
+          accountPopover: {
+            menuOptions: {
+              home: 'Home',
+              profile: 'Perfil',
+              settings: 'Ajustes'
+            }
+          },
+          sideBarNav: {
+            profile: 'perfil'
           }
         }
       }

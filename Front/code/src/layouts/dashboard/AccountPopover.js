@@ -4,33 +4,34 @@ import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+import i18n from '../../i18n';
 // components
 import MenuPopover from '../../components/MenuPopover';
 //
 import account from '../../_mocks_/account';
 
-import { logout } from '../../store/reducers/authSlice';
+import { logout, selectUser } from '../../store/reducers/authSlice';
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: i18n.t('accountPopover.menuOptions.home'),
     icon: homeFill,
     linkTo: '/'
   },
   {
-    label: 'Profile',
+    label: i18n.t('accountPopover.menuOptions.profile'),
     icon: personFill,
     linkTo: '/dashboard/profile'
   },
   {
-    label: 'Settings',
+    label: i18n.t('accountPopover.menuOptions.settings'),
     icon: settings2Fill,
     linkTo: '#'
   }
@@ -43,6 +44,7 @@ export default function AccountPopover() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
 
   const handleOpen = () => {
     setOpen(true);
@@ -89,10 +91,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            {user.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user.email}
           </Typography>
         </Box>
 
@@ -122,7 +124,7 @@ export default function AccountPopover() {
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
-            Logout
+            {i18n.t('buttons.logout')}
           </Button>
         </Box>
       </MenuPopover>

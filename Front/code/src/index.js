@@ -1,6 +1,8 @@
 // scroll bar
 import 'simplebar/src/simplebar.css';
 
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -14,12 +16,15 @@ import store from './store/index';
 import './i18n';
 
 // ----------------------------------------------------------------------
+const persistor = persistStore(store);
 
 ReactDOM.render(
   <HelmetProvider>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <PersistGate persistor={persistor}>
+          <App />
+        </PersistGate>
       </Provider>
     </BrowserRouter>
   </HelmetProvider>,

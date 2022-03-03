@@ -120,6 +120,15 @@ export default function Lopd() {
 
       <Container maxWidth="sm">
         <ContentStyle>
+          <Button
+            component={routerLink}
+            to="/dashboard/profile"
+            size="small"
+            color="inherit"
+            endIcon={<Icon icon={arrowIosForwardFill} />}
+          >
+            Saltar
+          </Button>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
               {t('lopd.mainTitle')}
