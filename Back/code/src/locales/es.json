@@ -1,8 +1,7 @@
 {
-  "errorMailPassword": "El email o la contraseña introducidos no son válidos",
+  "invalidMailOrPassword": "El email o la contraseña introducidos no son válidos",
   "lockedAccount": "La cuenta ha sido bloqueada y se ha enviado un correo para desbloquearla",
   "unlockedAccountcheckMail": "Esta cuenta esta bloqueada. Revisa la bandeja de entrada de tu correo",
-  "invalidPassword": "El email o la contraseña introducidos no son válidos",
   "invalidUser": "Usuario no válido",
   "invalidPassword2": "Contraseña inválida",
   "clientNonExist": "El cliente no existe",
@@ -37,5 +36,6 @@
   "recoverSubject": "Recuperar contraseña",
   "recoverMailTitle": "Recuperar contraseña",
   "recoverMailMessage": "Pulse en el siguiente enlace para recuperar tu contraseña.",
-  "recoverButtonText": "Recuperar contraseña"
+  "recoverButtonText": "Recuperar contraseña",
+  "inactiveUser" : "Tu usuario no esta activo. Por favor, revisa tu correo electrónico"
 }
