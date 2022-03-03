@@ -206,10 +206,22 @@ const updateProfile = async (req, res, next) => {
   res.json(userService.toPublic(response));
 };
 
+const getProfile = async (req, res, next) => {
+  const { user } = req;
+
+  try {
+      return res.json(await userService.toPublic(user));
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation(error.message));
+  }
+};
+
 module.exports = {
   login,
   register,
   unBlockAccount,
   activateAccount,
   updateProfile,
+  getProfile
 };
