@@ -75,7 +75,7 @@ const forgotPassword = async (user) => {
   }
 
   try {
-    await mailService.sendRecoveryPasswordEmail(user.email, token);
+    await mailService.sendRecoveryPasswordEmail(user.email, token, user.language);
   } catch (error) {
     logger.info(`${error}`);
   }
