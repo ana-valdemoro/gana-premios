@@ -1,24 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from '../../services/authenticationService';
 import userService from '../../services/userService';
-
-const getUserInMemory = () => JSON.parse(localStorage.getItem('user'));
-
-const saveUserInMemory = (user) => {
-  localStorage.setItem('user', JSON.stringify(user));
-};
+import localStorageService from '../../services/localStorageService';
 
 const checkUserInMemory = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = localStorageService.getItemInMemory('user');
   return !!user;
 };
 
-const user = JSON.parse(localStorage.getItem('user'));
-const token = JSON.parse(localStorage.getItem('token'));
+const token = localStorageService.getItemInMemory('token');
 
 const initialState = {
-  isLoggedIn: !!user,
-  user: user ? { ...user } : null,
+  isLoggedIn: null,
+  user: null,
   token: token || null,
   error: null
 };
@@ -28,8 +22,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
+      localStorageService.removeItemInMemory('user');
+      localStorageService.removeItemInMemory('token');
       state.isLoggedIn = false;
       state.user = null;
       state.token = null;
@@ -62,17 +56,14 @@ const authSlice = createSlice({
 });
 
 export const login = createAsyncThunk('auth/login', async (values) => {
-  const { remember, email, password } = values;
+  const { email, password } = values;
   const userCredentials = { email, password };
 
   const response = await authService.login(userCredentials);
 
   // eslint-disable-next-line no-prototype-builtins
   if (response.hasOwnProperty('token')) {
-    if (remember) {
-      localStorage.setItem('token', JSON.stringify(response.token));
-      localStorage.setItem('user', JSON.stringify(response));
-    }
+    localStorageService.saveItemInMemory('token', response.token);
     return response;
   }
   return Promise.reject(response);
@@ -87,10 +78,10 @@ export const saveLopd = createAsyncThunk('auth/saveLopd', async (lopd, thunkApi)
     return Promise.reject(response);
   }
 
-  const user = getUserInMemory();
+  const user = localStorageService.getItemInMemory('user');
   if (user) {
     user.lopd_uuid = response.uuid;
-    saveUserInMemory(user);
+    localStorageService.saveItemInMemory('user', user);
   }
 
   return response;
@@ -106,7 +97,7 @@ export const updateProfile = createAsyncThunk('auth/updateProfile', async (userD
   }
 
   if (checkUserInMemory()) {
-    saveUserInMemory(response);
+    localStorageService.saveItemInMemory('user', response);
   }
 
   return response;
