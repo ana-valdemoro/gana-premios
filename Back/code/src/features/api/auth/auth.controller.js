@@ -29,17 +29,16 @@ const login = async (req, res, next) => {
   }
 
   if (user.blocked) {
-    return next(boom.unauthorized(res.__('unlockedAccountcheckMail')));
+    return next(boom.unauthorized(res.__('lockedAccountcheckMail')));
   }
 
   try {
-    if (user.failed_logins >= 5) {
+    if (user.failed_logins >= 5 && !user.blocked) {
       await userService.blockAccount(user);
       return next(boom.unauthorized(res.__('lockedAccount')));
     }
-  } catch (error) {
-    console.log(error);
-    return next(boom.badImplementation(error.message));
+  } catch (errorKey) {
+    return next(boom.badData(res.__(errorKey)));
   }
   try {
     const userHasValidPassword = await user.validPassword(password);

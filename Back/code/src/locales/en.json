@@ -1,6 +1,6 @@
 {
   "invalidMailOrPassword": "The email or password entered are not valid",
-  "unlockedAccountcheckMail": "This account is locked. Check your email inbox",
+  "lockedAccountcheckMail": "This account is locked. Check your email inbox",
   "invalidUser": "Invalid user",
   "invalidPassword2": "Invalid password",
   "clientNonExist": "The client does not exist",
