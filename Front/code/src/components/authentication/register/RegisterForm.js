@@ -60,7 +60,7 @@ export default function RegisterForm(props) {
         const failAlert = {
           isOpen: true,
           header: t('alert.failure.label'),
-          content: t('alert.failure.content'),
+          content: t('alert.failure.signUpMessage'),
           type: 'error'
         };
         dispatch(setMessage(failAlert));
@@ -70,7 +70,7 @@ export default function RegisterForm(props) {
         const succesAlert = {
           isOpen: true,
           header: t('alert.success.label'),
-          content: t('alert.success.content'),
+          content: t('alert.success.signUpMessage'),
           type: 'success'
         };
         dispatch(setMessage(succesAlert));
