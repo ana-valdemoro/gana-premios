@@ -22,10 +22,23 @@ export const MainRoutes = (isLoggedIn, user) => ({
           <Navigate to="/dashboard/profile" />
         )
     },
-    { path: 'app', element: <DashboardApp /> },
-    { path: 'user', element: <User /> },
-    { path: 'products', element: <Products /> },
-    { path: 'blog', element: <Blog /> },
+    {
+      path: 'app',
+      element:
+        user?.lopd_uuid !== '' ? <DashboardApp /> : <Navigate to="/dashboard/profile" replace />
+    },
+    {
+      path: 'user',
+      element: user?.lopd_uuid !== '' ? <User /> : <Navigate to="/dashboard/profile" replace />
+    },
+    {
+      path: 'products',
+      element: user?.lopd_uuid !== '' ? <Products /> : <Navigate to="/dashboard/profile" replace />
+    },
+    {
+      path: 'blog',
+      element: user?.lopd_uuid !== '' ? <Blog /> : <Navigate to="/dashboard/profile" replace />
+    },
     { path: 'profile', element: <Profile /> }
   ]
 });
