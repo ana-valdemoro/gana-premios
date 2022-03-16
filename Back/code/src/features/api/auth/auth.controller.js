@@ -16,35 +16,36 @@ const login = async (req, res, next) => {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
-  /* if (user.active !== true) {
-    return next(
-      boom.unauthorized('Tu usuario no está activo. Por favor, revisa tu correo electrónico'),
-    );
-  } */
 
+  
   if (!user) {
-    return next(boom.unauthorized(res.__('errorMailPassword')));
+    return next(boom.unauthorized(res.__('invalidMailOrPassword')));
+  }
+  
+  if (!user.active) {
+    return next(
+      boom.unauthorized(res.__('inactiveUser')),
+    );
   }
 
   if (user.blocked) {
-    return next(boom.unauthorized(res.__('unlockedAccountcheckMail')));
+    return next(boom.unauthorized(res.__('lockedAccountcheckMail')));
   }
 
   try {
-    if (user.failed_logins >= 5) {
+    if (user.failed_logins >= 5 && !user.blocked) {
       await userService.blockAccount(user);
       return next(boom.unauthorized(res.__('lockedAccount')));
     }
-  } catch (error) {
-    console.log(error);
-    return next(boom.badImplementation(error.message));
+  } catch (errorKey) {
+    return next(boom.badData(res.__(errorKey)));
   }
   try {
     const userHasValidPassword = await user.validPassword(password);
 
     if (!userHasValidPassword) {
       await userService.incrementLoginAttempts(user._id);
-      return next(boom.unauthorized(res.__('invalidPassword')));
+      return next(boom.unauthorized(res.__('invalidMailOrPassword')));
     }
 
     if (user.failed_logins > 0) {
@@ -172,15 +173,14 @@ const activateAccount = async (req, res, next) => {
   }
 };
 
-
 const updateProfile = async (req, res, next) => {
   const { user } = req;
   const { lopdUuid, name, email, password } = req.body;
   let response;
 
-  if(password){
+  if (password) {
     const isValidPassword = validatePasswordPattern(email, password);
-  
+
     if (!isValidPassword.status) {
       const errorResponse = {
         statusCode: 422,
@@ -210,7 +210,7 @@ const getProfile = async (req, res, next) => {
   const { user } = req;
 
   try {
-      return res.json(await userService.toPublic(user));
+    return res.json(await userService.toPublic(user));
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
@@ -223,5 +223,5 @@ module.exports = {
   unBlockAccount,
   activateAccount,
   updateProfile,
-  getProfile
+  getProfile,
 };

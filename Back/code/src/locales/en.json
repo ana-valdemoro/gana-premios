@@ -1,7 +1,6 @@
 {
-  "errorMailPassword": "The email or password entered are not valid",
-  "unlockedAccountcheckMail": "This account is locked. Check your email inbox",
-  "invalidPassword": "The email or password entered are not valid",
+  "invalidMailOrPassword": "The email or password entered are not valid",
+  "lockedAccountcheckMail": "This account is locked. Check your email inbox",
   "invalidUser": "Invalid user",
   "invalidPassword2": "Invalid password",
   "clientNonExist": "The client does not exist",
@@ -38,5 +37,6 @@
   "recoverSubject": "Recover password",
   "recoverMailTitle": "Recover password",
   "recoverMailMessage": "Click on the following link to recover your password.",
-  "recoverButtonText": "Recover password"
+  "recoverButtonText": "Recover password",
+  "inactiveUser" : "Your account is not active. Please, check your mailbox"
 }

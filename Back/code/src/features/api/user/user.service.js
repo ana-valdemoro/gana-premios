@@ -75,7 +75,7 @@ const forgotPassword = async (user) => {
   }
 
   try {
-    await mailService.sendRecoveryPasswordEmail(user.email, token);
+    await mailService.sendRecoveryPasswordEmail(user.email, token, user.language);
   } catch (error) {
     logger.info(`${error}`);
   }
@@ -93,7 +93,7 @@ const incrementLoginAttempts = async (id) =>
 
 const resetLoginAttempts = async (id) => User.findOneAndUpdate({ _id: id }, { failed_logins: 0 });
 
-const blockAccount = async (res, user, language) => {
+const blockAccount = async (user) => {
   const token = jwt.generateJWT({
     uuid: '',
     type: 'user',
@@ -104,19 +104,20 @@ const blockAccount = async (res, user, language) => {
       blocked: true,
       token,
     });
+
     if (!updatedUser) {
-      return Promise.reject(new Error(res.__('userNoUpdate')));
+      return Promise.reject('dbFailed');
     }
   } catch (error) {
     logger.error(`${error}`);
-    return Promise.reject(new Error(res.__('dbFailed"')));
+    return Promise.reject('dbFailed');
   }
 
   try {
-    await mailService.sendBlockedAccountEmail(user.email, token, language);
+    await mailService.sendBlockedAccountEmail(user.email, token, user.language);
   } catch (error) {
     logger.info(`${error}`);
-    return Promise.reject(new Error(res.__('mailNotSent')));
+    return Promise.reject(new Error('mailNotSent'));
   }
 
   return true;

@@ -4,18 +4,24 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import authReducer from './reducers/authSlice';
 import messageReducer from './reducers/messageSlice';
 
-const reducers = combineReducers({
-  auth: authReducer,
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  blacklist: ['error']
+};
+
+const rootReducer = combineReducers({
+  auth: persistReducer(authPersistConfig, authReducer),
   notification: messageReducer
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth']
+  blacklist: ['auth']
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
