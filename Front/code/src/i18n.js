@@ -86,7 +86,10 @@ i18n
             goIn: 'Go in',
             logout: 'Logout',
             downloadSignedLopd: 'Download signed LOPD',
-            saveDetails: 'Save details'
+            saveDetails: 'Save details',
+            skip: 'Skip',
+            register: 'register',
+            signIn: 'Sign In'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -204,7 +207,10 @@ i18n
             goIn: 'Entra',
             logout: 'Cerrar sesión',
             downloadSignedLopd: 'Descarga LOPD firmada',
-            saveDetails: 'Guardar datos'
+            saveDetails: 'Guardar datos',
+            skip: 'Saltar',
+            register: 'Registrarse',
+            signIn: 'Iniciar sesión'
           },
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
