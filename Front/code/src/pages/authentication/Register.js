@@ -7,11 +7,11 @@ import { styled } from '@mui/material/styles';
 import { Box, Card, Link, Container, Typography } from '@mui/material';
 // import { clearMessage } from '../store/reducers/messageSlice';
 // layouts
-import AuthLayout from '../layouts/AuthLayout';
+import AuthLayout from '../../layouts/AuthLayout';
 // components
-import Page from '../components/Page';
-import { MHidden } from '../components/@material-extend';
-import { RegisterForm } from '../components/authentication/register';
+import Page from '../../components/Page';
+import { MHidden } from '../../components/@material-extend';
+import { RegisterForm } from '../../components/authentication/register';
 
 // ----------------------------------------------------------------------
 

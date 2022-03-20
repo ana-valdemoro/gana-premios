@@ -21,4 +21,13 @@ const register = async (user) =>
     body: JSON.stringify(user)
   }).then((res) => res.json());
 
-export default { login, register };
+const activateAccount = async (token) =>
+  fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/activate/${token}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({})
+  }).then((res) => res.json());
+
+export default { login, register, activateAccount };

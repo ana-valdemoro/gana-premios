@@ -5,7 +5,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { useDispatch, useSelector } from 'react-redux';
 // import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
-import { hideMessage } from '../../store/reducers/messageSlice';
+import { hideMessage, clearMessage } from '../../store/reducers/messageSlice';
 
 export default function Notification() {
   const { notification } = useSelector((state) => state);
@@ -18,6 +18,7 @@ export default function Notification() {
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       onClose={() => {
         dispatch(hideMessage());
+        dispatch(clearMessage());
       }}
     >
       <Alert
