@@ -28,7 +28,7 @@ const sendActiveAccountEmail = async (email, token, language) => {
   const message = getTranslation('activeMailMessage', language);
   const buttonText = getTranslation('activeButtonText', language);
   const htmlToSend = template({
-    url: `${process.env.FRONT_BASE_URL}/account/${token}/activate`,
+    url: `${process.env.FRONT_BASE_URL}/activate-account/${token}`,
     title,
     message,
     buttonText,
