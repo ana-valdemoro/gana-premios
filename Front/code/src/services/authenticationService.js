@@ -40,4 +40,23 @@ const activateAccount = async (token) => {
   throw await response.json();
 };
 
-export default { login, register, activateAccount };
+const unblockAccount = async (token) => {
+  const response = await fetch(
+    `${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/unlock/${token}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    }
+  );
+
+  if (response.status === 204) {
+    return Promise.resolve();
+  }
+
+  throw await response.json();
+};
+
+export default { login, register, activateAccount, unblockAccount };

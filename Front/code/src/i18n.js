@@ -148,6 +148,17 @@ i18n
               serverUnreachable: 'Server does not respond',
               alreadyActivate: 'This user already has an activated account'
             }
+          },
+          unblockAccount: {
+            success: {
+              mainTitle: 'Account unblocked!',
+              secondaryTitle: 'Log in again'
+            },
+            failure: {
+              mainTitle: 'Opps, there was a problem',
+              serverUnreachable: 'Server does not respond',
+              alreadyActivate: 'This user has already unblocked his account'
+            }
           }
         }
       },
@@ -279,6 +290,17 @@ i18n
               sideMessage: 'Opps, ha habido algún problema',
               serverUnreachable: 'No se ha podido alcanzar el servidor',
               alreadyActivate: 'Este usuario ya posee la cuenta activa'
+            }
+          },
+          unblockAccount: {
+            success: {
+              mainTitle: '¡Cuenta desbloqueada!',
+              secondaryTitle: 'Inicia sesión nuevamente'
+            },
+            failure: {
+              mainTitle: 'Opps, ha habido algún problema',
+              serverUnreachable: 'No se ha podido alcanzar el servidor',
+              alreadyActivate: 'Este usuario ya posee tiene la cuenta desbloqueada'
             }
           }
         }

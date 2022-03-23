@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import { Card, Stack, Container, Typography, Button, LinearProgress, Box } from '@mui/material';
 // layouts
 // eslint-disable-next-line import/no-unresolved
-import { useActivateAccount } from 'src/hooks/auth';
+import { useUnblockAccount } from 'src/hooks/auth';
 import AuthLayout from '../../layouts/AuthLayout';
 // components
 import Page from '../../components/Page';
@@ -42,10 +42,10 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function ActiveAccount() {
+export default function UnblockAccount() {
   const { t } = useTranslation();
   const { token } = useParams();
-  const { mutate, isLoading, data, isError, error } = useActivateAccount();
+  const { mutate, isLoading, data, isError, error } = useUnblockAccount();
 
   useEffect(() => {
     const activate = async () => {
@@ -66,9 +66,6 @@ export default function ActiveAccount() {
 
         <MHidden width="mdDown">
           <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              {t('acctivateAccount.failure.sideMessage')}
-            </Typography>
             <Box sx={{ width: '75%', alignSelf: 'center' }}>
               <img src="/static/illustrations/warning.png" alt="warning" />
             </Box>
@@ -79,10 +76,11 @@ export default function ActiveAccount() {
           <ContentStyle>
             <Stack sx={{ mb: 5 }}>
               <Typography variant="h4" gutterBottom>
-                {error.statusCode === 401
-                  ? t('acctivateAccount.failure.alreadyActivate')
-                  : t('acctivateAccount.failure.serverUnreachable')}
+                {t('unblockAccount.failure.mainTitle')}
               </Typography>
+              {error.statusCode === 401
+                ? t('unblockAccount.failure.alreadyActivate')
+                : t('unblockAccount.failure.serverUnreachable')}
             </Stack>
           </ContentStyle>
         </Container>
@@ -96,9 +94,6 @@ export default function ActiveAccount() {
 
       <MHidden width="mdDown">
         <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            {t('acctivateAccount.success.sideMessage')}
-          </Typography>
           <img src="/static/illustrations/bravo.jpg" alt="bravo" />
         </SectionStyle>
       </MHidden>
@@ -107,9 +102,9 @@ export default function ActiveAccount() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              {t('acctivateAccount.success.mainTitle')}
+              {t('unblockAccount.success.mainTitle')}
             </Typography>
-            {t('acctivateAccount.success.secondaryTitle')}
+            {t('unblockAccount.success.secondaryTitle')}
             <Button component={routerLink} to="/login" size="small" sx={{ marginTop: '8px' }}>
               {t('buttons.signIn')}
             </Button>
