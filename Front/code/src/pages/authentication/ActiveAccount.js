@@ -60,7 +60,6 @@ export default function ActiveAccount() {
   }
 
   if (error) {
-    console.log(error);
     return (
       <RootStyle title="Login | Minimal-UI">
         <AuthLayout />
@@ -68,7 +67,7 @@ export default function ActiveAccount() {
         <MHidden width="mdDown">
           <SectionStyle>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Opps, ha habido algún problema
+              {t('acctivateAccount.failure.sideMessage')}
             </Typography>
             <img src="/static/illustrations/warning.png" alt="warning" />
           </SectionStyle>
@@ -79,8 +78,8 @@ export default function ActiveAccount() {
             <Stack sx={{ mb: 5 }}>
               <Typography variant="h4" gutterBottom>
                 {error.statusCode === 401
-                  ? 'Este usuario ya posee la cuenta activa'
-                  : 'No se ha podido alcanzar el servidor'}
+                  ? t('acctivateAccount.failure.alreadyActivate')
+                  : t('acctivateAccount.failure.serverUnreachable')}
               </Typography>
             </Stack>
           </ContentStyle>
@@ -96,7 +95,7 @@ export default function ActiveAccount() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Cuenta Activada
+            {t('acctivateAccount.success.sideMessage')}
           </Typography>
           <img src="/static/illustrations/bravo.jpg" alt="bravo" />
         </SectionStyle>
@@ -106,9 +105,9 @@ export default function ActiveAccount() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              ¡Enhorabuena!
+              {t('acctivateAccount.success.mainTitle')}
             </Typography>
-            Ahora ya eres un usuario de pies a cabeza.
+            {t('acctivateAccount.success.secondaryTitle')}
             <Button component={routerLink} to="/login" size="small" sx={{ marginTop: '8px' }}>
               {t('buttons.signIn')}
             </Button>

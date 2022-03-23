@@ -136,6 +136,18 @@ i18n
           },
           sideBarNav: {
             profile: 'profile'
+          },
+          acctivateAccount: {
+            success: {
+              sideMessage: 'Account activated',
+              mainTitle: 'Congratulations!',
+              secondaryTitle: 'You are now a user through and through.'
+            },
+            failure: {
+              sideMessage: 'Opps, there was a problem',
+              serverUnreachable: 'Server does not respond',
+              alreadyActivate: 'This user already has an activated account'
+            }
           }
         }
       },
@@ -256,6 +268,18 @@ i18n
           },
           sideBarNav: {
             profile: 'perfil'
+          },
+          acctivateAccount: {
+            success: {
+              sideMessage: 'Cuenta activada',
+              mainTitle: '¡Enhorabuena!',
+              secondaryTitle: 'Ahora ya eres un usuario de pies a cabeza.'
+            },
+            failure: {
+              sideMessage: 'Opps, ha habido algún problema',
+              serverUnreachable: 'No se ha podido alcanzar el servidor',
+              alreadyActivate: 'Este usuario ya posee la cuenta activa'
+            }
           }
         }
       }
