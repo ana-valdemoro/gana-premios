@@ -192,7 +192,7 @@ const updateProfile = async (req, res, next) => {
   }
 
   try {
-    const userData = { lopd_uuid: lopdUuid, name, email, password };
+    const userData = { lopd_uuid: lopdUuid, name, email, password, password_history: user.password_history };
     response = await userService.putUser(user._id, userData);
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
