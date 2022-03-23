@@ -21,13 +21,23 @@ const register = async (user) =>
     body: JSON.stringify(user)
   }).then((res) => res.json());
 
-const activateAccount = async (token) =>
-  fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/activate/${token}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({})
-  }).then((res) => res.json());
+const activateAccount = async (token) => {
+  const response = await fetch(
+    `${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/activate/${token}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    }
+  );
+
+  if (response.status === 204) {
+    return Promise.resolve();
+  }
+
+  throw await response.json();
+};
 
 export default { login, register, activateAccount };

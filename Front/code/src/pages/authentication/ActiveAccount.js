@@ -1,11 +1,13 @@
+/* eslint-disable no-nested-ternary */
 import { Link as routerLink, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 // material
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Button } from '@mui/material';
+import { Card, Stack, Container, Typography, Button, LinearProgress } from '@mui/material';
 // layouts
+// eslint-disable-next-line import/no-unresolved
+import { useActivateAccount } from 'src/hooks/auth';
 import AuthLayout from '../../layouts/AuthLayout';
 // components
 import Page from '../../components/Page';
@@ -41,13 +43,51 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ActiveAccount() {
-  const { error } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const { token } = useParams();
+  const { mutate, isLoading, data, isError, error } = useActivateAccount();
 
   useEffect(() => {
-    console.log(token);
+    const activate = async () => {
+      mutate(token);
+    };
+    activate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  if (isLoading) {
+    return <LinearProgress color="primary" />;
+  }
+
+  if (error) {
+    console.log(error);
+    return (
+      <RootStyle title="Login | Minimal-UI">
+        <AuthLayout />
+
+        <MHidden width="mdDown">
+          <SectionStyle>
+            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+              Opps, ha habido algún problema
+            </Typography>
+            <img src="/static/illustrations/warning.png" alt="warning" />
+          </SectionStyle>
+        </MHidden>
+
+        <Container maxWidth="sm">
+          <ContentStyle>
+            <Stack sx={{ mb: 5 }}>
+              <Typography variant="h4" gutterBottom>
+                {error.statusCode === 401
+                  ? 'Este usuario ya posee la cuenta activa'
+                  : 'No se ha podido alcanzar el servidor'}
+              </Typography>
+            </Stack>
+          </ContentStyle>
+        </Container>
+      </RootStyle>
+    );
+  }
 
   return (
     <RootStyle title="Login | Minimal-UI">
