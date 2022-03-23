@@ -33,7 +33,7 @@
   "unlockedMailTitle": "Unlock your account",
   "unlockMailMessage": "Hello, your account has been blocked for having exceeded the maximum number of attempts to enter your password. Click on the following link to unlock it.",
   "unlockButtonText": "Unlock your account",
-  "unlockMailTitle": "unlockMailTitle",
+  "unlockMailTitle": "Unlock your account",
   "recoverSubject": "Recover password",
   "recoverMailTitle": "Recover password",
   "recoverMailMessage": "Click on the following link to recover your password.",
