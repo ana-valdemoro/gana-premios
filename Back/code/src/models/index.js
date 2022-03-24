@@ -5,6 +5,7 @@ const ClientSchema = require('./client');
 const CampaignSchema = require('./campaign');
 const PromotionSchema = require('./promotion');
 const MediaSchema = require('./media');
+const PasswordHistorySchema = require('./passwordHistory');
 
 const models = {
   User: mongoose.model('User', UserSchema),
@@ -13,6 +14,7 @@ const models = {
   Campaign: mongoose.model('Campaign', CampaignSchema),
   Promotion: mongoose.model('Promotion', PromotionSchema),
   Media: mongoose.model('Media', MediaSchema),
+  PasswordHistory: mongoose.model('PasswordHistories', PasswordHistorySchema),
 };
 
 // We export the models variable to be used in App.

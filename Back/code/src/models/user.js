@@ -46,9 +46,9 @@ const schema = new mongoose.Schema(
       default: 0,
       max: 5,
     },
-    password_history: {
-      type: Array,
-      default: [],
+    password_history_uuid: {
+      type: String,
+      required: true,
     },
     priority: {
       type: Number,
@@ -96,7 +96,6 @@ schema.pre('save', function (next) {
   const user = this;
   console.log(this);
   user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
-  user.password_history.push(user.password);
   return next();
 });
 
@@ -104,9 +103,7 @@ schema.pre('findOneAndUpdate', function (next) {
   const updatedParams = this._update;
 
   if (updatedParams.password) {
-    let newPassword = bcrypt.hashSync(updatedParams.password, bcrypt.genSaltSync(10));
-    updatedParams.password = newPassword;
-    updatedParams.password_history.push(newPassword);
+    updatedParams.password = bcrypt.hashSync(updatedParams.password, bcrypt.genSaltSync(10));
   }
 
   return next();
