@@ -12,7 +12,18 @@ const createPasswordHistory = async (password) => {
   return PasswordHistory.create(dataToCreate);
 };
 
+const getPasswordHistory = async (uuid) => PasswordHistory.findOne({ uuid });
+
+const addPasswordToHistory = async (id, password) =>
+  PasswordHistory.findByIdAndUpdate(
+    { _id: id },
+    { $push: { password_history: bcrypt.hashSync(password, bcrypt.genSaltSync(10)) } },
+    { new: true },
+  );
+
 module.exports = {
   toPublic,
   createPasswordHistory,
+  getPasswordHistory,
+  addPasswordToHistory,
 };

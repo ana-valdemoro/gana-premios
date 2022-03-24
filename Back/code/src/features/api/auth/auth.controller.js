@@ -187,6 +187,7 @@ const updateProfile = async (req, res, next) => {
   const { user } = req;
   const { lopdUuid, name, email, password } = req.body;
   let response;
+  let passwordHistory;
 
   if (password) {
     const isValidPassword = validatePasswordPattern(email, password);
@@ -199,10 +200,35 @@ const updateProfile = async (req, res, next) => {
       };
       return res.status(422).json(errorResponse);
     }
+
+    try {
+      passwordHistory = await passwordHistoryService.getPasswordHistory(user.password_history_uuid);
+    } catch (error) {
+      console.log(error);
+      return next(boom.badImplementation());
+    }
+
+    if (!passwordHistory) return next(boom.notFound('PasswordHistory no encontrado'));
+
+    if(passwordHistory.isPasswordIncluded(password)){
+      return next(boom.badData('Esta contraseña ya ha sido usada'));
+    }else{
+      console.log('No esta incluida la contraseña en el historial');
+    }
+
+    try {
+      passwordHistory = await passwordHistoryService.addPasswordToHistory(passwordHistory._id, password);
+    } catch (error) {
+      logger.error(`${error}`);
+      return next(boom.badImplementation());
+    }
+
+    if (!passwordHistory) return next(boom.notFound('PasswordHistory no se le ha podido añadir nueva contraseña'));
+
   }
 
   try {
-    const userData = { lopd_uuid: lopdUuid, name, email, password, password_history: user.password_history };
+    const userData = { lopd_uuid: lopdUuid, name, email, password };
     response = await userService.putUser(user._id, userData);
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
