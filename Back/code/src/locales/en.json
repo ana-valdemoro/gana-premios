@@ -38,5 +38,12 @@
   "recoverMailTitle": "Recover password",
   "recoverMailMessage": "Click on the following link to recover your password.",
   "recoverButtonText": "Recover password",
-  "inactiveUser" : "Your account is not active. Please, check your mailbox"
+  "inactiveUser" : "Your account is not active. Please, check your mailbox",
+  "passwordIncludeEmail": "The password cannot contain any part of the email",
+	"minPasswordLength" : "The password must contain at least 9 characters",
+	"passwordNotIncludeNumber" : "The password must include a number",
+	"passwordNotIncludeLowercase": "Password does not include a lowercase letter",
+	"passwordNotIncludeUppercase": "Password does not include an uppercase letter",
+	"passwordNotIncludeSymbol" : "The password does not include a symbol"
+
 }

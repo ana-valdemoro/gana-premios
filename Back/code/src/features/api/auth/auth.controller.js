@@ -112,7 +112,7 @@ const register = async (req, res, next) => {
     const errorResponse = {
       statusCode: 422,
       message: res.__('invalidPassword2'),
-      errors: isValidPassword.errors,
+      errors: isValidPassword.errors.map( key => res.__(key)),
     };
     return res.status(422).json(errorResponse);
   }
@@ -196,7 +196,7 @@ const updateProfile = async (req, res, next) => {
       const errorResponse = {
         statusCode: 422,
         message: res.__('invalidPassword2'),
-        errors: isValidPassword.errors,
+        errors: isValidPassword.errors.map( key => res.__(key)),
       };
       return res.status(422).json(errorResponse);
     }
