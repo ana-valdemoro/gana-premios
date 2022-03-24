@@ -4,6 +4,7 @@ const logger = require('../../../config/winston');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
+const passwordHistoryService = require('../passwordHistory/passwordHistory.service');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -103,6 +104,7 @@ const register = async (req, res, next) => {
   const language = req.headers['accept-language'];
   const userData = req.body;
   let user;
+  let passwordHistory;
 
   const isValidPassword = validatePasswordPattern(userData.email, userData.password);
 
@@ -116,12 +118,20 @@ const register = async (req, res, next) => {
   }
 
   try {
+    passwordHistory = await  passwordHistoryService.createPasswordHistory(userData.password);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
+  }
+
+  try {
     const searchRole = await userGroupService.getRoleByName('Participants');
 
     user = await userService.createUser({
       ...userData,
       role_uuid: searchRole.uuid,
       priority: PARTICIPANTS_RESOURCES,
+      password_history_uuid: passwordHistory.uuid,
     });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
