@@ -53,7 +53,6 @@ i18n
           signInMainTitle: 'Sign in to WinPrize',
           signInSecondaryTitle: 'Enter your details below.',
           rememberMe: 'Remember me',
-          forgotPassword: 'Forgot password?',
           signInButton: 'Login',
           signInForm: {
             email: {
@@ -89,7 +88,8 @@ i18n
             saveDetails: 'Save details',
             skip: 'Skip',
             register: 'register',
-            signIn: 'Sign In'
+            signIn: 'Sign In',
+            submit: 'Submit'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -159,6 +159,10 @@ i18n
               serverUnreachable: 'Server does not respond',
               alreadyActivate: 'This user has already unblocked his account'
             }
+          },
+          forgotPassword: {
+            mainTitle: 'Forgot password?',
+            secondaryTitle: 'Please enter your email address below'
           }
         }
       },
@@ -197,7 +201,6 @@ i18n
           signInMainTitle: 'Inicia sesión en WinPrize.',
           signInSecondaryTitle: 'Introduce tus credenciales',
           rememberMe: 'Recordar cuenta',
-          forgotPassword: '¿Olvidaste tu contraseña?',
           signInButton: 'Iniciar sesión',
           signInForm: {
             email: {
@@ -233,7 +236,8 @@ i18n
             saveDetails: 'Guardar datos',
             skip: 'Saltar',
             register: 'Registrarse',
-            signIn: 'Iniciar sesión'
+            signIn: 'Iniciar sesión',
+            submit: 'Enviar'
           },
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
@@ -302,6 +306,10 @@ i18n
               serverUnreachable: 'No se ha podido alcanzar el servidor',
               alreadyActivate: 'Este usuario ya posee tiene la cuenta desbloqueada'
             }
+          },
+          forgotPassword: {
+            mainTitle: '¿Olvidaste tu contraseña?',
+            secondaryTitle: 'Por favor, introduzca su correo electrónico'
           }
         }
       }

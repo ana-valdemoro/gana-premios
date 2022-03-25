@@ -6,6 +6,7 @@ import UnblockAccount from '../pages/authentication/UnblockAccount';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import Login from '../pages/authentication/Login';
 import Register from '../pages/authentication/Register';
+import ForgotPassword from '../pages/authentication/ForgotPassword';
 import NotFound from '../pages/Page404';
 import Lopd from '../pages/Lopd';
 
@@ -22,7 +23,8 @@ const AuthenticationRoutes = {
     { path: '*', element: <Navigate to="/404" /> },
     { path: '/lopd', element: <Lopd /> },
     { path: 'activate-account/:token', element: <ActiveAccount /> },
-    { path: 'unblock-account/:token', element: <UnblockAccount /> }
+    { path: 'unblock-account/:token', element: <UnblockAccount /> },
+    { path: 'forgot-password', element: <ForgotPassword /> }
   ]
 };
 
