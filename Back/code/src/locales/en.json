@@ -44,6 +44,11 @@
 	"passwordNotIncludeNumber" : "The password must include a number",
 	"passwordNotIncludeLowercase": "Password does not include a lowercase letter",
 	"passwordNotIncludeUppercase": "Password does not include an uppercase letter",
-	"passwordNotIncludeSymbol" : "The password does not include a symbol"
+	"passwordNotIncludeSymbol" : "The password does not include a symbol",
+  "resetPasswordInvalid": "The token has expired or is invalid",
+  "resetPasswordUsed": "The token has already been used or a new token has been generated.",
+	"passwordHistoryNotFound": "Passwordhistory not founded",
+  "passwordHistoryNotUpdated": "Password history could not be updated",
+	"passwordUsed": "This password has already been used"
 
 }

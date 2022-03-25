@@ -10,6 +10,7 @@ const userGroupService = require('../userGroup/userGroup.service');
 const { MANAGER_RESOURCES } = require('./user.service');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { getTranslation } = require('../../../utils/getTranslation');
+const passwordHistoryService = require('../passwordHistory/passwordHistory.service');
 
 /*Private functions */
 const undoCreateLopd = async (media) => {
@@ -20,7 +21,7 @@ const undoCreateLopd = async (media) => {
   }
 };
 
-/*Public funcitons*/
+/*Public functions*/
 const activateAccount = async (req, res, next) => {
   const { token } = req.params;
   let activeUser;
@@ -76,36 +77,64 @@ const recovery = async (req, res, next) => {
   let user;
 
   try {
-    if (token !== '') {
-      user = await userService.getUserByToken(token);
-    }
-    console.log(user);
+    const payload = jwt.verifyJWT(token);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.forbidden(res.__('resetPasswordInvalid')));
+  }
+
+  try {
+    user = await userService.getUserByToken(token);
+
     if (!user) {
-      return next(boom.unauthorized(res.__('userNotFound')));
+      return next(boom.forbidden(res.__('resetPasswordUsed')));
     }
   } catch (error) {
     logger.error(`${error}`);
     return next(boom.badImplementation(error.message));
   }
 
-  try {
-    const { status, errors } = validatePasswordPattern(user.email, password);
-    if (!status) {
-      const errorResponse = {
-        statusCode: 422,
-        message: res.__('invalidPassword2'),
-        errors,
-      };
-      return res.status(422).json(errorResponse);
-    }
+  const { status, errors } = validatePasswordPattern(user.email, password);
+  if (!status) {
+    const errorResponse = {
+      statusCode: 422,
+      message: res.__('invalidPassword2'),
+      errors: errors.map((key) => res.__(key)),
+    };
+    return res.status(422).json(errorResponse);
+  }
 
+  try {
+    passwordHistory = await passwordHistoryService.getPasswordHistory(user.password_history_uuid);
+  } catch (error) {
+    console.log(error);
+    return next(boom.badImplementation());
+  }
+
+  if (!passwordHistory) return next(boom.notFound(res.__('passwordHistoryNotFound')));
+
+  if(passwordHistory.isPasswordIncluded(password)){
+    return next(boom.badData(res.__('passwordUsed')));
+  }
+
+  try {
+    passwordHistory = await passwordHistoryService.addPasswordToHistory(passwordHistory._id, password);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badImplementation());
+  }
+
+  if (!passwordHistory) return next(boom.notFound(res.__('passwordHistoryNotUpdated')));
+
+
+  try {
     await userService.recoveryPassword(user, password);
     return res.json({
       status: 'OK',
     });
   } catch (error) {
     logger.error(`${error}`);
-    return next(boom.badImplementation('No se ha podido actualizar la contraseña'));
+    return next(boom.badImplementation(res.__('noUpdatePassword')));
   }
 };
 
@@ -128,13 +157,13 @@ const createManagerUser = async (req, res, next) => {
   const userData = req.body;
   let user;
 
-  const isValidPassword = validatePasswordPattern(userData.email, userData.password);
+  const { status, errors } = validatePasswordPattern(userData.email, userData.password);
 
-  if (!isValidPassword.status) {
+  if (!status) {
     const errorResponse = {
       statusCode: 422,
       message: res.__('invalidPassword2'),
-      errors: isValidPassword.errors,
+      errors: errors.map((key) => res.__(key)),
     };
     return res.status(422).json(errorResponse);
   }
@@ -249,7 +278,7 @@ const getLopd = async (req, res, next) => {
 
   if (user.lopd_uuid === '') {
     return next(boom.badData(getTranslation('noLOPD', user.language)));
-      // res.__('noLOPD', user.language)));
+    // res.__('noLOPD', user.language)));
   }
 
   try {
@@ -269,7 +298,6 @@ const getLopd = async (req, res, next) => {
   res.set('Content-Disposition', 'application/pdf');
 
   return res.download(path, media.original_file_name);
-  ;
 };
 
 module.exports = {

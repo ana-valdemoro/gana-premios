@@ -208,12 +208,10 @@ const updateProfile = async (req, res, next) => {
       return next(boom.badImplementation());
     }
 
-    if (!passwordHistory) return next(boom.notFound('PasswordHistory no encontrado'));
+    if (!passwordHistory) return next(boom.notFound(res.__('passwordHistoryNotFound')));
 
     if(passwordHistory.isPasswordIncluded(password)){
-      return next(boom.badData('Esta contraseña ya ha sido usada'));
-    }else{
-      console.log('No esta incluida la contraseña en el historial');
+      return next(boom.badData(res.__('passwordUsed')));
     }
 
     try {
@@ -223,7 +221,7 @@ const updateProfile = async (req, res, next) => {
       return next(boom.badImplementation());
     }
 
-    if (!passwordHistory) return next(boom.notFound('PasswordHistory no se le ha podido añadir nueva contraseña'));
+    if (!passwordHistory) return next(boom.notFound(res.__('passwordHistoryNotUpdated')));
 
   }
 
@@ -233,7 +231,7 @@ const updateProfile = async (req, res, next) => {
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
       const dupField = Object.keys(error.keyValue)[0];
-      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
+      return next(boom.badData(res.__('duplicateField', dupField)));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
