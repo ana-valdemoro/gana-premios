@@ -42,17 +42,16 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ForgotPassword() {
-  const { error } = useSelector((state) => state.auth);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (error) {
-      console.log('No nos hemos podido loguear');
-    }
-  }, [error]);
+  //   useEffect(() => {
+  //     if (error) {
+  //       console.log('No nos hemos podido loguear');
+  //     }
+  //   }, [error]);
 
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Forgot password | Minimal-UI">
       <AuthLayout>
         <Trans i18nKey="signUpAuthLayout">
           Already have an account? &nbsp;
@@ -74,13 +73,10 @@ export default function ForgotPassword() {
             <Typography variant="h4" gutterBottom>
               {t('forgotPassword.mainTitle')}
             </Typography>
-            {error ? (
-              <Typography sx={{ color: 'text.error' }}>{error}</Typography>
-            ) : (
-              <Typography sx={{ color: 'text.secondary' }}>
-                {t('forgotPassword.secondaryTitle')}
-              </Typography>
-            )}
+
+            <Typography sx={{ color: 'text.secondary' }}>
+              {t('forgotPassword.secondaryTitle')}
+            </Typography>
           </Stack>
 
           <ForgotPasswordForm />

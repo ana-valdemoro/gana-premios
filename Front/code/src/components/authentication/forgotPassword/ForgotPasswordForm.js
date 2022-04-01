@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -8,31 +9,22 @@ import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // store
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useForgotPassword } from '../../../hooks/auth';
 import Captcha from '../../Captcha';
-import { login, clearErrorMessage } from '../../../store/reducers/authSlice';
+// import { login, clearErrorMessage } from '../../../store/reducers/authSlice';
+import { setMessage } from '../../../store/reducers/messageSlice';
 
 // ----------------------------------------------------------------------
 
 export default function ForgotPasswordForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isLoggedIn } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const [resetCaptcha, setResetCaptch] = useState(false);
-  const { error } = useSelector((state) => state.auth);
+  const { mutate, data, isError, error } = useForgotPassword();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      if (user.lopd_uuid === '') {
-        navigate('/lopd', { replace: true });
-      } else {
-        navigate('/dashboard', { replace: true });
-      }
-    }
-  }, [user, isLoggedIn, navigate]);
-
-  const LoginSchema = Yup.object().shape({
+  const ForgotSchema = Yup.object().shape({
     email: Yup.string()
       .email(t('signInForm.email.validFormat'))
       .required(t('signInForm.email.required')),
@@ -44,22 +36,43 @@ export default function ForgotPasswordForm() {
       email: '',
       recaptcha: ''
     },
-    validationSchema: LoginSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      if (error) {
-        dispatch(clearErrorMessage());
-      }
-
+    validationSchema: ForgotSchema,
+    onSubmit: async (values, { setSubmitting }) => {
       setResetCaptch(true);
       setResetCaptch(false);
-      dispatch(login(values)).then(() => {
-        setSubmitting(false);
-      });
+      const response = mutate({ email: values.email, setSubmitting });
     }
   });
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
     formik;
+
+  useEffect(() => {
+    if (isError) {
+      formik.setSubmitting(false);
+      const failAlert = {
+        isOpen: true,
+        header: t('alert.failure.label'),
+        content: t('alert.serverConflicts.unreachable'),
+        type: 'error'
+      };
+      dispatch(setMessage(failAlert));
+    }
+  }, [error?.message, isError]);
+
+  useEffect(() => {
+    if (data) {
+      formik.setSubmitting(false);
+      const succesAlert = {
+        isOpen: true,
+        header: t('alert.forgotPassword.success.label'),
+        content: t('alert.forgotPassword.success.signUpMessage'),
+        type: 'success'
+      };
+      dispatch(setMessage(succesAlert));
+      navigate('/login', { replace: true });
+    }
+  }, [data]);
 
   return (
     <FormikProvider value={formik}>

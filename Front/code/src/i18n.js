@@ -225,6 +225,15 @@ i18n
               signUpMessage: 'Error en el registro',
               lopdMessage: 'Fallo al guardar LOPD',
               updateProfileMessage: 'Fallo al actualizar los datos'
+            },
+            forgotPassword: {
+              success: {
+                label: '¡Email enviado!',
+                signUpMessage: 'Revisa tu bandeja de correo'
+              }
+            },
+            serverConflicts: {
+              unreachable: 'Servidor con problemas'
             }
           },
           buttons: {
