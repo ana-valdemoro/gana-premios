@@ -77,6 +77,15 @@ i18n
               signUpMessage: 'Sign up fails',
               lopdMessage: 'Failure to save',
               updateProfileMessage: 'Failure to update profile'
+            },
+            forgotPassword: {
+              success: {
+                label: 'Email sended!',
+                signUpMessage: 'Check your mailbox.'
+              }
+            },
+            serverConflicts: {
+              unreachable: 'Server with problems'
             }
           },
           buttons: {

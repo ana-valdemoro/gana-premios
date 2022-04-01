@@ -12,7 +12,6 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'react-redux';
 import { useForgotPassword } from '../../../hooks/auth';
 import Captcha from '../../Captcha';
-// import { login, clearErrorMessage } from '../../../store/reducers/authSlice';
 import { setMessage } from '../../../store/reducers/messageSlice';
 
 // ----------------------------------------------------------------------
@@ -22,7 +21,7 @@ export default function ForgotPasswordForm() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [resetCaptcha, setResetCaptch] = useState(false);
-  const { mutate, data, isError, error } = useForgotPassword();
+  const { mutateAsync, data, isError, error } = useForgotPassword();
 
   const ForgotSchema = Yup.object().shape({
     email: Yup.string()
@@ -37,15 +36,14 @@ export default function ForgotPasswordForm() {
       recaptcha: ''
     },
     validationSchema: ForgotSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
       setResetCaptch(true);
       setResetCaptch(false);
-      const response = mutate({ email: values.email, setSubmitting });
+      await mutateAsync({ email: values.email });
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
-    formik;
+  const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
 
   useEffect(() => {
     if (isError) {
