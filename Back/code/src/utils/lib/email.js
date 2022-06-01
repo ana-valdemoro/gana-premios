@@ -11,8 +11,8 @@ const sendEmail = async (mailOptions) => {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '3f03301b811fff',
-      pass: 'fa6d7fe5be6fad',
+      user: "b40fb0e055936b",
+      pass: "f7c0ad3b2d9283"
     },
   });
   return transporter.sendMail(mailOptions);
