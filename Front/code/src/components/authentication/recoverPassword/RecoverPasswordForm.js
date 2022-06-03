@@ -1,27 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
+import { useDispatch } from 'react-redux';
+
 // material
 import { Stack, TextField, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
+// store
+import { setMessage } from '../../../store/reducers/messageSlice';
+
 // project
+import Captcha from '../../Captcha';
 import useTogglePasswordVisibility from '../../../hooks/useTogglePasswordVisibility';
 import { useRecoverPassword } from '../../../hooks/auth';
-
-// store
-// import { useDispatch } from 'react-redux';
-import Captcha from '../../Captcha';
-// import { setMessage } from '../../../store/reducers/messageSlice';
 
 // ----------------------------------------------------------------------
 
 export default function RecoverPasswordForm() {
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [resetCaptcha, setResetCaptch] = useState(false);
   const { mutateAsync, data, isError, error } = useRecoverPassword();
@@ -31,7 +32,7 @@ export default function RecoverPasswordForm() {
 
   const RecoverSchema = Yup.object().shape({
     password: Yup.string().required(t('signInForm.password.required')),
-    repitedPassword: Yup.string().required(t('signInForm.password.required')),
+    repitedPassword: Yup.string().required(t('recoverPasswordForm.confirmPassword.required')),
     recaptcha: Yup.string().required()
   });
 
@@ -55,32 +56,32 @@ export default function RecoverPasswordForm() {
 
   const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
 
-  // useEffect(() => {
-  //   if (isError) {
-  //     formik.setSubmitting(false);
-  //     const failAlert = {
-  //       isOpen: true,
-  //       header: t('alert.failure.label'),
-  //       content: t('alert.serverConflicts.unreachable'),
-  //       type: 'error'
-  //     };
-  //     dispatch(setMessage(failAlert));
-  //   }
-  // }, [error?.message, isError]);
+  useEffect(() => {
+    if (isError) {
+      formik.setSubmitting(false);
+      const failAlert = {
+        isOpen: true,
+        header: t('alert.failure.label'),
+        content: t('alert.serverConflicts.unreachable'),
+        type: 'error'
+      };
+      dispatch(setMessage(failAlert));
+    }
+  }, [error?.message, isError]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     formik.setSubmitting(false);
-  //     const succesAlert = {
-  //       isOpen: true,
-  //       header: t('alert.forgotPassword.success.label'),
-  //       content: t('alert.forgotPassword.success.signUpMessage'),
-  //       type: 'success'
-  //     };
-  //     dispatch(setMessage(succesAlert));
-  //     navigate('/login', { replace: true });
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data) {
+      formik.setSubmitting(false);
+      const succesAlert = {
+        isOpen: true,
+        header: t('alert.forgotPassword.success.label'),
+        content: t('alert.forgotPassword.success.signUpMessage'),
+        type: 'success'
+      };
+      dispatch(setMessage(succesAlert));
+      navigate('/login', { replace: true });
+    }
+  }, [data]);
 
   return (
     <FormikProvider value={formik}>

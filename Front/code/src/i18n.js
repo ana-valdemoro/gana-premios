@@ -62,7 +62,13 @@ i18n
             },
             password: {
               label: 'Password',
-              required: 'Passworrd is required'
+              required: 'Password is required'
+            }
+          },
+          recoverPasswordForm: {
+            confirmPassword: {
+              label: 'Confirm password',
+              required: 'Confirm password is required'
             }
           },
           alert: {
@@ -82,6 +88,12 @@ i18n
               success: {
                 label: 'Email sended!',
                 signUpMessage: 'Check your mailbox.'
+              }
+            },
+            recoverPassword: {
+              success: {
+                label: '¡Password changed!',
+                signUpMessage: 'Try to log in'
               }
             },
             serverConflicts: {
@@ -172,6 +184,10 @@ i18n
           forgotPassword: {
             mainTitle: 'Forgot password?',
             secondaryTitle: 'Please enter your email address below'
+          },
+          recoverPassword: {
+            mainTitle: 'Recover your password',
+            secondaryTitle: 'Please enter a new password below'
           }
         }
       },
@@ -222,6 +238,12 @@ i18n
               required: 'La contraseña es requerido'
             }
           },
+          recoverPasswordForm: {
+            confirmPassword: {
+              label: 'Confirmar contraseña',
+              required: 'La confirmación de contraseña es requerido'
+            }
+          },
           alert: {
             success: {
               label: '¡Hurra!',
@@ -239,6 +261,12 @@ i18n
               success: {
                 label: '¡Email enviado!',
                 signUpMessage: 'Revisa tu bandeja de correo'
+              }
+            },
+            recoverPassword: {
+              success: {
+                label: '¡Contraseña modificada!',
+                signUpMessage: 'Intenta loguearte'
               }
             },
             serverConflicts: {
@@ -328,6 +356,10 @@ i18n
           forgotPassword: {
             mainTitle: '¿Olvidaste tu contraseña?',
             secondaryTitle: 'Por favor, introduzca su correo electrónico'
+          },
+          recoverPassword: {
+            mainTitle: 'Recupera tu contraseña',
+            secondaryTitle: 'Por favor, introduzca una nueva contraseña'
           }
         }
       }
