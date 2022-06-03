@@ -78,4 +78,10 @@ const unblockAccount = async (token) => {
 // };
 export const forgotPassword = async (email) => postRequest(`/auth/forgot`, { email });
 
+export const recoverPassword = async ({ token, password }) => {
+  console.log(token);
+  console.log(password);
+  return postRequest(`/auth/recovery/${token}`, { password });
+};
+
 export default { login, register, activateAccount, unblockAccount };

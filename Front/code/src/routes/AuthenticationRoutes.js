@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 // project imports
 import ActiveAccount from '../pages/authentication/ActiveAccount';
 import UnblockAccount from '../pages/authentication/UnblockAccount';
+import RecoverPassword from '../pages/authentication/RecoverPassword';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import Login from '../pages/authentication/Login';
 import Register from '../pages/authentication/Register';
@@ -24,7 +25,8 @@ const AuthenticationRoutes = {
     { path: '/lopd', element: <Lopd /> },
     { path: 'activate-account/:token', element: <ActiveAccount /> },
     { path: 'unblock-account/:token', element: <UnblockAccount /> },
-    { path: 'forgot-password', element: <ForgotPassword /> }
+    { path: 'forgot-password', element: <ForgotPassword /> },
+    { path: 'recover-password/:token', element: <RecoverPassword /> }
   ]
 };
 

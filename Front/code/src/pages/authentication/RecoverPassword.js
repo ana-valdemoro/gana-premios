@@ -9,7 +9,7 @@ import AuthLayout from '../../layouts/AuthLayout';
 // components
 import Page from '../../components/Page';
 import { MHidden } from '../../components/@material-extend';
-import { ForgotPasswordForm } from '../../components/authentication/forgotPassword';
+import { RecoverPasswordForm } from '../../components/authentication/recoverPassword';
 
 // ----------------------------------------------------------------------
 
@@ -40,11 +40,11 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function ForgotPassword() {
+export default function RecoverPassword() {
   const { t } = useTranslation();
 
   return (
-    <RootStyle title="Forgot password | Minimal-UI">
+    <RootStyle title="Recover password | Minimal-UI">
       <AuthLayout>
         <Trans i18nKey="signUpAuthLayout">
           Already have an account? &nbsp;
@@ -56,7 +56,10 @@ export default function ForgotPassword() {
 
       <MHidden width="mdDown">
         <SectionStyle>
-          <img src="/static/illustrations/confused_password.png" alt="confused women and men" />
+          <img
+            src="/static/illustrations/recover-password.png"
+            alt="padlock with a field for entering the password"
+          />
         </SectionStyle>
       </MHidden>
 
@@ -64,19 +67,19 @@ export default function ForgotPassword() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              {t('forgotPassword.mainTitle')}
+              {t('recoverPassword.mainTitle')}
             </Typography>
 
             <Typography sx={{ color: 'text.secondary' }}>
-              {t('forgotPassword.secondaryTitle')}
+              {t('recoverPassword.secondaryTitle')}
             </Typography>
           </Stack>
 
-          <ForgotPasswordForm />
+          <RecoverPasswordForm />
 
           <MHidden width="smUp">
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?&nbsp;
+              Don't have an account?&nbsp;
               <Link variant="subtitle2" component={RouterLink} to="register">
                 Get started
               </Link>
