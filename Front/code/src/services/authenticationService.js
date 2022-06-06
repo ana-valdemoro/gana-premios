@@ -60,28 +60,9 @@ const unblockAccount = async (token) => {
   throw await response.json();
 };
 
-// const forgotPassword = async (email) => {
-//   const response = await fetch(`${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/forgot`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept-Language': i18n.resolvedLanguage
-//     },
-//     body: JSON.stringify(email)
-//   });
-//   console.log(response);
-//   if (response.status === 200) {
-//     return Promise.resolve(await response.json());
-//   }
-
-//   throw await response.json();
-// };
 export const forgotPassword = async (email) => postRequest(`/auth/forgot`, { email });
 
-export const recoverPassword = async ({ token, password }) => {
-  console.log(token);
-  console.log(password);
-  return postRequest(`/auth/recovery/${token}`, { password });
-};
+export const recoverPassword = async ({ token, password }) =>
+  postRequest(`/auth/recovery/${token}`, { password });
 
 export default { login, register, activateAccount, unblockAccount };

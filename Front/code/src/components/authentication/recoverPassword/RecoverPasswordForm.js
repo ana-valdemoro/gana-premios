@@ -50,12 +50,22 @@ export default function RecoverPasswordForm() {
   useEffect(() => {
     if (isError) {
       formik.setSubmitting(false);
-      const failAlert = {
-        isOpen: true,
-        header: t('alert.failure.label'),
-        content: t('alert.serverConflicts.unreachable'),
-        type: 'error'
-      };
+      let failAlert;
+      if (error.statusCode === 422) {
+        failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: error.message,
+          type: 'error'
+        };
+      } else {
+        failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: t('alert.serverConflicts.unreachable'),
+          type: 'error'
+        };
+      }
       dispatch(setMessage(failAlert));
     }
   }, [error?.message, isError]);
