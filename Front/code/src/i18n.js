@@ -157,7 +157,8 @@ i18n
             }
           },
           sideBarNav: {
-            profile: 'profile'
+            profile: 'profile',
+            clients: 'clients'
           },
           acctivateAccount: {
             success: {
@@ -330,7 +331,8 @@ i18n
             }
           },
           sideBarNav: {
-            profile: 'perfil'
+            profile: 'perfil',
+            clients: 'clientes'
           },
           acctivateAccount: {
             success: {
