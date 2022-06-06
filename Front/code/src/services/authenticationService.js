@@ -1,3 +1,4 @@
+import { postRequest } from '../utils/http';
 import config from './const';
 import i18n from '../i18n';
 
@@ -21,4 +22,47 @@ const register = async (user) =>
     body: JSON.stringify(user)
   }).then((res) => res.json());
 
-export default { login, register };
+const activateAccount = async (token) => {
+  const response = await fetch(
+    `${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/activate/${token}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    }
+  );
+
+  if (response.status === 204) {
+    return Promise.resolve();
+  }
+
+  throw await response.json();
+};
+
+const unblockAccount = async (token) => {
+  const response = await fetch(
+    `${config.API_BASE_URI}${config.API_BASE_PORT}/api/v1/auth/unlock/${token}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    }
+  );
+
+  if (response.status === 204) {
+    return Promise.resolve();
+  }
+
+  throw await response.json();
+};
+
+export const forgotPassword = async (email) => postRequest(`/auth/forgot`, { email });
+
+export const recoverPassword = async ({ token, password }) =>
+  postRequest(`/auth/recovery/${token}`, { password });
+
+export default { login, register, activateAccount, unblockAccount };

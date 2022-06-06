@@ -8,33 +8,33 @@ const userEmailsIsIncluded = (email, password) => {
 const validatePasswordPattern = (email, password) => {
   const errors = [];
   if (email && userEmailsIsIncluded(email, password)) {
-    errors.push('La contraseña no puede contener ninguna parte del email');
+    errors.push('passwordIncludeEmail');
   }
 
   if (password.length < 9) {
-    errors.push('La contraseña debe contener al menos 9 caracteres');
+    errors.push('minPasswordLength');
   }
 
   const number = new RegExp(/^(?=.*[0-9]).{1,}$/);
   if (!number.test(password)) {
-    errors.push('La contraseña debe incluir un número');
+    errors.push('passwordNotIncludeNumber');
   }
 
   const lowercase = new RegExp(/^(?=.*[a-z]).{1,}$/);
   if (!lowercase.test(password)) {
-    errors.push('La contraseña no incluye una letra en minúscula');
+    errors.push('passwordNotIncludeLowercase');
   }
 
   const uppercase = new RegExp(/^(?=.*[A-Z]).{1,}$/);
   if (!uppercase.test(password)) {
-    errors.push('La contraseña no incluye una letra en mayúscula');
+    errors.push('passwordNotIncludeUppercase');
   }
 
   // Supported symbols : [-!$%^&*()_+|~=`{}[]:";'<>?,./]
   // eslint-disable-next-line no-useless-escape
   const symbols = new RegExp(/^(?=.*[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).{1,}$/);
   if (!symbols.test(password)) {
-    errors.push('La contraseña no incluye un símbolo');
+    errors.push('passwordNotIncludeSymbol');
   }
 
   if (errors.length > 0) {

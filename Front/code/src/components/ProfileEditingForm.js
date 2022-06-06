@@ -1,32 +1,30 @@
 /* eslint-disable react/no-this-in-sfc */
 import PropTypes from 'prop-types';
-import { useState, useMemo, useEffect } from 'react';
-import { Icon } from '@iconify/react';
+import { useMemo, useEffect } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import * as Yup from 'yup';
 // import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Stack, TextField, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { setMessage } from '../store/reducers/messageSlice';
 // import registerSchema from '../utils/Validators/registerSchema';
 import { updateProfile } from '../store/reducers/authSlice';
+// project
 import { userEmailsIsIncluded } from '../utils/Validators/registerSchema';
+import useTogglePasswordVisibility from '../hooks/useTogglePasswordVisibility';
 
 // ----------------------------------------------------------------------
 
 export default function ProfileEditingForm(props) {
   const { errMessage, setErrorMessage, user } = props;
 
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showRepitedPassword, setShowRepitedPassword] = useState(false);
+  const [inputTypePassword, IconPassword] = useTogglePasswordVisibility();
+  const [inputTypeRepitedPassword, IconRepitedPassword] = useTogglePasswordVisibility();
 
   const { t } = useTranslation();
 
@@ -142,8 +140,6 @@ export default function ProfileEditingForm(props) {
         dataToUpdate.password = newPassword;
       }
 
-      console.log(dataToUpdate);
-
       if (Object.entries(dataToUpdate).length === 0) {
         return;
       }
@@ -212,34 +208,22 @@ export default function ProfileEditingForm(props) {
 
             <TextField
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={inputTypePassword}
               label={t('profileEditingForm.password.label')}
               {...getFieldProps('newPassword')}
               InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                    </IconButton>
-                  </InputAdornment>
-                )
+                endAdornment: <InputAdornment position="end">{IconPassword}</InputAdornment>
               }}
               error={Boolean(touched.newPassword && errors.newPassword)}
               helperText={touched.newPassword && errors.newPassword}
             />
             <TextField
               fullWidth
-              type={showRepitedPassword ? 'text' : 'password'}
+              type={inputTypeRepitedPassword}
               label={t('profileEditingForm.repitNewPassword.label')}
               {...getFieldProps('repitNewPassword')}
               InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={() => setShowRepitedPassword((prev) => !prev)}>
-                      <Icon icon={showRepitedPassword ? eyeFill : eyeOffFill} />
-                    </IconButton>
-                  </InputAdornment>
-                )
+                endAdornment: <InputAdornment position="end">{IconRepitedPassword}</InputAdornment>
               }}
               error={Boolean(touched.repitNewPassword && errors.repitNewPassword)}
               helperText={touched.repitNewPassword && errors.repitNewPassword}

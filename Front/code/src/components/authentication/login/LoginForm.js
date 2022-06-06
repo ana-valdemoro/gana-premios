@@ -3,32 +3,22 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 // material
-import {
-  Link,
-  Stack,
-  Checkbox,
-  TextField,
-  IconButton,
-  InputAdornment,
-  FormControlLabel
-} from '@mui/material';
+import { Link, Stack, TextField, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-
 // store
 import { useDispatch, useSelector } from 'react-redux';
-import Captcha from '../../Captcha';
 import { login, clearErrorMessage } from '../../../store/reducers/authSlice';
+// project
+import Captcha from '../../Captcha';
+import useTogglePasswordVisibility from '../../../hooks/useTogglePasswordVisibility';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+  const [inputTypePassword, IconPassword] = useTogglePasswordVisibility();
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const [resetCaptcha, setResetCaptch] = useState(false);
@@ -73,12 +63,7 @@ export default function LoginForm() {
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps, setFieldValue } =
-    formik;
-
-  const handleShowPassword = () => {
-    setShowPassword((show) => !show);
-  };
+  const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -97,17 +82,11 @@ export default function LoginForm() {
           <TextField
             fullWidth
             autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
+            type={inputTypePassword}
             label={t('signInForm.password.label')}
             {...getFieldProps('password')}
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              )
+              endAdornment: <InputAdornment position="end">{IconPassword}</InputAdornment>
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
@@ -120,8 +99,8 @@ export default function LoginForm() {
             label={t('rememberMe')}
           /> */}
 
-          <Link component={RouterLink} variant="subtitle2" to="#">
-            {t('forgotPassword')}
+          <Link component={RouterLink} variant="subtitle2" to="/forgot-password">
+            {t('forgotPassword.mainTitle')}
           </Link>
         </Stack>
 

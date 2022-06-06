@@ -6,11 +6,11 @@ import { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Link, Container, Typography } from '@mui/material';
 // layouts
-import AuthLayout from '../layouts/AuthLayout';
+import AuthLayout from '../../layouts/AuthLayout';
 // components
-import Page from '../components/Page';
-import { MHidden } from '../components/@material-extend';
-import { LoginForm } from '../components/authentication/login';
+import Page from '../../components/Page';
+import { MHidden } from '../../components/@material-extend';
+import { LoginForm } from '../../components/authentication/login';
 
 // ----------------------------------------------------------------------
 
@@ -88,10 +88,12 @@ export default function Login() {
 
           <MHidden width="smUp">
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?&nbsp;
-              <Link variant="subtitle2" component={RouterLink} to="register">
-                Get started
-              </Link>
+              <Trans i18nKey="signInAuthLayout">
+                Don’t have an account? &nbsp;
+                <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
+                  Get started
+                </Link>
+              </Trans>
             </Typography>
           </MHidden>
         </ContentStyle>

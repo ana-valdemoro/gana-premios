@@ -127,7 +127,7 @@ export default function Lopd() {
             color="inherit"
             endIcon={<Icon icon={arrowIosForwardFill} />}
           >
-            Saltar
+            {t('buttons.skip')}
           </Button>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>

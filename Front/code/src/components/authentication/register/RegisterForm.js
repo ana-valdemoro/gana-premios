@@ -1,21 +1,21 @@
 /* eslint-disable react/no-this-in-sfc */
 import PropTypes from 'prop-types';
 import { useState, useMemo, useEffect } from 'react';
-import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Stack, TextField, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import registerSchema from '../../../utils/Validators/registerSchema';
+// store
 import { setMessage } from '../../../store/reducers/messageSlice';
 import authService from '../../../services/authenticationService';
+// project
+import registerSchema from '../../../utils/Validators/registerSchema';
 import Captcha from '../../Captcha';
+import useTogglePasswordVisibility from '../../../hooks/useTogglePasswordVisibility';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ export default function RegisterForm(props) {
   const { errMessage, setErrorMessage } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
+  const [inputTypePassword, IconPassword] = useTogglePasswordVisibility();
   const { t } = useTranslation();
   const [resetCaptcha, setResetCaptch] = useState(false);
 
@@ -117,17 +117,11 @@ export default function RegisterForm(props) {
             <TextField
               fullWidth
               autoComplete="current-password"
-              type={showPassword ? 'text' : 'password'}
+              type={inputTypePassword}
               label={t('registerForm.password.label')}
               {...getFieldProps('password')}
               InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                    </IconButton>
-                  </InputAdornment>
-                )
+                endAdornment: <InputAdornment position="end">{IconPassword}</InputAdornment>
               }}
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}

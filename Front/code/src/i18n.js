@@ -53,7 +53,6 @@ i18n
           signInMainTitle: 'Sign in to WinPrize',
           signInSecondaryTitle: 'Enter your details below.',
           rememberMe: 'Remember me',
-          forgotPassword: 'Forgot password?',
           signInButton: 'Login',
           signInForm: {
             email: {
@@ -63,7 +62,14 @@ i18n
             },
             password: {
               label: 'Password',
-              required: 'Passworrd is required'
+              required: 'Password is required'
+            }
+          },
+          recoverPasswordForm: {
+            confirmPassword: {
+              label: 'Confirm password',
+              required: 'Confirm password is required',
+              notMatch: 'Confirm password do not match with password'
             }
           },
           alert: {
@@ -78,6 +84,21 @@ i18n
               signUpMessage: 'Sign up fails',
               lopdMessage: 'Failure to save',
               updateProfileMessage: 'Failure to update profile'
+            },
+            forgotPassword: {
+              success: {
+                label: 'Email sended!',
+                signUpMessage: 'Check your mailbox.'
+              }
+            },
+            recoverPassword: {
+              success: {
+                label: '¡Password changed!',
+                signUpMessage: 'Try to log in'
+              }
+            },
+            serverConflicts: {
+              unreachable: 'Server with problems'
             }
           },
           buttons: {
@@ -86,7 +107,11 @@ i18n
             goIn: 'Go in',
             logout: 'Logout',
             downloadSignedLopd: 'Download signed LOPD',
-            saveDetails: 'Save details'
+            saveDetails: 'Save details',
+            skip: 'Skip',
+            register: 'register',
+            signIn: 'Sign In',
+            submit: 'Submit'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -133,6 +158,37 @@ i18n
           },
           sideBarNav: {
             profile: 'profile'
+          },
+          acctivateAccount: {
+            success: {
+              sideMessage: 'Account activated',
+              mainTitle: 'Congratulations!',
+              secondaryTitle: 'You are now a user through and through.'
+            },
+            failure: {
+              sideMessage: 'Opps, there was a problem',
+              serverUnreachable: 'Server does not respond',
+              alreadyActivate: 'This user already has an activated account'
+            }
+          },
+          unblockAccount: {
+            success: {
+              mainTitle: 'Account unblocked!',
+              secondaryTitle: 'Log in again'
+            },
+            failure: {
+              mainTitle: 'Opps, there was a problem',
+              serverUnreachable: 'Server does not respond',
+              alreadyActivate: 'This user has already unblocked his account'
+            }
+          },
+          forgotPassword: {
+            mainTitle: 'Forgot password?',
+            secondaryTitle: 'Please enter your email address below'
+          },
+          recoverPassword: {
+            mainTitle: 'Recover your password',
+            secondaryTitle: 'Please enter a new password below'
           }
         }
       },
@@ -171,7 +227,6 @@ i18n
           signInMainTitle: 'Inicia sesión en WinPrize.',
           signInSecondaryTitle: 'Introduce tus credenciales',
           rememberMe: 'Recordar cuenta',
-          forgotPassword: '¿Olvidaste tu contraseña?',
           signInButton: 'Iniciar sesión',
           signInForm: {
             email: {
@@ -181,7 +236,14 @@ i18n
             },
             password: {
               label: 'Contraseña',
-              required: 'La contraseña es requerido'
+              required: 'La contraseña es requerida'
+            }
+          },
+          recoverPasswordForm: {
+            confirmPassword: {
+              label: 'Confirmar contraseña',
+              required: 'La confirmación de contraseña es requerida',
+              notMatch: 'La confirmación de contraseña no coincide con la contraseña'
             }
           },
           alert: {
@@ -196,6 +258,21 @@ i18n
               signUpMessage: 'Error en el registro',
               lopdMessage: 'Fallo al guardar LOPD',
               updateProfileMessage: 'Fallo al actualizar los datos'
+            },
+            forgotPassword: {
+              success: {
+                label: '¡Email enviado!',
+                signUpMessage: 'Revisa tu bandeja de correo'
+              }
+            },
+            recoverPassword: {
+              success: {
+                label: '¡Contraseña modificada!',
+                signUpMessage: 'Intenta loguearte'
+              }
+            },
+            serverConflicts: {
+              unreachable: 'Servidor con problemas'
             }
           },
           buttons: {
@@ -204,7 +281,11 @@ i18n
             goIn: 'Entra',
             logout: 'Cerrar sesión',
             downloadSignedLopd: 'Descarga LOPD firmada',
-            saveDetails: 'Guardar datos'
+            saveDetails: 'Guardar datos',
+            skip: 'Saltar',
+            register: 'Registrarse',
+            signIn: 'Iniciar sesión',
+            submit: 'Enviar'
           },
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
@@ -250,6 +331,37 @@ i18n
           },
           sideBarNav: {
             profile: 'perfil'
+          },
+          acctivateAccount: {
+            success: {
+              sideMessage: 'Cuenta activada',
+              mainTitle: '¡Enhorabuena!',
+              secondaryTitle: 'Ahora ya eres un usuario de pies a cabeza.'
+            },
+            failure: {
+              sideMessage: 'Opps, ha habido algún problema',
+              serverUnreachable: 'No se ha podido alcanzar el servidor',
+              alreadyActivate: 'Este usuario ya posee la cuenta activa'
+            }
+          },
+          unblockAccount: {
+            success: {
+              mainTitle: '¡Cuenta desbloqueada!',
+              secondaryTitle: 'Inicia sesión nuevamente'
+            },
+            failure: {
+              mainTitle: 'Opps, ha habido algún problema',
+              serverUnreachable: 'No se ha podido alcanzar el servidor',
+              alreadyActivate: 'Este usuario ya posee tiene la cuenta desbloqueada'
+            }
+          },
+          forgotPassword: {
+            mainTitle: '¿Olvidaste tu contraseña?',
+            secondaryTitle: 'Por favor, introduzca su correo electrónico'
+          },
+          recoverPassword: {
+            mainTitle: 'Recupera tu contraseña',
+            secondaryTitle: 'Por favor, introduzca una nueva contraseña'
           }
         }
       }

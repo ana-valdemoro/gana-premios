@@ -11,8 +11,8 @@ const sendEmail = async (mailOptions) => {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '3f03301b811fff',
-      pass: 'fa6d7fe5be6fad',
+      user: "b40fb0e055936b",
+      pass: "f7c0ad3b2d9283"
     },
   });
   return transporter.sendMail(mailOptions);
@@ -28,7 +28,7 @@ const sendActiveAccountEmail = async (email, token, language) => {
   const message = getTranslation('activeMailMessage', language);
   const buttonText = getTranslation('activeButtonText', language);
   const htmlToSend = template({
-    url: `${process.env.FRONT_BASE_URL}/account/${token}/activate`,
+    url: `${process.env.FRONT_BASE_URL}/activate-account/${token}`,
     title,
     message,
     buttonText,
@@ -48,7 +48,6 @@ const sendActiveAccountEmail = async (email, token, language) => {
 
 const sendBlockedAccountEmail = async (email, token, language) => {
   const route = path.join(emailsFolder, '/blocked.hbs');
-  console.log('ruta block', route);
   const emailTemplateSource = fs.readFileSync(route, 'utf8');
   const template = Handlebars.compile(emailTemplateSource);
   const title = getTranslation('unlockMailTitle', language);
@@ -56,7 +55,7 @@ const sendBlockedAccountEmail = async (email, token, language) => {
   const buttonText = getTranslation('unlockButtonText', language);
 
   const htmlToSend = template({
-    url: `${process.env.FRONT_BASE_URL}/active-account/${token}`,
+    url: `${process.env.FRONT_BASE_URL}/unblock-account/${token}`,
     title,
     message,
     buttonText,

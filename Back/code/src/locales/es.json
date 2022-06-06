@@ -38,5 +38,18 @@
 	"recoverMailMessage": "Pulse en el siguiente enlace para recuperar tu contraseña.",
 	"recoverButtonText": "Recuperar contraseña",
 	"inactiveUser": "Tu usuario no esta activo. Por favor, revisa tu correo electrónico",
-	"unlockMailTitle": "unlockMailTitle"
+	"unlockMailTitle": "Desbloquea tu cuenta", 
+	"passwordIncludeEmail": "La contraseña no puede contener ninguna parte del email",
+	"minPasswordLength" : "La contraseña debe contener al menos 9 caracteres",
+	"passwordNotIncludeNumber" : "La contraseña debe incluir un número",
+	"passwordNotIncludeLowercase": "La contraseña no incluye una letra en minúscula",
+	"passwordNotIncludeUppercase": "La contraseña no incluye una letra en mayúscula",
+	"passwordNotIncludeSymbol" : "La contraseña no incluye un símbolo",
+	"resetPasswordUsed": "El token ya se ha usado o se ha generado uno nuevo",
+	"resetPasswordInvalid": "El token ha expirado o es invalido",
+	"passwordHistoryNotFound": "Historial de contraseña no encontrado",
+	"passwordHistoryNotUpdated": "Historial de contraseña no se ha podido actualizar",
+	"passwordUsed": "Esta contraseña ya ha sido usada"
+	
+
 }

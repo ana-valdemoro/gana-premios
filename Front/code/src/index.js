@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 //
 import App from './App';
@@ -18,12 +19,16 @@ import './i18n';
 // ----------------------------------------------------------------------
 const persistor = persistStore(store);
 
+const queryClient = new QueryClient();
+
 ReactDOM.render(
   <HelmetProvider>
     <BrowserRouter>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
         </PersistGate>
       </Provider>
     </BrowserRouter>

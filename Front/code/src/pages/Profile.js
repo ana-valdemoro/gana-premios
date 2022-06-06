@@ -136,54 +136,11 @@ export default function Profile() {
                 <Typography sx={{ color: 'text.error' }}>{errMessage}</Typography>
               ) : null}
 
-              {/* <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    autoComplete="username"
-                    type="email"
-                    label="Full name*"
-                    // {...getFieldProps('email')}
-                    // error={Boolean(touched.email && errors.email)}
-                    // helperText={touched.email && errors.email}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    autoComplete="username"
-                    type="email"
-                    label="Email address*"
-                    // {...getFieldProps('email')}
-                    // error={Boolean(touched.email && errors.email)}
-                    // helperText={touched.email && errors.email}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    autoComplete="password"
-                    type="password"
-                    label="Password*"
-                    // {...getFieldProps('email')}
-                    // error={Boolean(touched.email && errors.email)}
-                    // helperText={touched.email && errors.email}
-                  />
-                </Grid>
-              </Grid> */}
               <ProfileEditingForm
                 user={user}
                 errMessage={errMessage}
                 setErrorMessage={setErrorMessage}
               />
-              {/* <Button
-                variant="contained"
-                to="#"
-                sx={{ width: '100%', marginTop: '16px' }}
-                onClick={() => console.log('click')}
-              >
-                Save details
-              </Button> */}
             </MainCard>
           </Grid>
         </Grid>

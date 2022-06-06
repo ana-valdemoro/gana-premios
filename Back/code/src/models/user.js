@@ -48,7 +48,7 @@ const schema = new mongoose.Schema(
     },
     password_history_uuid: {
       type: String,
-      default: '',
+      required: true,
     },
     priority: {
       type: Number,
@@ -94,6 +94,7 @@ schema.methods.toAuthJSON = function () {
 
 schema.pre('save', function (next) {
   const user = this;
+  console.log(this);
   user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
   return next();
 });

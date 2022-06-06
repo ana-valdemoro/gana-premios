@@ -15,9 +15,9 @@ const options = {
 };
 
 const connect = async () => {
-  const { database } = config.mongo;
+  const { database, pass, user } = config.mongo;
   const url =
-    'mongodb+srv://user1:ai989rcj552qmbsQ@cluster0.4s5rj.mongodb.net/boilerplate?retryWrites=true&w=majority&maxPoolSize=5';
+    `mongodb+srv://${user}:${pass}@cluster0.ndylh.mongodb.net/?retryWrites=true&w=majority&maxPoolSize=5`;
   try {
     await mongoose.connect(url, options);
     console.log('Connection to mongoose works');

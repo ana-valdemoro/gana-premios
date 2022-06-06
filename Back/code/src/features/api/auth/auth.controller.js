@@ -4,6 +4,7 @@ const logger = require('../../../config/winston');
 const { validatePasswordPattern } = require('../../../utils/passwordValidator');
 const { PARTICIPANTS_RESOURCES } = require('../user/user.service');
 const userGroupService = require('../userGroup/userGroup.service');
+const passwordHistoryService = require('../passwordHistory/passwordHistory.service');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -103,6 +104,7 @@ const register = async (req, res, next) => {
   const language = req.headers['accept-language'];
   const userData = req.body;
   let user;
+  let passwordHistory;
 
   const isValidPassword = validatePasswordPattern(userData.email, userData.password);
 
@@ -110,9 +112,16 @@ const register = async (req, res, next) => {
     const errorResponse = {
       statusCode: 422,
       message: res.__('invalidPassword2'),
-      errors: isValidPassword.errors,
+      errors: isValidPassword.errors.map( key => res.__(key)),
     };
     return res.status(422).json(errorResponse);
+  }
+
+  try {
+    passwordHistory = await  passwordHistoryService.createPasswordHistory(userData.password);
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(boom.badData(error.message));
   }
 
   try {
@@ -122,6 +131,7 @@ const register = async (req, res, next) => {
       ...userData,
       role_uuid: searchRole.uuid,
       priority: PARTICIPANTS_RESOURCES,
+      password_history_uuid: passwordHistory.uuid,
     });
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
@@ -177,6 +187,7 @@ const updateProfile = async (req, res, next) => {
   const { user } = req;
   const { lopdUuid, name, email, password } = req.body;
   let response;
+  let passwordHistory;
 
   if (password) {
     const isValidPassword = validatePasswordPattern(email, password);
@@ -185,10 +196,33 @@ const updateProfile = async (req, res, next) => {
       const errorResponse = {
         statusCode: 422,
         message: res.__('invalidPassword2'),
-        errors: isValidPassword.errors,
+        errors: isValidPassword.errors.map( key => res.__(key)),
       };
       return res.status(422).json(errorResponse);
     }
+
+    try {
+      passwordHistory = await passwordHistoryService.getPasswordHistory(user.password_history_uuid);
+    } catch (error) {
+      console.log(error);
+      return next(boom.badImplementation());
+    }
+
+    if (!passwordHistory) return next(boom.notFound(res.__('passwordHistoryNotFound')));
+
+    if(passwordHistory.isPasswordIncluded(password)){
+      return next(boom.badData(res.__('passwordUsed')));
+    }
+
+    try {
+      passwordHistory = await passwordHistoryService.addPasswordToHistory(passwordHistory._id, password);
+    } catch (error) {
+      logger.error(`${error}`);
+      return next(boom.badImplementation());
+    }
+
+    if (!passwordHistory) return next(boom.notFound(res.__('passwordHistoryNotUpdated')));
+
   }
 
   try {
@@ -197,7 +231,7 @@ const updateProfile = async (req, res, next) => {
   } catch (error) {
     if (error.code === 11000 && error.keyPattern) {
       const dupField = Object.keys(error.keyValue)[0];
-      return next(boom.badData(`Ya existe un usuario con ese ${dupField} introducido`));
+      return next(boom.badData(res.__('duplicateField', dupField)));
     }
     logger.error(`${error}`);
     return next(boom.badData(error.message));
