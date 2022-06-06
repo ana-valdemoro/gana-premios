@@ -68,7 +68,8 @@ i18n
           recoverPasswordForm: {
             confirmPassword: {
               label: 'Confirm password',
-              required: 'Confirm password is required'
+              required: 'Confirm password is required',
+              notMatch: 'Confirm password do not match with password'
             }
           },
           alert: {
@@ -235,13 +236,14 @@ i18n
             },
             password: {
               label: 'Contraseña',
-              required: 'La contraseña es requerido'
+              required: 'La contraseña es requerida'
             }
           },
           recoverPasswordForm: {
             confirmPassword: {
               label: 'Confirmar contraseña',
-              required: 'La confirmación de contraseña es requerido'
+              required: 'La confirmación de contraseña es requerida',
+              notMatch: 'La confirmación de contraseña no coincide con la contraseña'
             }
           },
           alert: {

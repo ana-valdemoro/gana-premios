@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import { setMessage } from '../../../store/reducers/messageSlice';
 
 // project
+import recoverPasswordSchema from '../../../utils/Validators/recoverPasswordSchema';
 import Captcha from '../../Captcha';
 import useTogglePasswordVisibility from '../../../hooks/useTogglePasswordVisibility';
 import { useRecoverPassword } from '../../../hooks/auth';
@@ -30,27 +30,18 @@ export default function RecoverPasswordForm() {
   const [inputTypePassword, IconPassword] = useTogglePasswordVisibility();
   const [inputTypeRepitedPassword, IconRepitedPassword] = useTogglePasswordVisibility();
 
-  const RecoverSchema = Yup.object().shape({
-    password: Yup.string().required(t('signInForm.password.required')),
-    repitedPassword: Yup.string().required(t('recoverPasswordForm.confirmPassword.required')),
-    recaptcha: Yup.string().required()
-  });
-
   const formik = useFormik({
     initialValues: {
       password: '',
-      repitedPassword: '',
+      confirmPassword: '',
       recaptcha: ''
     },
-    validationSchema: RecoverSchema,
+    validationSchema: recoverPasswordSchema,
+    validateOnChange: false,
     onSubmit: async (values) => {
-      const { password, repitedPassword } = values;
       setResetCaptch(true);
       setResetCaptch(false);
-      if (password === repitedPassword) {
-        console.log('Probando la llamada al Back');
-        await mutateAsync({ password: values.password, token });
-      }
+      await mutateAsync({ password: values.password, token });
     }
   });
 
@@ -74,8 +65,8 @@ export default function RecoverPasswordForm() {
       formik.setSubmitting(false);
       const succesAlert = {
         isOpen: true,
-        header: t('alert.forgotPassword.success.label'),
-        content: t('alert.forgotPassword.success.signUpMessage'),
+        header: t('alert.recoverPassword.success.label'),
+        content: t('alert.recoverPassword.success.signUpMessage'),
         type: 'success'
       };
       dispatch(setMessage(succesAlert));
@@ -102,15 +93,15 @@ export default function RecoverPasswordForm() {
 
           <TextField
             fullWidth
-            autoComplete="current-password"
+            autoComplete="confirm-password"
             type={inputTypeRepitedPassword}
             label={t('recoverPasswordForm.confirmPassword.label')}
-            {...getFieldProps('repitedPassword')}
+            {...getFieldProps('confirmPassword')}
             InputProps={{
               endAdornment: <InputAdornment position="end">{IconRepitedPassword}</InputAdornment>
             }}
-            error={Boolean(touched.repitedPassword && errors.repitedPassword)}
-            helperText={touched.repitedPassword && errors.repitedPassword}
+            error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+            helperText={touched.confirmPassword && errors.confirmPassword}
           />
         </Stack>
 
