@@ -1,55 +1,19 @@
-import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link as routerLink } from 'react-router-dom';
 
 // material
 import { Container, Stack, Typography, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
 import plusIcon from '@iconify/icons-akar-icons/plus';
 // components
-import Page from '../components/Page';
-import {
-  ProductSort,
-  ProductList,
-  ProductCartWidget,
-  ProductFilterSidebar
-} from '../components/_dashboard/products';
+import Page from '../../components/Page';
+import { ProductList, ProductCartWidget } from '../../components/_dashboard/products';
 //
-import PRODUCTS from '../_mocks_/products';
-
-// ----------------------------------------------------------------------
+import PRODUCTS from '../../_mocks_/products';
 
 export default function ClientsDashboard() {
-  const [openFilter, setOpenFilter] = useState(false);
   const { t } = useTranslation();
-
-  const formik = useFormik({
-    initialValues: {
-      gender: '',
-      category: '',
-      colors: '',
-      priceRange: '',
-      rating: ''
-    },
-    onSubmit: () => {
-      setOpenFilter(false);
-    }
-  });
-
-  const { resetForm, handleSubmit } = formik;
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
-  const handleResetFilter = () => {
-    handleSubmit();
-    resetForm();
-  };
 
   return (
     <Page title="Dashboard: Clients | Minimal-UI">
@@ -67,8 +31,9 @@ export default function ClientsDashboard() {
         >
           <Stack direction="row" spacing={6} flexShrink={0} sx={{ my: 1 }}>
             <Button
+              component={routerLink}
               variant="contained"
-              to="#"
+              to="/dashboard/clients/create-client"
               sx={{ width: '100%' }}
               startIcon={<Icon icon={plusIcon} />}
             >

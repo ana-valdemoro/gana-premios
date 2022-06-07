@@ -8,7 +8,9 @@ import Products from '../pages/Products';
 import Blog from '../pages/Blog';
 import User from '../pages/User';
 import Profile from '../pages/Profile';
-import Clients from '../pages/Clients';
+import Clients from '../pages/clients/Clients';
+import CreateClient from '../pages/clients/CreateClient';
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 export const MainRoutes = (isLoggedIn, user) => ({
@@ -41,6 +43,17 @@ export const MainRoutes = (isLoggedIn, user) => ({
       element: user?.lopd_uuid !== '' ? <Blog /> : <Navigate to="/dashboard/profile" replace />
     },
     { path: 'profile', element: <Profile /> },
-    { path: 'clients', element: <Clients /> }
+    {
+      path: 'clients',
+      children: [
+        {
+          element: <Clients />
+        },
+        {
+          path: 'create-client',
+          element: <CreateClient />
+        }
+      ]
+    }
   ]
 });
