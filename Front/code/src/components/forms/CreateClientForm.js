@@ -1,58 +1,130 @@
 import * as Yup from 'yup';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
-import { Link, Stack, TextField, InputAdornment } from '@mui/material';
+import { Stack, TextField, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // store
 import { useDispatch, useSelector } from 'react-redux';
 import { login, clearErrorMessage } from '../../store/reducers/authSlice';
 // project
-import useTogglePasswordVisibility from '../../hooks/useTogglePasswordVisibility';
 
 // ----------------------------------------------------------------------
 
 export default function CreateClientForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [inputTypePassword, IconPassword] = useTogglePasswordVisibility();
-  const { user, isLoggedIn } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const { error } = useSelector((state) => state.auth);
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     if (user.lopd_uuid === '') {
-  //       navigate('/lopd', { replace: true });
-  //     } else {
-  //       navigate('/dashboard', { replace: true });
-  //     }
-  //   }
-  // }, [user, isLoggedIn, navigate]);
+  const createClientSchema = Yup.object().shape({
+    name: Yup.string()
+      .test({
+        name: 'custom-name-test',
+        test: function checkClientName(name, context) {
+          if (!name) {
+            return context.createError({
+              message: t('clientForm.name.required'),
+              path: `name`
+            });
+          }
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .email(t('signInForm.email.validFormat'))
-      .required(t('signInForm.email.required')),
-    password: Yup.string().required(t('signInForm.password.required'))
+          if (name.length < 20) {
+            return context.createError({
+              message: t('clientForm.name.minLength'),
+              path: `name`
+            });
+          }
+
+          if (name.length > 100) {
+            return context.createError({
+              message: t('clientForm.name.maxLength'),
+              path: `name`
+            });
+          }
+
+          return true;
+        }
+      })
+      .required(t('clientForm.name.required')),
+    manager: Yup.string()
+      .test({
+        name: 'custom-manager-test',
+        test: function checkClientManager(manager, context) {
+          if (!manager) {
+            return context.createError({
+              message: t('clientForm.manager.required'),
+              path: `manager`
+            });
+          }
+
+          if (manager.length < 20) {
+            return context.createError({
+              message: t('clientForm.manager.minLength'),
+              path: `manager`
+            });
+          }
+
+          if (manager.length > 100) {
+            return context.createError({
+              message: t('clientForm.manager.maxLength'),
+              path: `manager`
+            });
+          }
+
+          return true;
+        }
+      })
+      .required(t('clientForm.manager.required')),
+    numberPromotionsActive: Yup.number()
+      .test({
+        name: 'custom-number-of-active-promotions-test',
+        test: function checkNumberPromotionsActive(numberPromotionsActive, context) {
+          if (numberPromotionsActive == null) {
+            return context.createError({
+              message: t('clientForm.numberPromotionsActive.required'),
+              path: `numberPromotionsActive`
+            });
+          }
+
+          if (!Number.isInteger(numberPromotionsActive)) {
+            return context.createError({
+              message: t('clientForm.numberPromotionsActive.integer'),
+              path: `numberPromotionsActive`
+            });
+          }
+
+          if (numberPromotionsActive < 1 || numberPromotionsActive > 10) {
+            return context.createError({
+              message: t('clientForm.numberPromotionsActive.permissibleNumber'),
+              path: `numberPromotionsActive`
+            });
+          }
+
+          return true;
+        }
+      })
+      .required('clientForm.numberPromotionsActive.required')
   });
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: ''
+      name: '',
+      manager: '',
+      numberPromotionsActive: ''
     },
-    validationSchema: LoginSchema,
+    validationSchema: createClientSchema,
     onSubmit: (values, { setSubmitting }) => {
-      if (error) {
-        dispatch(clearErrorMessage());
-      }
+      console.log(values);
+      // if (error) {
+      //   dispatch(clearErrorMessage());
+      // }
 
-      dispatch(login(values)).then(() => {
-        setSubmitting(false);
-      });
+      // dispatch(login(values)).then(() => {
+      //   setSubmitting(false);
+      // });
     }
   });
 
@@ -64,25 +136,32 @@ export default function CreateClientForm() {
         <Stack spacing={3}>
           <TextField
             fullWidth
-            autoComplete="username"
-            type="email"
-            label={t('signInForm.email.label')}
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
+            autoComplete="name"
+            type="text"
+            label={t('clientForm.name.label')}
+            {...getFieldProps('name')}
+            error={Boolean(touched.name && errors.name)}
+            helperText={touched.name && errors.name}
           />
 
           <TextField
             fullWidth
-            autoComplete="current-password"
-            type={inputTypePassword}
-            label={t('signInForm.password.label')}
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">{IconPassword}</InputAdornment>
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
+            autoComplete="manager"
+            type="text"
+            label={t('clientForm.manager.label')}
+            {...getFieldProps('manager')}
+            error={Boolean(touched.manager && errors.manager)}
+            helperText={touched.manager && errors.manager}
+          />
+
+          <TextField
+            fullWidth
+            autoComplete="number-of-promotions-active"
+            type="number"
+            label={t('clientForm.numberPromotionsActive.label')}
+            {...getFieldProps('numberPromotionsActive')}
+            error={Boolean(touched.numberPromotionsActive && errors.numberPromotionsActive)}
+            helperText={touched.numberPromotionsActive && errors.numberPromotionsActive}
           />
         </Stack>
 
@@ -94,7 +173,7 @@ export default function CreateClientForm() {
           variant="contained"
           loading={isSubmitting}
         >
-          {t('signInButton')}
+          {t('buttons.create')}
         </LoadingButton>
       </Form>
     </FormikProvider>

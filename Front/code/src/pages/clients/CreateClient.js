@@ -12,7 +12,7 @@ export default function CreateClient() {
 
   return (
     <Page title="Dashboard: Create client | Minimal-UI">
-      <Container>
+      <Container maxWidth="sm">
         <Typography variant="h4" sx={{ mb: 5 }}>
           Create Client
         </Typography>

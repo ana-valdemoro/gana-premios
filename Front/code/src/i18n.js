@@ -112,7 +112,8 @@ i18n
             register: 'register',
             signIn: 'Sign In',
             submit: 'Submit',
-            addClient: 'Add client'
+            addClient: 'Add client',
+            create: 'Create'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -148,6 +149,26 @@ i18n
               label: 'Repit the new password',
               notSame: 'Both fields are noth the same',
               required: 'This field is required to change the password'
+            }
+          },
+          clientForm: {
+            name: {
+              label: 'Name',
+              required: 'Client name is required',
+              minLength: 'Must contain at least 20 characters',
+              maxLength: 'Must contain less than 100 characters'
+            },
+            manager: {
+              label: 'Manager',
+              required: 'Manager is required',
+              minLength: 'Must contain at least 20 characters',
+              maxLength: 'Must contain less than 250 characters'
+            },
+            numberPromotionsActive: {
+              label: 'Number of active promotions',
+              required: 'Number of active promotions is required',
+              permissibleNumber: 'Must have between 1 and 10 promotions',
+              integer: 'Must be an integer value'
             }
           },
           accountPopover: {
@@ -323,6 +344,26 @@ i18n
               label: 'Repite la nueva contraseña',
               notSame: 'No coinciden ambos campos',
               required: 'Este campo es obligatorio para cambiar la contraseña'
+            }
+          },
+          clientForm: {
+            name: {
+              label: 'Nombre',
+              required: 'Nombre es requerido',
+              minLength: 'Debe tener al menos 20 caracteres',
+              maxLength: 'Debe tener menos de 100 caracteres'
+            },
+            manager: {
+              label: 'Responsable',
+              required: 'Manager is required',
+              minLength: 'Debe tener al menos 20 caracteres',
+              maxLength: 'Debe tener menos de 250 caracteres'
+            },
+            numberPromotionsActive: {
+              label: 'Número de promociones activas',
+              required: 'Este campo es requerido',
+              permissibleNumber: 'Debe tener entre 1 y 10 promociones',
+              integer: 'Debe ser un número entero'
             }
           },
           accountPopover: {
