@@ -111,7 +111,8 @@ i18n
             skip: 'Skip',
             register: 'register',
             signIn: 'Sign In',
-            submit: 'Submit'
+            submit: 'Submit',
+            addClient: 'Add client'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -286,7 +287,8 @@ i18n
             skip: 'Saltar',
             register: 'Registrarse',
             signIn: 'Iniciar sesión',
-            submit: 'Enviar'
+            submit: 'Enviar',
+            addClient: 'Añadir cliente'
           },
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
