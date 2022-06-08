@@ -10,7 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, clearErrorMessage } from '../../store/reducers/authSlice';
 // project
-
+import createClientSchema from '../../utils/Validators/createClientSchema';
 // ----------------------------------------------------------------------
 
 export default function CreateClientForm() {
@@ -18,96 +18,6 @@ export default function CreateClientForm() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { error } = useSelector((state) => state.auth);
-
-  const createClientSchema = Yup.object().shape({
-    name: Yup.string()
-      .test({
-        name: 'custom-name-test',
-        test: function checkClientName(name, context) {
-          if (!name) {
-            return context.createError({
-              message: t('clientForm.name.required'),
-              path: `name`
-            });
-          }
-
-          if (name.length < 20) {
-            return context.createError({
-              message: t('clientForm.name.minLength'),
-              path: `name`
-            });
-          }
-
-          if (name.length > 100) {
-            return context.createError({
-              message: t('clientForm.name.maxLength'),
-              path: `name`
-            });
-          }
-
-          return true;
-        }
-      })
-      .required(t('clientForm.name.required')),
-    manager: Yup.string()
-      .test({
-        name: 'custom-manager-test',
-        test: function checkClientManager(manager, context) {
-          if (!manager) {
-            return context.createError({
-              message: t('clientForm.manager.required'),
-              path: `manager`
-            });
-          }
-
-          if (manager.length < 20) {
-            return context.createError({
-              message: t('clientForm.manager.minLength'),
-              path: `manager`
-            });
-          }
-
-          if (manager.length > 100) {
-            return context.createError({
-              message: t('clientForm.manager.maxLength'),
-              path: `manager`
-            });
-          }
-
-          return true;
-        }
-      })
-      .required(t('clientForm.manager.required')),
-    numberPromotionsActive: Yup.number()
-      .test({
-        name: 'custom-number-of-active-promotions-test',
-        test: function checkNumberPromotionsActive(numberPromotionsActive, context) {
-          if (numberPromotionsActive == null) {
-            return context.createError({
-              message: t('clientForm.numberPromotionsActive.required'),
-              path: `numberPromotionsActive`
-            });
-          }
-
-          if (!Number.isInteger(numberPromotionsActive)) {
-            return context.createError({
-              message: t('clientForm.numberPromotionsActive.integer'),
-              path: `numberPromotionsActive`
-            });
-          }
-
-          if (numberPromotionsActive < 1 || numberPromotionsActive > 10) {
-            return context.createError({
-              message: t('clientForm.numberPromotionsActive.permissibleNumber'),
-              path: `numberPromotionsActive`
-            });
-          }
-
-          return true;
-        }
-      })
-      .required('clientForm.numberPromotionsActive.required')
-  });
 
   const formik = useFormik({
     initialValues: {
