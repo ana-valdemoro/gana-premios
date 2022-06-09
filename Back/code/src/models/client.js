@@ -10,11 +10,11 @@ const schema = new mongoose.Schema(
     name: {
       required: true,
       type: String,
+      unique: true
     },
     responsable: {
       required: true,
       type: String,
-      unique: true,
     },
     number_promotion_active: {
       required: true,

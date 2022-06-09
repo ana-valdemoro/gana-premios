@@ -14,7 +14,7 @@
   "campaignNotActive": "The campaign is not active",
   "startDatePromotion": "The start date of the promo must be greater than that of the campaign",
   "endDatePromotion": "The end date of the promo must be less than that of the campaign",
-  "clientExist": "This client already exists",
+  "clientExist": "There is already a client with that %s",
   "userNotFound": "User not found",
   "activeButtonText": "Active your account",
   "duplicateField": "A user with this %s already exists",
