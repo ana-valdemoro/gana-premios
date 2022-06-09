@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as routerLink } from 'react-router-dom';
 
 // material
 import { Container, Stack, Typography, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
-import plusIcon from '@iconify/icons-akar-icons/plus';
 // components
 import Page from '../../components/Page';
 import { ProductList, ProductCartWidget } from '../../components/_dashboard/products';
@@ -35,7 +33,7 @@ export default function ClientsDashboard() {
               variant="contained"
               to="/dashboard/clients/create-client"
               sx={{ width: '100%' }}
-              startIcon={<Icon icon={plusIcon} />}
+              startIcon={<Icon icon="akar-icons:plus" />}
             >
               {t('buttons.addClient')}
             </Button>
