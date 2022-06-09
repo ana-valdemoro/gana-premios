@@ -1,23 +1,24 @@
-import * as Yup from 'yup';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
+import { useDispatch } from 'react-redux';
 // material
-import { Stack, TextField, InputAdornment } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // store
-import { useDispatch, useSelector } from 'react-redux';
-import { login, clearErrorMessage } from '../../store/reducers/authSlice';
+import { setMessage } from '../../store/reducers/messageSlice';
 // project
 import createClientSchema from '../../utils/Validators/createClientSchema';
+import useCreateClient from '../../hooks/client/useCreateClient';
+
 // ----------------------------------------------------------------------
 
 export default function CreateClientForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { error } = useSelector((state) => state.auth);
+  const { mutateAsync, data, isError, error } = useCreateClient();
 
   const formik = useFormik({
     initialValues: {
@@ -26,23 +27,62 @@ export default function CreateClientForm() {
       numberPromotionsActive: ''
     },
     validationSchema: createClientSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      console.log(values);
-      // if (error) {
-      //   dispatch(clearErrorMessage());
-      // }
-
-      // dispatch(login(values)).then(() => {
-      //   setSubmitting(false);
-      // });
+    onSubmit: async (values) => {
+      const { name, manager, numberPromotionsActive } = values;
+      const clientData = {
+        name,
+        responsable: manager,
+        numberPromotionActive: numberPromotionsActive
+      };
+      await mutateAsync(clientData);
     }
   });
 
-  const { errors, touched, isSubmitting, handleSubmit, getFieldProps, setFieldValue } = formik;
+  useEffect(() => {
+    if (isError) {
+      formik.setSubmitting(false);
+      let failAlert;
+      console.log();
+      if (error?.statusCode === 422) {
+        failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: error.message,
+          type: 'error'
+        };
+      } else {
+        failAlert = {
+          isOpen: true,
+          header: t('alert.failure.label'),
+          content: t('alert.serverConflicts.unreachable'),
+          type: 'error'
+        };
+      }
+      dispatch(setMessage(failAlert));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error?.message, isError, error?.statusCode]);
+
+  useEffect(() => {
+    if (data) {
+      formik.setSubmitting(false);
+      const succesAlert = {
+        isOpen: true,
+        header: t('alert.createClient.success.label'),
+        content: '',
+        type: 'success'
+      };
+      dispatch(setMessage(succesAlert));
+      navigate('/dashboard/clients', { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <Form noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
             fullWidth

@@ -99,6 +99,11 @@ i18n
             },
             serverConflicts: {
               unreachable: 'Server with problems'
+            },
+            createClient: {
+              success: {
+                label: 'Client created!'
+              }
             }
           },
           buttons: {
@@ -296,6 +301,11 @@ i18n
             },
             serverConflicts: {
               unreachable: 'Servidor con problemas'
+            },
+            createClient: {
+              success: {
+                label: '¡Cliente creado!'
+              }
             }
           },
           buttons: {

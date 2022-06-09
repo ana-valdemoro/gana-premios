@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { configureInitialInterceptors } from './utils/http.interceptors';
 
 //
 import App from './App';
@@ -18,6 +19,8 @@ import './i18n';
 
 // ----------------------------------------------------------------------
 const persistor = persistStore(store);
+
+configureInitialInterceptors(store);
 
 const queryClient = new QueryClient();
 
