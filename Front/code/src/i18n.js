@@ -99,6 +99,11 @@ i18n
             },
             serverConflicts: {
               unreachable: 'Server with problems'
+            },
+            createClient: {
+              success: {
+                label: 'Client created!'
+              }
             }
           },
           buttons: {
@@ -111,7 +116,9 @@ i18n
             skip: 'Skip',
             register: 'register',
             signIn: 'Sign In',
-            submit: 'Submit'
+            submit: 'Submit',
+            addClient: 'Add client',
+            create: 'Create'
           },
           welcomeToTheApp: 'Welcome to the App',
           lopd: {
@@ -149,6 +156,26 @@ i18n
               required: 'This field is required to change the password'
             }
           },
+          clientForm: {
+            name: {
+              label: 'Name',
+              required: 'Client name is required',
+              minLength: 'Must contain at least 20 characters',
+              maxLength: 'Must contain less than 100 characters'
+            },
+            manager: {
+              label: 'Manager',
+              required: 'Manager is required',
+              minLength: 'Must contain at least 20 characters',
+              maxLength: 'Must contain less than 250 characters'
+            },
+            numberPromotionsActive: {
+              label: 'Number of active promotions',
+              required: 'Number of active promotions is required',
+              permissibleNumber: 'Must have between 1 and 10 promotions',
+              integer: 'Must be an integer value'
+            }
+          },
           accountPopover: {
             menuOptions: {
               home: 'Home',
@@ -157,7 +184,8 @@ i18n
             }
           },
           sideBarNav: {
-            profile: 'profile'
+            profile: 'profile',
+            clients: 'clients'
           },
           acctivateAccount: {
             success: {
@@ -273,6 +301,11 @@ i18n
             },
             serverConflicts: {
               unreachable: 'Servidor con problemas'
+            },
+            createClient: {
+              success: {
+                label: '¡Cliente creado!'
+              }
             }
           },
           buttons: {
@@ -285,7 +318,8 @@ i18n
             skip: 'Saltar',
             register: 'Registrarse',
             signIn: 'Iniciar sesión',
-            submit: 'Enviar'
+            submit: 'Enviar',
+            addClient: 'Añadir cliente'
           },
           welcomeToTheApp: 'Bienvenido a la aplicación',
           lopd: {
@@ -322,6 +356,26 @@ i18n
               required: 'Este campo es obligatorio para cambiar la contraseña'
             }
           },
+          clientForm: {
+            name: {
+              label: 'Nombre',
+              required: 'Nombre es requerido',
+              minLength: 'Debe tener al menos 20 caracteres',
+              maxLength: 'Debe tener menos de 100 caracteres'
+            },
+            manager: {
+              label: 'Responsable',
+              required: 'Manager is required',
+              minLength: 'Debe tener al menos 20 caracteres',
+              maxLength: 'Debe tener menos de 250 caracteres'
+            },
+            numberPromotionsActive: {
+              label: 'Número de promociones activas',
+              required: 'Este campo es requerido',
+              permissibleNumber: 'Debe tener entre 1 y 10 promociones',
+              integer: 'Debe ser un número entero'
+            }
+          },
           accountPopover: {
             menuOptions: {
               home: 'Home',
@@ -330,7 +384,8 @@ i18n
             }
           },
           sideBarNav: {
-            profile: 'perfil'
+            profile: 'perfil',
+            clients: 'clientes'
           },
           acctivateAccount: {
             success: {

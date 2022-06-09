@@ -7,6 +7,9 @@ import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 // material
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
+// store
+import { useSelector } from 'react-redux';
+import { selectUser } from '../store/reducers/authSlice';
 
 // ----------------------------------------------------------------------
 
@@ -150,15 +153,21 @@ NavItem.propTypes = {
 };
 
 export default function NavSection({ navConfig, ...other }) {
+  const user = useSelector(selectUser);
+
   const { pathname } = useLocation();
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
   return (
     <Box {...other}>
       <List disablePadding>
-        {navConfig.map((item) => (
-          <NavItem key={item.title} item={item} active={match} />
-        ))}
+        {navConfig.map((item) =>
+          user.priority >= item.priority ? (
+            <NavItem key={item.title} item={item} active={match} />
+          ) : (
+            false
+          )
+        )}
       </List>
     </Box>
   );

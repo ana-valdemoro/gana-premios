@@ -62,9 +62,11 @@ const createClient = async (req, res, next) => {
   try {
     client = await clientService.createClient(clientData);
   } catch (error) {
-    if (error instanceof UniqueConstraintError) {
-      return next(boom.badData(getTranslation('clientExist')));
+    if (error.code === 11000 && error.keyPattern) {
+      const dupField = Object.keys(error.keyValue)[0];
+      return next(boom.badData(res.__('clientExist', dupField)));
     }
+
     logger.error(`${error}`);
     return next(boom.badData(error.message));
   }
